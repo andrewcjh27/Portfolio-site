@@ -1,0 +1,194 @@
+/* ══════════════════════════════════════════════════════════════════════
+   "More" dropdown (Cohere-style flyout panel)
+   ══════════════════════════════════════════════════════════════════════ */
+.nav-more {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-more-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.nav-more-toggle:hover { background: rgba(0, 0, 0, 0.05); }
+.site-header.dark-header .nav-more-toggle:hover,
+.photo-stage ~ * .nav-more-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Triangle arrow rotates on open */
+.nav-more-toggle svg {
+  width: 9px;
+  height: 9px;
+  transition: transform 0.25s ease;
+}
+.nav-more.open .nav-more-toggle svg {
+  transform: rotate(180deg);
+}
+
+/* Active state when current page is one of the dropdown categories */
+.nav-more-toggle.active {
+  background: #111;
+  color: #faf7f2;
+}
+.site-header.dark-header .nav-more-toggle.active {
+  background: #fff;
+  color: #111;
+}
+
+/* ── Flyout panel ──────────────────────────────────────────────────── */
+.nav-more-panel {
+  position: absolute;
+  top: calc(100% + 0.85rem);
+  right: 0;
+  width: min(740px, 94vw);
+  background: rgba(255, 255, 255, 0.985);
+  color: #111;
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.18),
+              0 0 0 1px rgba(0, 0, 0, 0.04);
+  padding: 2.2rem 2.2rem 1.4rem;
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  column-gap: 2.2rem;
+  row-gap: 1.4rem;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  z-index: 200;
+  text-align: left;
+}
+.nav-more.open .nav-more-panel {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nav-more-label {
+  font-family: -apple-system, "SF Mono", Menlo, ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  margin-bottom: 1rem;
+}
+
+.nav-more-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.nav-more-list a {
+  font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: #111;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  transition: color 0.18s ease, transform 0.18s ease;
+  letter-spacing: -0.005em;
+  display: inline-block;
+}
+.nav-more-list a:hover {
+  color: #5d7cf8;
+  transform: translateX(4px);
+}
+
+/* ── Right-side feature card ───────────────────────────────────────── */
+.nav-more-feature {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0d0d0d;
+  min-height: 240px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.4rem;
+  color: #fff;
+}
+.nav-more-feature::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 88% 8%, rgba(255, 220, 110, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 95% 35%, rgba(180, 140, 255, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 85% 60%, rgba(120, 200, 255, 0.25) 0%, transparent 70%);
+  z-index: 1;
+}
+.nav-more-feature::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);
+  z-index: 2;
+}
+.nav-more-feature > * { position: relative; z-index: 3; }
+
+.nav-more-feature h3 {
+  font-family: -apple-system, "SF Pro Display", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.45rem;
+}
+.nav-more-feature p {
+  font-family: -apple-system, "SF Pro Text", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.5;
+  max-width: 28ch;
+}
+
+/* ── Bottom links row ──────────────────────────────────────────────── */
+.nav-more-footer {
+  grid-column: 1 / -1;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 1rem;
+  margin-top: 0.4rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 2.6rem;
+}
+.nav-more-footer a {
+  font-family: -apple-system, "SF Mono", Menlo, ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-more-footer a:hover { color: #111; }
+.nav-more-footer a::after {
+  content: " →";
+  margin-left: 0.25rem;
+  font-family: inherit;
+}
+
+/* ── Mobile collapse ───────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .nav-more-panel {
+    grid-template-columns: 1fr;
+    width: min(420px, 92vw);
+    padding: 1.5rem;
+    right: -0.5rem;
+  }
+  .nav-more-feature { min-height: 170px; }
+  .nav-more-footer { justify-content: space-between; gap: 1rem; }
+}

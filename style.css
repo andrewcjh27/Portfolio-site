@@ -1,0 +1,386 @@
+/* Reset-ish */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+      sans-serif;
+    color: #222;
+    background: #faf7f2;
+    line-height: 1.6;
+  }
+  
+  img {
+    max-width: 100%;
+    display: block;
+  }
+  
+  /* Layout */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    background: rgba(250, 247, 242, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #e3ddd3;
+  }
+  
+  .logo {
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+  }
+  
+  .nav {
+    display: flex;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    color: #555;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    transition: 0.2s ease;
+  }
+  
+  .nav-link:hover {
+    background: #e7dfd2;
+    color: #111;
+  }
+  
+  .nav-link.active {
+    background: #111;
+    color: #faf7f2;
+  }
+  
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+  }
+  
+  .hero {
+    padding: 2.5rem 0 1.5rem;
+  }
+  
+  .hero h1 {
+    font-size: 2.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .hero p {
+    max-width: 40rem;
+    color: #555;
+  }
+  
+  .section {
+    margin-top: 2rem;
+  }
+  
+  .section h2,
+  .section h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Cards and grids */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .card,
+  .photo-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid #e3ddd3;
+    box-shadow: 0 6px 14px rgba(15, 11, 5, 0.04);
+  }
+  
+  .photo-card img {
+    border-radius: 12px;
+    margin-bottom: 0.6rem;
+  }
+  
+  .photo-card figcaption {
+    font-size: 0.85rem;
+    color: #666;
+  }
+  
+  /* Cafe table */
+  .cafe-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .cafe-table th,
+  .cafe-table td {
+    border: 1px solid #e3ddd3;
+    padding: 0.6rem 0.5rem;
+  }
+  
+  .cafe-table th {
+    background: #f1e8da;
+    text-align: left;
+    font-weight: 600;
+  }
+  
+  .site-footer {
+    border-top: 1px solid #e3ddd3;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #777;
+  }
+  
+  /* ── Hamburger button (hidden on desktop) ───────────────────────────── */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem;
+    z-index: 20;
+  }
+  .hamburger svg {
+    width: 22px;
+    height: 22px;
+    stroke: #555;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .site-header.dark-header .hamburger svg,
+  .dark-theme .hamburger svg {
+    stroke: #ccc;
+  }
+
+  /* ── Mobile nav ───────────────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .hamburger {
+      display: block;
+    }
+
+    .site-header {
+      flex-wrap: wrap;
+    }
+
+    .nav {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding-top: 0.5rem;
+    }
+
+    .nav.nav-open {
+      display: flex;
+    }
+
+    .nav-link {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .nav-link {
+      border-radius: 8px;
+    }
+
+    .hero h1 {
+      font-size: 1.7rem;
+    }
+  }
+  
+  #cafe-map {
+    margin-top: 1rem;
+    width: 100%;
+    height: 420px;
+    border-radius: 18px;
+    border: 1px solid #e3ddd3;
+    overflow: hidden;
+  }
+  
+  .map-frame {
+    margin-top: 1rem;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #e3ddd3;
+  }
+  
+  #naver-map {
+    margin-top: 1rem;
+    width: 100%;
+    height: 420px;
+    border-radius: 18px;
+    border: 1px solid #e3ddd3;
+    overflow: hidden;
+  }
+
+  .photo-hero-strip {
+    position: relative;
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    background: #faf7f2;
+    margin-top: 3rem;   /* push hero down; adjust 2–5rem to taste */
+  }
+  
+  
+  .photo-hero-overlay {
+    position: absolute;
+    z-index: 2;
+    top: 1.5rem;         /* was 0; moves overlay down */
+    bottom: auto;
+    left: min(8vw, 80px); /* pushes text further right from the edge */
+    width: min(42vw, 480px);
+    padding: 2.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.25),
+      transparent
+    );
+    pointer-events: none;
+  }
+  
+  .photo-hero-overlay h1 {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  
+  .photo-hero-overlay p {
+    max-width: 20rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .photo-hero-hint {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+  
+  /* Sliding strip stays underneath */
+  .photo-strip-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 1.5rem;    /* small gap under the text */
+  }
+  
+  .photo-strip {
+    display: inline-flex;
+    align-items: center;
+    animation: photo-strip-scroll 40s linear infinite;
+  }
+  
+  /* Entire image visible; height controls size */
+  .photo-strip img {
+    height: 500px;          /* increase/decrease to change overall size */
+    width: auto;
+    flex-shrink: 0;
+    object-fit: contain;
+    display: block;
+  }
+  
+  /* Scroll animation */
+  @keyframes photo-strip-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  
+  /* Mobile: make hero text smaller and let images take more height */
+  @media (max-width: 768px) {
+    .photo-hero-overlay {
+      padding: 2rem 1.5rem;
+      width: 70vw;
+    }
+  
+    .photo-strip img {
+      height: 280px;
+    }
+  }
+  
+  /* ── Small contact footer (all pages except about) ──────────────────── */
+  .contact-footer {
+    border-top: 1px solid #e3ddd3;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: #999;
+  }
+  .contact-footer-copy {
+    color: #999;
+  }
+  .contact-footer-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .contact-footer-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #888;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-footer-links a:hover {
+    color: #333;
+  }
+  .contact-footer-links svg {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+  }
+  @media (max-width: 640px) {
+    .contact-footer {
+      flex-direction: column;
+      gap: 0.6rem;
+      text-align: center;
+    }
+  }
+
+  .codes-hero::before {
+    content: "";
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 900px;
+  
+    background: radial-gradient(
+      circle,
+      rgba(80,120,255,0.18) 0%,
+      rgba(80,120,255,0.10) 25%,
+      rgba(80,120,255,0.04) 45%,
+      transparent 70%
+    );
+  
+    filter: blur(80px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  
