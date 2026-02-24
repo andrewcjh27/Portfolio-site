@@ -165,3 +165,118 @@
     }
   }
   
+  #cafe-map {
+    margin-top: 1rem;
+    width: 100%;
+    height: 420px;
+    border-radius: 18px;
+    border: 1px solid #e3ddd3;
+    overflow: hidden;
+  }
+  
+  .map-frame {
+    margin-top: 1rem;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #e3ddd3;
+  }
+  
+  #naver-map {
+    margin-top: 1rem;
+    width: 100%;
+    height: 420px;
+    border-radius: 18px;
+    border: 1px solid #e3ddd3;
+    overflow: hidden;
+  }
+
+  .photo-hero-strip {
+    position: relative;
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    overflow: hidden;
+    background: #faf7f2;
+    margin-top: 3rem;   /* push hero down; adjust 2–5rem to taste */
+  }
+  
+  
+  .photo-hero-overlay {
+    position: absolute;
+    z-index: 2;
+    top: 1.5rem;         /* was 0; moves overlay down */
+    bottom: auto;
+    left: min(8vw, 80px); /* pushes text further right from the edge */
+    width: min(42vw, 480px);
+    padding: 2.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.75),
+      rgba(0, 0, 0, 0.25),
+      transparent
+    );
+    pointer-events: none;
+  }
+  
+  .photo-hero-overlay h1 {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    line-height: 1.1;
+    margin-bottom: 0.6rem;
+  }
+  
+  .photo-hero-overlay p {
+    max-width: 20rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .photo-hero-hint {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+  
+  /* Sliding strip stays underneath */
+  .photo-strip-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin-top: 1.5rem;    /* small gap under the text */
+  }
+  
+  .photo-strip {
+    display: inline-flex;
+    align-items: center;
+    animation: photo-strip-scroll 40s linear infinite;
+  }
+  
+  /* Entire image visible; height controls size */
+  .photo-strip img {
+    height: 500px;          /* increase/decrease to change overall size */
+    width: auto;
+    flex-shrink: 0;
+    object-fit: contain;
+    display: block;
+  }
+  
+  /* Scroll animation */
+  @keyframes photo-strip-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  
+  /* Mobile: make hero text smaller and let images take more height */
+  @media (max-width: 768px) {
+    .photo-hero-overlay {
+      padding: 2rem 1.5rem;
+      width: 70vw;
+    }
+  
+    .photo-strip img {
+      height: 280px;
+    }
+  }
+  

@@ -2,13 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>My Room | Your Name</title>
+  <title>My Room | Junho Choi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Full-page room override ──────────────────────────────────────────── */
+    html, body { height: 100%; overflow: hidden; }
+
+    .site-header {
+      position: relative;
+      z-index: 100;
+      background: rgba(20, 20, 19, 0.80) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border-bottom: 1px solid rgba(120, 115, 108, 0.22) !important;
+    }
+
+    .room-viewer-wrap {
+      position: fixed;
+      inset: 0;
+      background: #1c1c1a;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    #room-canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    .room-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 20, 18, 0.82);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(200, 195, 185, 0.18);
+      border-radius: 999px;
+      padding: 0.35rem 1.1rem;
+      font-size: 0.78rem;
+      color: #b0aa9e;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    /* ── Hotspot markers ─────────────────────────────────────────────────── */
+    .hotspot {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 6;
+      pointer-events: auto;
+    }
+
+    .hs-btn {
+      width: 34px;
+      height: 34px;
+      background: rgba(22, 22, 20, 0.85);
+      border: 1.5px solid rgba(220, 212, 198, 0.7);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      animation: hs-pulse 2.8s ease-in-out infinite;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .hs-btn:hover { transform: scale(1.18); }
+
+    @keyframes hs-pulse {
+      0%, 100% { box-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 0 0 0 rgba(220,212,198,0.5); }
+      50%       { box-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 0 0 10px rgba(220,212,198,0); }
+    }
+
+    /* ── Popup card — full-focus, viewport-safe ──────────────────────────── */
+    .hs-popup {
+      position: absolute;
+      /* --px is set by JS to clamp horizontal position within viewport      */
+      left: calc(50% + var(--px, 0px));
+      bottom: calc(100% + 20px);
+      transform: translateX(-50%) translateY(16px);
+      /* Responsive width: up to 480px but never wider than the screen       */
+      width: min(480px, calc(100vw - 32px));
+      background: rgba(14, 14, 12, 0.94);
+      border: 1px solid rgba(218, 208, 190, 0.16);
+      border-radius: 20px;
+      padding: 0.6rem 0.6rem 1rem;
+      box-shadow: 0 28px 72px rgba(0, 0, 0, 0.72),
+                  0 0 0 1px rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease,
+                  transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 20;
+    }
+
+    .hotspot:hover .hs-popup,
+    .hotspot.open   .hs-popup {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Flip below when not enough space above */
+    .hotspot.flip-down .hs-popup {
+      bottom: auto;
+      top: calc(100% + 20px);
+      transform: translateX(-50%) translateY(-16px);
+    }
+    .hotspot.flip-down:hover .hs-popup,
+    .hotspot.flip-down.open  .hs-popup {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .hs-popup img {
+      width: 100%;
+      /* Tall image: up to 55% of viewport height so it always fits on screen */
+      height: min(360px, 55vh);
+      object-fit: cover;
+      border-radius: 14px;
+      display: block;
+      background: #28251f;
+    }
+
+    .hs-label {
+      display: block;
+      margin-top: 0.7rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(205, 196, 180, 0.65);
+      text-align: center;
+      font-family: system-ui, -apple-system, sans-serif;
+      padding-bottom: 0.1rem;
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
-    <div class="logo">Your Name</div>
+    <div class="logo">Junho Choi</div>
     <nav class="nav">
       <a href="index.html" class="nav-link">About</a>
       <a href="design.html" class="nav-link">Design</a>
@@ -18,22 +158,303 @@
     </nav>
   </header>
 
-  <main class="page">
-    <section class="section">
-      <h1>My room interiors</h1>
-      <p>Share photos or moodboards of your room, plus notes on decor, layout, and favorite objects.</p>
-      <div class="grid grid-photos">
-        <figure class="photo-card">
-          <img src="images/room1.jpg" alt="Desk corner" />
-          <figcaption>Desk setup with notes app screenshots, plants, and lighting.</figcaption>
-        </figure>
-      </div>
-    </section>
-  </main>
+  <!-- Full-page 3D Room Viewer -->
+  <div class="room-viewer-wrap">
+    <canvas id="room-canvas"></canvas>
 
-  <footer class="site-footer">
-    <p>© 2026 Your Name</p>
-  </footer>
+    <!-- ── Hotspots ── hover to see a photo of that room section ───────── -->
+    <!-- 💡 To swap a photo: change the src="images/..." on each hotspot   -->
+
+    <!-- Desk left -->
+    <div class="hotspot" id="hs-desk1">
+      <div class="hs-btn">🔍</div>
+      <div class="hs-popup">
+        <img src="images/Room/IMG_5183.JPG" alt="Desk left" />
+        <span class="hs-label">Desk-Left</span>
+      </div>
+    </div>
+
+    <!-- Desk mid -->
+    <div class="hotspot" id="hs-desk2">
+      <div class="hs-btn">🔍</div>
+      <div class="hs-popup">
+        <img src="images/Room/IMG_5182.JPG" alt="Desk mid" />
+        <span class="hs-label">Desk-Middle</span>
+      </div>
+    </div>
+
+    <!-- Desk right -->
+    <div class="hotspot" id="hs-desk3">
+      <div class="hs-btn">🔍</div>
+      <div class="hs-popup">
+        <img src="images/Room/IMG_5184.JPG" alt="Desk right" />
+        <span class="hs-label">Desk-Right</span>
+      </div>
+    </div>
+
+    <!-- Bed & nightstand -->
+    <div class="hotspot" id="hs-bedside">
+      <div class="hs-btn">🔍</div>
+      <div class="hs-popup">
+        <img src="images/Room/IMG_5213.JPG" alt="Bed & nightstand" />
+        <span class="hs-label">Bed &amp; nightstand</span>
+      </div>
+    </div>
+
+    <!-- Corner Shelf -->
+    <div class="hotspot" id="hs-corner1">
+      <div class="hs-btn">🔍</div>
+      <div class="hs-popup">
+        <img src="images/Room/IMG_5214.JPG" alt="Corner 1" />
+        <span class="hs-label">Corner Shelf</span>
+      </div>
+    </div>
+
+
+    <!-- Corner Lamp -->
+    <div class="hotspot" id="hs-corner2">
+        <div class="hs-btn">🔍</div>
+        <div class="hs-popup">
+          <img src="images/Room/IMG_5181.JPG" alt="Corner 2" />
+          <span class="hs-label">Corner Lamp</span>
+        </div>
+      </div>
+
+    
+    <!-- Projector -->
+    <div class="hotspot" id="hs-projector">
+        <div class="hs-btn">🔍</div>
+        <div class="hs-popup">
+          <img src="images/Room/IMG_5180.JPG" alt="Projector" />
+          <span class="hs-label">Projector</span>
+        </div>
+      </div>
+
+    <div class="room-hint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Hover 🔍 for photos</div>
+  </div>
+
   <script src="script.js"></script>
+
+  <!-- Three.js 3D Room Planner -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.162/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // ── Renderer & Scene ──────────────────────────────────────────────────────
+    const canvas = document.getElementById('room-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1c1c1a); // dark warm grey — neutral CAD canvas
+
+    // ── Camera (angled to match CAD isometric view) ───────────────────────────
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(9, 7, 8);
+    camera.lookAt(0, 1, 0);
+
+    // ── Orbit Controls ────────────────────────────────────────────────────────
+    const controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.07;
+    controls.maxPolarAngle = Math.PI / 2.08;
+    controls.minDistance = 3;
+    controls.maxDistance = 18;
+    controls.target.set(0, 1, 0);
+
+    // ── Hotspot 3D anchor positions (updated for CAD layout) ─────────────────
+    // Each pos is the world-space point the 🔍 icon will float above.
+    // Adjust x/y/z here if you want to reposition a marker.
+    const HOTSPOTS = [
+      { id: 'hs-desk1',   pos: new THREE.Vector3(1.0,  1.0,  2.6)    },  // centre of main room
+      { id: 'hs-desk2',    pos: new THREE.Vector3(0,  1.0,  2.6)  },  // back-left zone
+      { id: 'hs-desk3',  pos: new THREE.Vector3(-1.0,  1.0,  2.6)  },  // back-left corner
+      { id: 'hs-bedside', pos: new THREE.Vector3(-1.5,  1.0,  -0.1)  },  // right section
+      { id: 'hs-corner1', pos: new THREE.Vector3(3.2,  0.5,   -1.2)  },  // right section
+      { id: 'hs-corner2', pos: new THREE.Vector3(3.9,  1.7,   -2.3)  },  // right section
+      { id: 'hs-projector', pos: new THREE.Vector3(1.0,  1.0,  -1.5)  },  // right section
+    ];
+
+    // ── Mobile: tap icon to toggle popup ─────────────────────────────────────
+    document.querySelectorAll('.hotspot').forEach(el => {
+      el.querySelector('.hs-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        const wasOpen = el.classList.contains('open');
+        document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('open'));
+        if (!wasOpen) el.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () =>
+      document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('open'))
+    );
+
+    // ── Materials — CAD dark-theme palette ───────────────────────────────────
+    const wall = new THREE.MeshStandardMaterial({
+      color: 0xf0ece2,    // light warm plaster — matches photo reference
+      roughness: 0.6,
+      metalness: 0.0,
+      side: THREE.DoubleSide
+    });
+    const floor = new THREE.MeshStandardMaterial({
+      color: 0xe9e5db,    // same warm off-white, fractionally more muted for the slab
+      roughness: 0.92,
+    });
+
+    // ── Geometry helper ───────────────────────────────────────────────────────
+    function box(w, h, d, mat, x = 0, y = 0, z = 0) {
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+      mesh.position.set(x, y, z);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      scene.add(mesh);
+      return mesh;
+    }
+
+    // ── Room dimensions (from CAD) ─────────────────────────────────────────
+    //   9 wide  (x: -4.5 → 4.5)
+    //   6 deep  (z: -3   → 3)
+    //   3.2 high
+    const RW = 9, RH = 3.2, RD = 6;
+    const WT = 0.18;
+
+    // Window props (right wall only)
+    const WB = 0.72, WT2 = 2.32;   // window bottom / top y
+
+    // Door props (front wall) — near the right end
+    const DL = 2.6, DR = 4.1;      // door x-span, almost at right wall (x=4.5)
+    const DH = 2.15;                // door height
+
+    // ── CAD-style ground grid ─────────────────────────────────────────────────
+    const grid = new THREE.GridHelper(40, 40, 0x3a3a38, 0x2e2e2c);
+    grid.position.y = -0.04;
+    scene.add(grid);
+
+    // ── Floor slab ────────────────────────────────────────────────────────────
+    box(RW, 0.06, RD, floor, 0, 0, 0);
+
+    // ── Left wall — solid ────────────────────────────────────────────────────
+    box(WT, RH, RD, wall, -RW/2, RH/2, 0);
+
+    // ── Back wall — solid (no window) ─────────────────────────────────────────
+    box(RW, RH, WT, wall, 0, RH/2, -RD/2);
+
+    // ── Right wall — window void at z=[-1.1, 1.1], y=[0.72, 2.32] ──────────
+    const WFront = 1.1, WBack = -1.1;
+    const rightX = RW / 2;
+    box(WT, RH,       RD/2 + WBack,   wall, rightX, RH/2,           (WBack  - RD/2) / 2);
+    box(WT, RH,       RD/2 - WFront,  wall, rightX, RH/2,           (WFront + RD/2) / 2);
+    box(WT, RH - WT2, WFront - WBack, wall, rightX, (WT2 + RH) / 2, (WFront + WBack) / 2);
+    box(WT, WB,       WFront - WBack, wall, rightX, WB / 2,         (WFront + WBack) / 2);
+
+    // ── Front wall — door void ────────────────────────────────────────────────
+    //   3 pieces: left slab | [door opening] | right slab  +  above lintel
+    const frontZ = RD / 2;
+    box(DL + RW/2,  RH,       WT, wall, (-RW/2 + DL) / 2,  RH/2,           frontZ); // left
+    box(RW/2 - DR,  RH,       WT, wall, (DR   + RW/2) / 2,  RH/2,           frontZ); // right
+    box(DR - DL,    RH - DH,  WT, wall, (DL   + DR)   / 2,  (DH + RH) / 2,  frontZ); // lintel
+
+    // ── Closet / dividing partition ───────────────────────────────────────────
+    //   Wall runs parallel to the left wall, full room depth (back → front).
+    //   Door is in the right-of-centre portion of the wall, with wall stubs
+    //   on both sides so it reads as a proper interior doorway.
+    //   x = -2.5 · door void: z 0.8 → 2.2 · wall on both sides + lintel
+    const pX       = -2.5;          // partition x  (2 units from left wall)
+    const pZa      = -RD/2;         // -3  — starts flush at back wall
+    const cDoorZa  =  0.8;          // door opening begins
+    const cDoorZb  =  2.2;          // door opening ends
+    const pZb      =  RD/2;         //  3  — ends flush at front wall
+    const cDH      =  2.15;         // closet door height
+
+    box(WT, RH,       cDoorZa - pZa,         wall, pX, RH/2,            (pZa    + cDoorZa) / 2); // back solid
+    box(WT, RH - cDH, cDoorZb - cDoorZa,     wall, pX, (cDH + RH) / 2, (cDoorZa + cDoorZb) / 2); // lintel
+    box(WT, RH,       pZb     - cDoorZb,     wall, pX, RH/2,            (cDoorZb + pZb   ) / 2); // front stub
+
+    // ── Lighting — warm-neutral studio quality ────────────────────────────────
+    scene.add(new THREE.AmbientLight(0xfff8f0, 0.75)); // soft warm ambient
+
+    const key = new THREE.DirectionalLight(0xffffff, 1.1);
+    key.position.set(8, 13, 9);
+    key.castShadow = true;
+    key.shadow.mapSize.set(2048, 2048);
+    key.shadow.camera.left = key.shadow.camera.bottom = -10;
+    key.shadow.camera.right = key.shadow.camera.top   =  10;
+    key.shadow.camera.near = 0.5;
+    key.shadow.camera.far  = 40;
+    scene.add(key);
+
+    // Subtle cool fill from opposite side (simulates sky bounce)
+    const fill = new THREE.DirectionalLight(0xe8eeff, 0.3);
+    fill.position.set(-6, 5, -4);
+    scene.add(fill);
+
+    // ── Hotspot overlay: project 3D → 2D each frame ──────────────────────────
+    function updateHotspots() {
+      const wrap = canvas.parentElement;
+      const W = wrap.clientWidth, H = wrap.clientHeight;
+
+      // Match the CSS min(480px, 100vw-32px) and min(360px, 55vh) values
+      const POPUP_W   = Math.min(480, W - 32);
+      const IMG_H     = Math.min(360, H * 0.55);
+      const POPUP_H   = IMG_H + 80;  // image + label + padding
+      const GAP       = 20;
+      const EDGE      = 16;           // minimum margin from viewport edge
+
+      HOTSPOTS.forEach(({ id, pos }) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const ndc = pos.clone().project(camera);
+        if (ndc.z >= 1) { el.style.visibility = 'hidden'; return; }
+        el.style.visibility = 'visible';
+
+        const x = (ndc.x + 1) / 2 * W;
+        const y = (-ndc.y + 1) / 2 * H;
+        el.style.left = x + 'px';
+        el.style.top  = y + 'px';
+
+        // ── Vertical: flip down when there's not enough room above ──────────
+        el.classList.toggle('flip-down', y < POPUP_H + GAP);
+
+        // ── Horizontal: clamp popup center so it never exits the viewport ───
+        // The popup is centered on the hotspot by default (translateX -50%).
+        // --px shifts the left: 50% anchor so the popup stays on screen.
+        const idealCenter  = x;
+        const clampedCenter = Math.max(POPUP_W / 2 + EDGE,
+                                       Math.min(W - POPUP_W / 2 - EDGE, idealCenter));
+        const px = clampedCenter - idealCenter;  // offset relative to hotspot
+        el.style.setProperty('--px', px + 'px');
+      });
+    }
+
+    // ── Resize ────────────────────────────────────────────────────────────────
+    function resize() {
+      const wrap = canvas.parentElement;
+      renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+      camera.aspect = wrap.clientWidth / wrap.clientHeight;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // ── Render loop ───────────────────────────────────────────────────────────
+    (function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+      updateHotspots(); // keep hotspot icons locked to their 3D positions
+    })();
+  </script>
 </body>
 </html>
