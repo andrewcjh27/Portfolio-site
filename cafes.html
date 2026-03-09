@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cafe Tours | Junho Choi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="naver-map-client-id" content="l4ebcs0mcq" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      background: #fdfdfb;
+      color: #111;
+      margin: 0;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      position: relative;
+    }
+
+    /* Header — light over the warm-white page */
+    .site-header {
+      background: rgba(253,253,251,0.62) !important;
+      border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .site-header .logo { color: #111; }
+    .site-header .hamburger svg { stroke: #111; }
+    .site-header .nav-link { color: #555; }
+    .site-header .nav-link:hover { background: rgba(0,0,0,0.05); color: #111; }
+    .site-header .nav-link.active { background: #111; color: #fff; }
+
+    /* Scroll animations */
+    .anim {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .anim.visible { opacity: 1; transform: translateY(0); }
+    .anim-d1 { transition-delay: 0.1s; }
+    .anim-d2 { transition-delay: 0.2s; }
+    .anim-d3 { transition-delay: 0.3s; }
+
+    /* ── Hero image strip ───────────────────────────────────── */
+    .cafe-hero-img {
+      --hero-top-gap: calc(86px + 1.1rem);
+      width: min(1460px, calc(100% - 0.8rem));
+      height: calc(100dvh - var(--hero-top-gap));
+      margin: var(--hero-top-gap) auto 0;
+      padding: 0;
+      border-radius: 0;
+      overflow: hidden;
+      position: relative;
+      background: transparent;
+      box-shadow: none;
+    }
+    .cafe-hero-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Second screen: overview panel ─────────────────── */
+    .cafe-overview {
+      background: #fff;
+      min-height: 100vh;
+      padding: clamp(2.2rem, 4.6vw, 4rem) 0 clamp(2.4rem, 4vw, 3.6rem);
+      display: flex;
+      align-items: stretch;
+    }
+    .cafe-overview-inner {
+      width: min(1240px, calc(100% - 4rem));
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(4.5rem, 11vh, 8.3rem);
+    }
+    .cafe-intro {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(540px, 1.8fr);
+      column-gap: clamp(2.8rem, 6.8vw, 7rem);
+      align-items: start;
+    }
+    .cafe-intro h1 {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: clamp(2.7rem, 4.8vw, 4.2rem);
+      font-weight: 650;
+      letter-spacing: -0.045em;
+      line-height: 0.96;
+      margin: 0;
+      max-width: 8ch;
+      color: #111;
+    }
+    .cafe-intro-paragraphs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1.6rem, 2.4vw, 2.8rem);
+      max-width: none;
+      margin: clamp(4.8rem, 12vh, 8rem) 0 0;
+    }
+    .cafe-intro-paragraphs p {
+      font-size: clamp(0.96rem, 1.08vw, 1.12rem);
+      line-height: 1.42;
+      color: #111;
+      font-weight: 520;
+      margin: 0;
+      max-width: 30ch;
+    }
+
+    /* ── Stats row ────────────────────────────────────────── */
+    .cafe-stats {
+      max-width: none;
+      margin: auto 0 clamp(3rem, 6.6vh, 5.5rem);
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(1.8rem, 3vw, 3.2rem);
+    }
+    .cafe-stat strong {
+      display: block;
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: clamp(3rem, 5.2vw, 4.8rem);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      color: #111;
+      line-height: 1;
+      margin-bottom: 0.44rem;
+    }
+    .cafe-stat span {
+      font-size: clamp(1.02rem, 1.16vw, 1.42rem);
+      color: #111;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-weight: 550;
+    }
+
+    /* ── Plotted on Naver section ────────────────────── */
+    .cafe-plotted {
+      background: #fff;
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      padding: clamp(2.2rem, 4.6vw, 4rem) 0 clamp(3rem, 4.8vw, 5rem);
+      display: grid;
+      grid-template-columns: minmax(250px, 0.88fr) minmax(540px, 1.52fr);
+      gap: clamp(1.8rem, 3.2vw, 3.5rem);
+      align-items: start;
+    }
+    .cafe-plotted-text {
+      padding-left: clamp(1.4rem, 3.2vw, 2.8rem);
+      padding-top: clamp(0.4rem, 1.4vw, 1.1rem);
+    }
+    .cafe-plotted-text h2 {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: clamp(2.9rem, 4.2vw, 4.4rem);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      line-height: 0.95;
+      margin: 0 0 0.95rem;
+      color: #111;
+    }
+    .naver-word { color: #03c75a; }
+    .cafe-plotted-text p {
+      font-size: clamp(0.96rem, 1.04vw, 1.08rem);
+      color: #111;
+      line-height: 1.38;
+      margin: 0 0 clamp(1.9rem, 2.8vw, 2.6rem);
+      max-width: 29ch;
+      font-weight: 530;
+    }
+    .cafe-plotted-link {
+      color: #111;
+      text-decoration: none;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: clamp(0.98rem, 1.02vw, 1.12rem);
+      font-weight: 560;
+      letter-spacing: -0.01em;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .cafe-plotted-link:hover { color: #444; }
+    .cafe-plotted-img {
+      height: clamp(420px, 48vw, 690px);
+      overflow: hidden;
+      background: #f6f6f4;
+    }
+    .cafe-plotted-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 55%;
+      display: block;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       MAP SECTION — full-bleed map + floating sidebar overlay
+       ══════════════════════════════════════════════════════════════════════ */
+    .cafe-map-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 780px;
+      background: #f0f0ee;
+      overflow: hidden;
+    }
+    #cafe-map {
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      overflow: hidden;
+      background: #f0f0ee;
+    }
+    #mapStatus {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      max-width: 360px;
+      z-index: 6;
+      border: 1px solid rgba(239,83,80,0.32);
+      background: rgba(253,235,234,0.95);
+      backdrop-filter: blur(6px);
+      color: #b53a37;
+      border-radius: 10px;
+      padding: 0.7rem 0.85rem;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    }
+    #mapStatus.hidden { display: none; }
+
+    /* ── Sidebar (floating card, left of map) ────────────── */
+    .cafe-sidebar {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      bottom: 1.5rem;
+      width: 500px;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .cafe-sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.4rem 0.8rem;
+    }
+    .cafe-sidebar-head h2 {
+      margin: 0;
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #111;
+    }
+    .cafe-sidebar-search-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f4f1ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+    }
+    .cafe-sidebar-search-icon svg { width: 16px; height: 16px; }
+
+    /* Tab toggle */
+    .cafe-sidebar-tabs {
+      display: flex;
+      gap: 0.3rem;
+      padding: 0.35rem;
+      background: #f4f1ec;
+      border-radius: 999px;
+      margin: 0 1.4rem 0.8rem;
+    }
+    .sidebar-tab {
+      flex: 1;
+      padding: 0.55rem 0.6rem;
+      border-radius: 999px;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: #666;
+      transition: background 0.2s, color 0.2s;
+    }
+    .sidebar-tab.active {
+      background: #111;
+      color: #fff;
+    }
+    .sidebar-tab:not(.active):hover {
+      color: #111;
+    }
+
+    .tab-pane {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.18) transparent;
+    }
+    .tab-pane.active { display: flex; }
+    .tab-pane::-webkit-scrollbar { width: 7px; }
+    .tab-pane::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.18); border-radius: 6px; }
+
+    /* ── Search pane ─────────────────────────────────────── */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.55rem;
+      padding: 0 1.4rem 0.7rem;
+    }
+    .field { display: flex; flex-direction: column; gap: 0.32rem; }
+    .field-label {
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+      font-weight: 600;
+    }
+    .search-input {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #ebe6dd;
+      background: #faf8f3;
+      padding: 0.6rem 0.7rem;
+      font-size: 0.86rem;
+      color: #111;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    .search-input::placeholder { color: #aaa; }
+    .search-input:focus {
+      border-color: #888;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+    }
+    .reset-btn {
+      align-self: flex-start;
+      border: 1px solid #ebe6dd;
+      background: transparent;
+      color: #555;
+      border-radius: 999px;
+      padding: 0.42rem 0.85rem;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .reset-btn:hover { background: #f4f1ec; color: #111; border-color: #d8d2c7; }
+
+    .chips {
+      display: flex;
+      gap: 0.32rem;
+      flex-wrap: wrap;
+      padding: 0.4rem 1.4rem 0.5rem;
+    }
+    .chip {
+      border: 1px solid #ebe6dd;
+      background: #faf8f3;
+      color: #555;
+      border-radius: 999px;
+      padding: 0.25rem 0.55rem;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.66rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      letter-spacing: 0.02em;
+    }
+    .chip:hover { border-color: #888; color: #111; }
+    .chip.active { background: #111; border-color: #111; color: #fff; }
+
+    .groups-wrap {
+      padding: 0.5rem 1rem 1rem;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .location-group {
+      border: 1px solid #ebe6dd;
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .location-group summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.7rem 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.7rem;
+      transition: background 0.2s;
+    }
+    .location-group summary::-webkit-details-marker { display: none; }
+    .location-group summary:hover { background: #faf8f3; }
+    .group-title { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+    .group-chevron {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid #ebe6dd;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.66rem;
+      color: #888;
+      background: #faf8f3;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .location-group[open] .group-chevron { transform: rotate(90deg); }
+    .group-name {
+      font-weight: 600;
+      color: #111;
+      font-size: 0.84rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .group-count {
+      color: #888;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.66rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .group-grid {
+      border-top: 1px solid #f0eee8;
+      padding: 0.5rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+      max-height: 340px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: #d8d2c7 transparent;
+    }
+    .group-grid::-webkit-scrollbar { width: 6px; }
+    .group-grid::-webkit-scrollbar-thumb { background: #d8d2c7; border-radius: 6px; }
+
+    .cafe-card {
+      border: 1px solid #f0eee8;
+      background: #fff;
+      border-radius: 12px;
+      padding: 0.7rem 0.8rem;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .cafe-card:hover {
+      border-color: #d8d2c7;
+      background: #faf8f3;
+    }
+    .cafe-card.active {
+      border-color: #111;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.06);
+      background: #fff;
+    }
+    .cafe-card-main {
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      width: 100%;
+      border-radius: 8px;
+      padding: 0;
+      text-align: left;
+      cursor: pointer;
+      display: grid;
+      gap: 0.3rem;
+      font-family: inherit;
+    }
+    .cafe-name {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #111;
+      line-height: 1.32;
+    }
+    .cafe-address {
+      color: #888;
+      font-size: 0.74rem;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .cafe-card-actions {
+      display: flex;
+      gap: 0.36rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .cafe-action-btn {
+      border: 1px solid #ebe6dd;
+      background: #fff;
+      color: #555;
+      border-radius: 999px;
+      padding: 0.3rem 0.6rem;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cafe-action-btn:hover {
+      border-color: #888;
+      color: #111;
+      background: #faf8f3;
+    }
+    .cafe-map-link { color: #111; }
+    .route-pick-btn.active {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+    }
+    .route-pick-btn.active:hover {
+      background: #000;
+      border-color: #000;
+      color: #fff;
+    }
+    .empty-state {
+      padding: 1.4rem 1.2rem;
+      text-align: center;
+      color: #888;
+      font-size: 0.82rem;
+      line-height: 1.55;
+    }
+
+    /* ── Route pane ────────────────────────────────────────── */
+    .route-toolbar {
+      padding: 0 1.4rem 0.7rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .route-selection-summary {
+      font-size: 0.82rem;
+      color: #555;
+      line-height: 1.45;
+    }
+    .route-actions { display: flex; gap: 0.4rem; }
+    .route-plan-btn {
+      flex: 1;
+      border: 1px solid #111;
+      background: #111;
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.55rem 0.85rem;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .route-plan-btn:hover { background: #000; border-color: #000; transform: translateY(-1px); }
+    .route-plan-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; background: #555; border-color: #555; }
+    .route-clear-btn { flex: 0 0 auto; }
+
+    .route-selected-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.42rem;
+      padding: 0.4rem 1.4rem 0.7rem;
+      max-height: 130px;
+      overflow-y: auto;
+    }
+    .route-selected-empty { color: #888; font-size: 0.78rem; }
+    .route-pick-chip {
+      border: 1px solid #ebe6dd;
+      background: #fff;
+      color: #111;
+      border-radius: 999px;
+      padding: 0.28rem 0.55rem;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.34rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .route-pick-chip:hover { border-color: #888; background: #faf8f3; }
+    .route-pick-chip-order { color: #888; font-weight: 700; font-size: 0.64rem; }
+    .route-pick-chip-remove { color: #aaa; font-size: 0.85rem; line-height: 1; }
+
+    .route-results {
+      flex: 1;
+      padding: 0.5rem 1.4rem 1.2rem;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .route-empty {
+      color: #888;
+      font-size: 0.8rem;
+      line-height: 1.55;
+      padding: 0.4rem 0;
+    }
+    .route-results-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.7rem;
+      align-items: baseline;
+      margin-bottom: 0.7rem;
+    }
+    .route-results-head strong {
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+    }
+    .route-total-distance {
+      color: #111;
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .route-stop-list {
+      list-style: none; padding: 0; margin: 0;
+      display: grid; gap: 0.5rem;
+    }
+    .route-stop { display: flex; gap: 0.55rem; align-items: center; }
+    .route-stop-focus {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #ebe6dd;
+      background: #fff;
+      color: #111;
+      border-radius: 12px;
+      padding: 0.55rem 0.7rem;
+      cursor: pointer;
+      display: flex;
+      gap: 0.55rem;
+      align-items: center;
+      text-align: left;
+      transition: border-color 0.2s, background 0.2s;
+      font-family: inherit;
+    }
+    .route-stop-focus:hover { border-color: #888; background: #faf8f3; }
+    .route-stop-index {
+      width: 1.5rem; height: 1.5rem;
+      border-radius: 50%;
+      border: 1px solid #d8d2c7;
+      color: #111;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.66rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .route-stop-main { min-width: 0; display: grid; gap: 0.14rem; }
+    .route-stop-name {
+      color: #111;
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .route-stop-meta {
+      color: #888;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.64rem;
+      line-height: 1.35;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .route-stop-distance {
+      color: #555;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      white-space: nowrap;
+      min-width: 3.6rem;
+      text-align: right;
+    }
+    .route-stop-distance.start { color: #aaa; }
+    .route-note {
+      margin: 0.7rem 0 0;
+      color: #888;
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: 0.66rem;
+      line-height: 1.45;
+    }
+
+    /* Naver popup styling */
+    .cafe-popup {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      width: 232px;
+      padding: 0;
+      animation: popupFadeUp 0.2s cubic-bezier(0.21, 1, 0.33, 1);
+      transform-origin: 50% 100%;
+    }
+    .cafe-popup-shell {
+      border: 1px solid #ebe6dd;
+      border-radius: 12px;
+      background: #fff;
+      padding: 0.7rem 0.8rem;
+      box-shadow: 0 14px 26px rgba(0,0,0,0.12);
+    }
+    .cafe-popup strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 0.86rem;
+      color: #111;
+      line-height: 1.32;
+    }
+    .cafe-popup span {
+      color: #666;
+      font-size: 0.74rem;
+      line-height: 1.45;
+      display: block;
+    }
+    @keyframes popupFadeUp {
+      from { opacity: 0; transform: translateY(6px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Footer ───────────────────────────────────────── */
+    .cafe-footer {
+      position: absolute;
+      right: 1.4rem;
+      bottom: 1rem;
+      left: auto;
+      z-index: 7;
+      pointer-events: auto;
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      padding: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #000;
+      border-top: none;
+      gap: 0.9rem;
+    }
+    .cafe-footer > div { display: flex; align-items: center; }
+    .cafe-footer a {
+      color: #000;
+      text-decoration: none;
+      margin-left: 0.9rem;
+    }
+    .cafe-footer a:hover { color: #000; }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 980px) {
+      .cafe-plotted {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        padding: 1.8rem 0 3rem;
+      }
+      .cafe-plotted-text { padding-top: 0; padding-left: 1.1rem; padding-right: 1.1rem; }
+      .cafe-plotted-text p { max-width: 38ch; margin-bottom: 1.4rem; }
+      .cafe-plotted-img { height: clamp(330px, 66vw, 560px); }
+      .cafe-overview { min-height: auto; padding: 2.2rem 0 2.4rem; }
+      .cafe-overview-inner { width: calc(100% - 2.2rem); gap: 3.2rem; }
+      .cafe-intro {
+        grid-template-columns: 1fr;
+        row-gap: 1.4rem;
+      }
+      .cafe-intro h1 { max-width: 11ch; }
+      .cafe-intro-paragraphs {
+        margin: 0;
+        gap: 1.2rem;
+      }
+      .cafe-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+      .cafe-sidebar {
+        position: relative;
+        top: auto; left: auto; bottom: auto;
+        width: calc(100% - 2rem);
+        margin: 1rem;
+        max-height: 60vh;
+      }
+      .cafe-map-section {
+        height: clamp(800px, 110vh, 1100px);
+        display: flex;
+        flex-direction: column;
+      }
+      #cafe-map {
+        flex: 1;
+        min-height: 380px;
+        height: auto;
+      }
+    }
+    @media (max-width: 640px) {
+      .cafe-hero-img {
+        --hero-top-gap: calc(86px + 0.8rem);
+        width: calc(100% - 0.5rem);
+        height: calc(100dvh - var(--hero-top-gap));
+        min-height: 0;
+        margin: var(--hero-top-gap) auto 0;
+        padding: 0;
+      }
+      .cafe-overview { padding: 1.5rem 0 1.7rem; }
+      .cafe-overview-inner { width: calc(100% - 1rem); gap: 2.2rem; }
+      .cafe-intro h1 { font-size: clamp(2.05rem, 8.4vw, 3rem); }
+      .cafe-intro-paragraphs {
+        grid-template-columns: 1fr;
+        margin-top: 0;
+      }
+      .cafe-stats { grid-template-columns: 1fr; gap: 1.1rem; }
+      .cafe-stat strong { font-size: clamp(2.8rem, 14vw, 3.5rem); }
+      .cafe-stat span { font-size: clamp(1rem, 5.4vw, 1.25rem); }
+      .cafe-plotted {
+        width: 100%;
+        padding: 1.15rem 0 2.35rem;
+      }
+      .cafe-plotted-img { height: clamp(250px, 72vw, 440px); }
+      .cafe-footer {
+        left: 1rem;
+        right: 1rem;
+        bottom: 0.8rem;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.38rem;
+        font-size: 0.76rem;
+      }
+      .cafe-footer a { margin-left: 0.65rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">JUNHO CHOI</div>
+    <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <nav class="nav">
+      <a href="index.html"      class="nav-link">About</a>
+      <a href="resume.html"     class="nav-link">Resume</a>
+      <a href="experience.html" class="nav-link">Experience</a>
+      <div class="nav-more">
+        <button class="nav-more-toggle nav-link active" type="button" aria-haspopup="true" aria-expanded="false">
+          More
+          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+        </button>
+        <div class="nav-more-panel" role="menu">
+          <div>
+            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-list">
+              <a href="design.html">Design</a>
+              <a href="photo.html">Photography</a>
+              <a href="cafes.html">Cafe Tours</a>
+              <a href="codes.html">Codes</a>
+              <a href="soccer.html">Soccer</a>
+            </div>
+          </div>
+          <a href="photo.html" class="nav-more-feature">
+            <h3>Photography &rarr;</h3>
+            <p>A growing visual diary of cities, water, and quiet moments.</p>
+          </a>
+          <div class="nav-more-footer">
+            <a href="resume.html">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ═══ Hero image strip ═══════════════════════════════════════════ -->
+  <div class="cafe-hero-img anim">
+    <img src="images/Cafes/cafe-hero.jpg" alt="Cafe at night" />
+  </div>
+
+  <!-- ═══ Intro + Stats (second screen) ══════════════════════════════ -->
+  <section class="cafe-overview">
+    <div class="cafe-overview-inner">
+      <section class="cafe-intro">
+        <h1 class="anim">Every cafe I&rsquo;ve<br>added to the list.</h1>
+        <div class="cafe-intro-paragraphs">
+          <p class="anim anim-d1">
+            I keep a running Naver bookmark folder of cafes &mdash; some I&rsquo;ve been to,
+            many I want to. This page reads from that folder and turns it into
+            something you can actually browse: search, filter, group by district,
+            see every spot on a map.
+          </p>
+          <p class="anim anim-d2">
+            The route planner uses a small TSP solver to take 3&ndash;7 cafes
+            you&rsquo;ve picked and order them by shortest straight-line path.
+            Useful when I have a free afternoon and want to chain two or three
+            in one walk.
+          </p>
+        </div>
+      </section>
+
+      <section class="cafe-stats">
+        <div class="cafe-stat anim">
+          <strong>200+</strong>
+          <span>Total Cafes</span>
+        </div>
+        <div class="cafe-stat anim anim-d1">
+          <strong>10+</strong>
+          <span>Location Groups</span>
+        </div>
+        <div class="cafe-stat anim anim-d2">
+          <strong>Million+</strong>
+          <span>Combinations of tours</span>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ═══ Plotted on Naver section ═══════════════════════════════════ -->
+  <section class="cafe-plotted">
+    <div class="cafe-plotted-text anim">
+      <h2>Plotted on <span class="naver-word">Naver</span>.</h2>
+      <p>
+        Your shared bookmark folder is plotted with custom markers.
+        Click any marker or list card to sync map focus.
+      </p>
+      <a class="cafe-plotted-link" href="https://naver.me/Grgzo9sq" target="_blank" rel="noopener">Open shared list &rarr;</a>
+    </div>
+    <div class="cafe-plotted-img anim anim-d1">
+      <img src="images/Cafes/cafe-interior.jpg" alt="Cafe interior" />
+    </div>
+  </section>
+
+  <!-- ═══ Map section (full-bleed) with sidebar overlay ═════════════ -->
+  <section class="cafe-map-section">
+    <div id="mapStatus" class="hidden"></div>
+    <div id="cafe-map"></div>
+
+    <aside class="cafe-sidebar anim">
+      <div class="cafe-sidebar-head">
+        <h2 id="sidebarTitle">Search the list</h2>
+        <span class="cafe-sidebar-search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="cafe-sidebar-tabs" role="tablist">
+        <button class="sidebar-tab active" type="button" data-tab="search" role="tab">Search the list</button>
+        <button class="sidebar-tab"        type="button" data-tab="route"  role="tab">Plan a tour</button>
+      </div>
+
+      <!-- ─ Search pane ─ -->
+      <div class="tab-pane active" data-pane="search">
+        <div class="controls-grid">
+          <label class="field" for="searchInput">
+            <span class="field-label">Search by name</span>
+            <input id="searchInput" class="search-input" type="search" placeholder="Try: 테라로사, 커스텀커피, onion..." autocomplete="off" />
+          </label>
+        </div>
+        <div class="chips" id="locationChips"></div>
+        <div class="groups-wrap" id="cafeGroups"></div>
+        <div class="empty-state" id="emptyState" hidden>No cafes matched your search. Try a shorter name or switch back to all locations.</div>
+      </div>
+
+      <!-- ─ Route pane ─ -->
+      <div class="tab-pane" data-pane="route">
+        <div class="route-toolbar">
+          <span class="route-selection-summary" id="routeSelectionSummary">Pick 3 to 7 cafes from the list to plan your tour.</span>
+          <div class="route-actions">
+            <button id="optimizeRouteBtn"      class="route-plan-btn"  type="button" disabled>Optimize route</button>
+            <button id="clearRouteSelection"   class="reset-btn route-clear-btn" type="button">Clear</button>
+          </div>
+        </div>
+        <div class="route-selected-list" id="routeSelectedList"></div>
+        <div class="route-results" id="routeResults"></div>
+      </div>
+    </aside>
+    <footer class="cafe-footer">
+      <span>&copy; 2026 Junho Choi</span>
+      <div>
+        <a href="mailto:andrewc27@berkeley.edu">Email</a>
+        <a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://instagram.com/andrew7choi" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </footer>
+  </section>
+
+  <script>
+    // ── Scroll fade-ins ─────────────────────────────────────────────
+    (function () {
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.anim').forEach(function (el) { io.observe(el); });
+      } else {
+        document.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
+      }
+    })();
+
+    // ── Sidebar tab toggle ──────────────────────────────────────────
+    (function () {
+      var tabs   = document.querySelectorAll('.sidebar-tab');
+      var panes  = document.querySelectorAll('.tab-pane');
+      var title  = document.getElementById('sidebarTitle');
+      var titles = { search: 'Search the list', route: 'Plan a tour' };
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var target = tab.dataset.tab;
+          tabs.forEach(function (t) { t.classList.toggle('active', t === tab); });
+          panes.forEach(function (p) { p.classList.toggle('active', p.dataset.pane === target); });
+          if (title && titles[target]) title.textContent = titles[target];
+        });
+      });
+    })();
+
+    var naverAuthFailed = false;
+    var onNaverAuthFailed = null;
+
+    window.navermap_authFailure = function() {
+      naverAuthFailed = true;
+      if (typeof onNaverAuthFailed === 'function') {
+        onNaverAuthFailed();
+      }
+    };
+  </script>
+
+  <script src="cafes-data.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      var mapElement = document.getElementById('cafe-map');
+      var mapStatusEl = document.getElementById('mapStatus');
+      var groupsEl = document.getElementById('cafeGroups');
+      var chipsEl = document.getElementById('locationChips');
+      var searchInput = document.getElementById('searchInput');
+      var emptyState = document.getElementById('emptyState');
+      var statTotal = document.getElementById('statTotal');
+      var statLocations = document.getElementById('statLocations');
+      var routeSelectionSummary = document.getElementById('routeSelectionSummary');
+      var routeSelectedList = document.getElementById('routeSelectedList');
+      var routeResults = document.getElementById('routeResults');
+      var clearRouteBtn = document.getElementById('clearRouteSelection');
+      var optimizeRouteBtn = document.getElementById('optimizeRouteBtn');
+
+      var collator = new Intl.Collator('ko');
+      var map = null;
+      var selectedCafeId = null;
+      var markerById = new Map();
+      var infoById = new Map();
+      var infoOpenTimer = null;
+      var routePolyline = null;
+      var routeSelectionIds = [];
+      var routePlan = null;
+
+      var state = {
+        search: '',
+        location: ''
+      };
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function normalizeCafe(raw, index) {
+        var lat = Number(raw && raw.lat);
+        var lng = Number(raw && raw.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+          return null;
+        }
+
+        var name = raw && raw.name ? String(raw.name).trim() : 'Untitled Cafe';
+        var address = raw && raw.address ? String(raw.address).trim() : '';
+
+        return {
+          id: String(index + 1),
+          name: name,
+          address: address,
+          lat: lat,
+          lng: lng,
+          sid: raw && raw.sid ? String(raw.sid) : '',
+          location: extractLocationLabel(address)
+        };
+      }
+
+      function extractLocationLabel(address) {
+        if (!address) return 'Unknown';
+
+        var normalized = address.replace(/\s+/g, ' ').trim();
+        if (!normalized) return 'Unknown';
+
+        if (/[가-힣]/.test(normalized)) {
+          var parts = normalized.split(' ');
+          if (parts[0] === '서울' && parts[1]) {
+            return '서울 ' + parts[1];
+          }
+
+          if ((parts[0] === '경기' || /도$/.test(parts[0])) && parts[1]) {
+            if (parts[2] && /(구|군|시)$/.test(parts[2])) {
+              return parts[0] + ' ' + parts[1] + ' ' + parts[2];
+            }
+            return parts[0] + ' ' + parts[1];
+          }
+
+          if (/시$/.test(parts[0]) && parts[1]) {
+            return parts[0] + ' ' + parts[1];
+          }
+
+          if (parts[0] && parts[1]) {
+            return parts[0] + ' ' + parts[1];
+          }
+
+          return parts[0] || 'Unknown';
+        }
+
+        var lower = normalized.toLowerCase();
+        if (lower.indexOf('bundang') > -1) return '경기 성남시 분당구';
+        if (lower.indexOf('seongnam') > -1) return '경기 성남시';
+        if (lower.indexOf('namyangju') > -1) return '경기 남양주시';
+        if (lower.indexOf('seocho') > -1) return '서울 서초구';
+        if (lower.indexOf('gangnam') > -1) return '서울 강남구';
+        if (lower.indexOf('seoul') > -1) return '서울';
+        if (lower.indexOf('gyeonggi') > -1) return '경기';
+
+        return normalized.split(/[\s,]+/).slice(0, 2).join(' ');
+      }
+
+      var cafes = (Array.isArray(window.CAFE_DATA) ? window.CAFE_DATA : [])
+        .map(normalizeCafe)
+        .filter(Boolean);
+      var cafeById = cafes.reduce(function(acc, cafe) {
+        acc[cafe.id] = cafe;
+        return acc;
+      }, Object.create(null));
+
+      var locationCountMap = cafes.reduce(function(acc, cafe) {
+        acc[cafe.location] = (acc[cafe.location] || 0) + 1;
+        return acc;
+      }, {});
+
+      var orderedLocations = Object.keys(locationCountMap).sort(function(a, b) {
+        var diff = locationCountMap[b] - locationCountMap[a];
+        return diff !== 0 ? diff : collator.compare(a, b);
+      });
+
+      if (!state.location && orderedLocations.length > 0) {
+        state.location = orderedLocations[0];
+      }
+
+      function formatCount(num) {
+        return Number(num || 0).toLocaleString();
+      }
+
+      function getFilteredCafes() {
+        var search = state.search.trim().toLowerCase();
+        return cafes.filter(function(cafe) {
+          var matchLocation = !state.location || cafe.location === state.location;
+          var matchName = !search || cafe.name.toLowerCase().indexOf(search) > -1;
+          return matchLocation && matchName;
+        });
+      }
+
+      function groupByLocation(list) {
+        return list.reduce(function(acc, cafe) {
+          if (!acc[cafe.location]) {
+            acc[cafe.location] = [];
+          }
+          acc[cafe.location].push(cafe);
+          return acc;
+        }, {});
+      }
+
+      function renderLocationChips() {
+        chipsEl.innerHTML = '';
+
+        orderedLocations.forEach(function(location) {
+          var chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'chip' + (state.location === location ? ' active' : '');
+          chip.textContent = location + ' (' + locationCountMap[location] + ')';
+          chip.dataset.location = location;
+          chipsEl.appendChild(chip);
+        });
+      }
+
+      function buildGroupSummary(location, items) {
+        return '<span class="group-title">' +
+          '<span class="group-chevron">›</span>' +
+          '<span class="group-name">' + escapeHtml(location) + '</span>' +
+          '</span>' +
+          '<span class="group-count">' + formatCount(items.length) + ' cafes</span>';
+      }
+
+      function isRouteSelected(cafeId) {
+        return routeSelectionIds.indexOf(cafeId) > -1;
+      }
+
+      function setRouteButtonState(button, selected) {
+        if (!button) return;
+        button.classList.toggle('active', selected);
+        button.textContent = selected ? 'Picked' : 'Pick for route';
+        button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      }
+
+      function syncRouteButtons() {
+        var routeButtons = document.querySelectorAll('.route-pick-btn');
+        routeButtons.forEach(function(button) {
+          setRouteButtonState(button, isRouteSelected(button.dataset.cafeId));
+        });
+      }
+
+      function renderRouteSelectionSummary() {
+        var picked = routeSelectionIds.length;
+        if (picked === 0) {
+          routeSelectionSummary.textContent = 'Pick 3 to 7 cafes from the list to plan your tour.';
+        } else if (picked < 3) {
+          routeSelectionSummary.textContent = formatCount(picked) + ' selected. Pick ' + (3 - picked) + ' more to optimize.';
+        } else {
+          routeSelectionSummary.textContent = formatCount(picked) + ' selected. Ready to optimize route order.';
+        }
+        optimizeRouteBtn.disabled = picked < 3;
+      }
+
+      function renderRouteSelectedList() {
+        routeSelectedList.innerHTML = '';
+
+        if (routeSelectionIds.length === 0) {
+          routeSelectedList.innerHTML = '<span class="route-selected-empty">No cafes picked yet.</span>';
+          return;
+        }
+
+        routeSelectionIds.forEach(function(cafeId, index) {
+          var cafe = cafeById[cafeId];
+          if (!cafe) return;
+
+          var chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'route-pick-chip';
+          chip.dataset.cafeId = cafeId;
+          chip.innerHTML =
+            '<span class="route-pick-chip-order">' + (index + 1) + '</span>' +
+            '<span>' + escapeHtml(cafe.name) + '</span>' +
+            '<span class="route-pick-chip-remove" aria-hidden="true">×</span>';
+          chip.title = 'Remove from route picks';
+          routeSelectedList.appendChild(chip);
+        });
+      }
+
+      function renderRouteResults(message) {
+        if (!routePlan || !Array.isArray(routePlan.orderIds) || routePlan.orderIds.length === 0) {
+          routeResults.innerHTML = '<div class="route-empty">' + escapeHtml(message || 'No route planned yet. Pick cafes and click Optimize Route.') + '</div>';
+          return;
+        }
+
+        var html =
+          '<div class="route-results-head">' +
+            '<strong>Optimized Order</strong>' +
+            '<span class="route-total-distance">' + formatDistance(routePlan.totalDistanceKm) + '</span>' +
+          '</div>' +
+          '<ol class="route-stop-list">';
+
+        routePlan.orderIds.forEach(function(cafeId, idx) {
+          var cafe = cafeById[cafeId];
+          if (!cafe) return;
+          var legLabel = idx === 0 ? 'Start' : formatDistance(routePlan.legDistancesKm[idx - 1]);
+
+          html +=
+            '<li class="route-stop">' +
+              '<button type="button" class="route-stop-focus" data-cafe-id="' + escapeHtml(cafe.id) + '">' +
+                '<span class="route-stop-index">' + (idx + 1) + '</span>' +
+                '<span class="route-stop-main">' +
+                  '<span class="route-stop-name">' + escapeHtml(cafe.name) + '</span>' +
+                  '<span class="route-stop-meta">' + escapeHtml(cafe.location || 'Unknown') + '</span>' +
+                '</span>' +
+              '</button>' +
+              '<span class="route-stop-distance' + (idx === 0 ? ' start' : '') + '">' + legLabel + '</span>' +
+            '</li>';
+        });
+
+        html +=
+          '</ol>' +
+          '<p class="route-note">Distance is estimated with straight-line segments between cafes; real routes can differ.</p>';
+
+        routeResults.innerHTML = html;
+      }
+
+      function invalidateRoutePlan(message) {
+        routePlan = null;
+        clearRoutePolyline();
+        syncMarkerVisibility();
+        renderRouteResults(message);
+      }
+
+      function toggleRouteSelection(cafeId) {
+        if (!cafeById[cafeId]) return;
+
+        var currentIndex = routeSelectionIds.indexOf(cafeId);
+        if (currentIndex > -1) {
+          routeSelectionIds.splice(currentIndex, 1);
+        } else {
+          if (routeSelectionIds.length >= 7) {
+            renderRouteResults('You can pick up to 7 cafes for one route.');
+            return;
+          }
+          routeSelectionIds.push(cafeId);
+        }
+
+        renderRouteSelectionSummary();
+        renderRouteSelectedList();
+        syncRouteButtons();
+        invalidateRoutePlan('Selection updated. Click Optimize Route to recalculate.');
+      }
+
+      function buildCard(cafe) {
+        var card = document.createElement('article');
+        card.className = 'cafe-card';
+        card.dataset.cafeId = cafe.id;
+
+        var mainBtn = document.createElement('button');
+        mainBtn.type = 'button';
+        mainBtn.className = 'cafe-card-main';
+        mainBtn.innerHTML =
+          '<span class="cafe-name">' + escapeHtml(cafe.name) + '</span>' +
+          '<span class="cafe-address">' + escapeHtml(cafe.address || 'Address unavailable') + '</span>';
+        mainBtn.addEventListener('click', function() {
+          focusCafe(cafe.id, true);
+        });
+
+        var actions = document.createElement('div');
+        actions.className = 'cafe-card-actions';
+
+        var mapBtn = document.createElement('button');
+        mapBtn.type = 'button';
+        mapBtn.className = 'cafe-action-btn cafe-map-link';
+        mapBtn.textContent = 'View on map';
+        mapBtn.addEventListener('click', function() {
+          focusCafe(cafe.id, true);
+        });
+
+        var routeBtn = document.createElement('button');
+        routeBtn.type = 'button';
+        routeBtn.className = 'cafe-action-btn route-pick-btn';
+        routeBtn.dataset.cafeId = cafe.id;
+        setRouteButtonState(routeBtn, isRouteSelected(cafe.id));
+        routeBtn.addEventListener('click', function() {
+          toggleRouteSelection(cafe.id);
+        });
+
+        actions.appendChild(mapBtn);
+        actions.appendChild(routeBtn);
+        card.appendChild(mainBtn);
+        card.appendChild(actions);
+
+        return card;
+      }
+
+      function renderCafeGroups() {
+        var filtered = getFilteredCafes();
+        var grouped = groupByLocation(filtered);
+
+        if (statTotal)     statTotal.textContent     = formatCount(cafes.length);
+        if (statLocations) statLocations.textContent = formatCount(orderedLocations.length);
+
+        groupsEl.innerHTML = '';
+
+        var activeLocations = orderedLocations.filter(function(location) {
+          return grouped[location] && grouped[location].length;
+        });
+
+        if (filtered.length === 0) {
+          emptyState.hidden = false;
+          return;
+        }
+
+        emptyState.hidden = true;
+
+        activeLocations.forEach(function(location) {
+          var items = grouped[location].slice().sort(function(a, b) {
+            return collator.compare(a.name, b.name);
+          });
+
+          var details = document.createElement('details');
+          details.className = 'location-group';
+          details.open = true;
+
+          var summary = document.createElement('summary');
+          summary.innerHTML = buildGroupSummary(location, items);
+          details.appendChild(summary);
+
+          var grid = document.createElement('div');
+          grid.className = 'group-grid';
+
+          items.forEach(function(cafe) {
+            grid.appendChild(buildCard(cafe));
+          });
+
+          details.appendChild(grid);
+          groupsEl.appendChild(details);
+        });
+
+        syncActiveCard();
+        syncRouteButtons();
+      }
+
+      function markerIcon(active) {
+        var bg = active ? '#111111' : '#ffffff';
+        var border = active ? '#111111' : '#cfcabf';
+        var cupStroke = active ? '#ffffff' : '#222222';
+        return {
+          content:
+            '<div style="width:32px;height:32px;border-radius:50%;background:' + bg + ';border:2px solid ' + border + ';box-shadow:0 4px 12px rgba(0,0,0,0.18);display:flex;align-items:center;justify-content:center;">' +
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="' + cupStroke + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 110 8h-1"/><path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>' +
+            '</div>',
+          size: new naver.maps.Size(32, 32),
+          anchor: new naver.maps.Point(16, 16)
+        };
+      }
+
+      function closeAllInfoWindows() {
+        if (infoOpenTimer) {
+          window.clearTimeout(infoOpenTimer);
+          infoOpenTimer = null;
+        }
+
+        infoById.forEach(function(info) {
+          info.close();
+        });
+      }
+
+      function syncActiveCard() {
+        var cards = document.querySelectorAll('.cafe-card');
+        cards.forEach(function(card) {
+          card.classList.toggle('active', card.dataset.cafeId === selectedCafeId);
+        });
+      }
+
+      function syncActiveMarker() {
+        if (!map || typeof naver === 'undefined' || !naver.maps) return;
+
+        markerById.forEach(function(marker, cafeId) {
+          marker.setIcon(markerIcon(cafeId === selectedCafeId));
+        });
+      }
+
+      function syncMarkerVisibility() {
+        if (!map || typeof naver === 'undefined' || !naver.maps) return;
+
+        var activeRouteIds = null;
+        if (routePlan && Array.isArray(routePlan.orderIds) && routePlan.orderIds.length > 0) {
+          activeRouteIds = Object.create(null);
+          routePlan.orderIds.forEach(function(cafeId) {
+            activeRouteIds[cafeId] = true;
+          });
+        }
+
+        markerById.forEach(function(marker, cafeId) {
+          var shouldShow = !activeRouteIds || !!activeRouteIds[cafeId];
+          var isShown = !!marker.getMap();
+          if (shouldShow && !isShown) {
+            marker.setMap(map);
+          } else if (!shouldShow && isShown) {
+            marker.setMap(null);
+          }
+        });
+
+        if (activeRouteIds && selectedCafeId && !activeRouteIds[selectedCafeId]) {
+          closeAllInfoWindows();
+        }
+      }
+
+      function findCafeCard(cafeId) {
+        return document.querySelector('.cafe-card[data-cafe-id="' + cafeId + '"]');
+      }
+
+      function ensureCafeVisibleInCurrentList(cafe) {
+        var card = findCafeCard(cafe.id);
+        if (card) return card;
+
+        var search = state.search.trim().toLowerCase();
+        var needsResetSearch = !!search && cafe.name.toLowerCase().indexOf(search) === -1;
+        var needsResetLocation = state.location !== cafe.location;
+
+        if (!needsResetSearch && !needsResetLocation) return null;
+
+        if (needsResetSearch) {
+          state.search = '';
+          searchInput.value = '';
+        }
+
+        if (needsResetLocation) {
+          state.location = cafe.location;
+        }
+
+        renderLocationChips();
+        renderCafeGroups();
+
+        return findCafeCard(cafe.id);
+      }
+
+      function scrollCardInsideGroup(activeCard) {
+        if (!activeCard) return;
+
+        var groupGrid = activeCard.closest('.group-grid');
+        if (!groupGrid) return;
+
+        var top = activeCard.offsetTop;
+        var bottom = top + activeCard.offsetHeight;
+        var viewTop = groupGrid.scrollTop;
+        var viewBottom = viewTop + groupGrid.clientHeight;
+
+        if (top < viewTop) {
+          groupGrid.scrollTo({ top: Math.max(0, top - 8), behavior: 'smooth' });
+          return;
+        }
+
+        if (bottom > viewBottom) {
+          groupGrid.scrollTo({ top: Math.max(0, bottom - groupGrid.clientHeight + 8), behavior: 'smooth' });
+        }
+      }
+
+      // Pan the map to a latlng but offset so the marker appears east of
+      // the sidebar (centered in the visible map area, not behind the panel).
+      function panToOffset(latlng, opts) {
+        if (!map || typeof naver === 'undefined' || !naver.maps) return;
+        var sb = document.querySelector('.cafe-sidebar');
+        var mobile = window.matchMedia && window.matchMedia('(max-width: 980px)').matches;
+        var duration = (opts && typeof opts.duration === 'number') ? opts.duration : 540;
+        if (mobile || !sb || sb.offsetWidth === 0) {
+          if (duration === 0) map.setCenter(latlng);
+          else                map.panTo(latlng, { duration: duration });
+          return;
+        }
+        try {
+          var sidebarRight = sb.offsetLeft + sb.offsetWidth;
+          var visibleCenterX = sidebarRight + (mapElement.offsetWidth - sidebarRight) / 2;
+          var dx = visibleCenterX - mapElement.offsetWidth / 2;
+          var proj = map.getProjection();
+          var center = proj.fromCoordToOffset(latlng);
+          center.x = center.x - dx;
+          var offsetLatLng = proj.fromOffsetToCoord(center);
+          if (duration === 0) map.setCenter(offsetLatLng);
+          else                map.panTo(offsetLatLng, { duration: duration });
+        } catch (e) {
+          if (duration === 0) map.setCenter(latlng);
+          else                map.panTo(latlng, { duration: duration });
+        }
+      }
+
+      function focusCafe(cafeId, openInfo) {
+        var cafe = cafeById[cafeId];
+        if (!cafe) return;
+
+        selectedCafeId = cafeId;
+        syncActiveMarker();
+
+        var activeCard = ensureCafeVisibleInCurrentList(cafe) || findCafeCard(cafeId);
+        syncActiveCard();
+
+        if (activeCard) {
+          var parentDetails = activeCard.closest('details');
+          if (parentDetails && !parentDetails.open) parentDetails.open = true;
+          scrollCardInsideGroup(activeCard);
+        }
+
+        if (!map) return;
+
+        var marker = markerById.get(cafeId);
+        var info = infoById.get(cafeId);
+
+        if (!marker) return;
+
+        panToOffset(marker.getPosition(), { duration: 540 });
+        if (map.getZoom() < 14) {
+          map.setZoom(14);
+        }
+
+        closeAllInfoWindows();
+        if (openInfo && info) {
+          infoOpenTimer = window.setTimeout(function() {
+            if (selectedCafeId === cafeId) {
+              info.open(map, marker);
+            }
+          }, 120);
+        }
+      }
+
+      function showMapStatus(message) {
+        mapStatusEl.textContent = message;
+        mapStatusEl.classList.remove('hidden');
+      }
+
+      function clearMapStatus() {
+        mapStatusEl.textContent = '';
+        mapStatusEl.classList.add('hidden');
+      }
+
+      function clearRoutePolyline() {
+        if (!routePolyline) return;
+        routePolyline.setMap(null);
+        routePolyline = null;
+      }
+
+      function drawRoutePolyline(orderIds) {
+        clearRoutePolyline();
+
+        if (!Array.isArray(orderIds) || orderIds.length < 2) return;
+        if (!map || typeof naver === 'undefined' || !naver.maps) return;
+
+        var path = orderIds.map(function(cafeId) {
+          var cafe = cafeById[cafeId];
+          if (!cafe) return null;
+          return new naver.maps.LatLng(cafe.lat, cafe.lng);
+        }).filter(Boolean);
+
+        if (path.length < 2) return;
+
+        routePolyline = new naver.maps.Polyline({
+          map: map,
+          path: path,
+          strokeColor: '#111111',
+          strokeOpacity: 0.85,
+          strokeWeight: 3
+        });
+      }
+
+      function toRadians(deg) {
+        return deg * Math.PI / 180;
+      }
+
+      function haversineDistanceKm(a, b) {
+        var earthRadiusKm = 6371;
+        var dLat = toRadians(b.lat - a.lat);
+        var dLng = toRadians(b.lng - a.lng);
+        var lat1 = toRadians(a.lat);
+        var lat2 = toRadians(b.lat);
+
+        var sinLat = Math.sin(dLat / 2);
+        var sinLng = Math.sin(dLng / 2);
+        var step =
+          sinLat * sinLat +
+          Math.cos(lat1) * Math.cos(lat2) * sinLng * sinLng;
+        var arc = 2 * Math.atan2(Math.sqrt(step), Math.sqrt(1 - step));
+
+        return earthRadiusKm * arc;
+      }
+
+      function formatDistance(km) {
+        if (!Number.isFinite(km)) return '-';
+        if (km < 1) return Math.round(km * 1000) + ' m';
+        return km >= 10 ? km.toFixed(1) + ' km' : km.toFixed(2) + ' km';
+      }
+
+      function buildDistanceMatrix(list) {
+        return list.map(function(fromCafe) {
+          return list.map(function(toCafe) {
+            if (fromCafe.id === toCafe.id) return 0;
+            return haversineDistanceKm(fromCafe, toCafe);
+          });
+        });
+      }
+
+      function solveShortestOpenPath(distanceMatrix) {
+        var size = distanceMatrix.length;
+        var bestDistance = Infinity;
+        var bestOrder = [];
+
+        function dfs(order, usedMask, distanceSoFar) {
+          if (distanceSoFar >= bestDistance) return;
+
+          if (order.length === size) {
+            bestDistance = distanceSoFar;
+            bestOrder = order.slice();
+            return;
+          }
+
+          for (var idx = 0; idx < size; idx += 1) {
+            if (usedMask & (1 << idx)) continue;
+            var additional = order.length > 0
+              ? distanceMatrix[order[order.length - 1]][idx]
+              : 0;
+            order.push(idx);
+            dfs(order, usedMask | (1 << idx), distanceSoFar + additional);
+            order.pop();
+          }
+        }
+
+        dfs([], 0, 0);
+
+        return {
+          order: bestOrder,
+          totalDistanceKm: bestDistance
+        };
+      }
+
+      function optimizeRouteSelection() {
+        if (routeSelectionIds.length < 3) {
+          renderRouteResults('Pick at least 3 cafes to optimize.');
+          return;
+        }
+
+        var selectedCafes = routeSelectionIds.map(function(cafeId) {
+          return cafeById[cafeId];
+        }).filter(Boolean);
+
+        var distanceMatrix = buildDistanceMatrix(selectedCafes);
+        var solved = solveShortestOpenPath(distanceMatrix);
+
+        var orderIds = solved.order.map(function(index) {
+          return selectedCafes[index].id;
+        });
+
+        var legDistancesKm = [];
+        for (var i = 1; i < solved.order.length; i += 1) {
+          legDistancesKm.push(distanceMatrix[solved.order[i - 1]][solved.order[i]]);
+        }
+
+        routePlan = {
+          orderIds: orderIds,
+          legDistancesKm: legDistancesKm,
+          totalDistanceKm: solved.totalDistanceKm
+        };
+
+        renderRouteResults();
+        syncMarkerVisibility();
+        drawRoutePolyline(orderIds);
+
+        if (orderIds[0]) {
+          focusCafe(orderIds[0], true);
+        }
+      }
+
+      function getNaverClientId() {
+        var meta = document.querySelector('meta[name="naver-map-client-id"]');
+        if (meta && meta.content && meta.content.trim()) {
+          return meta.content.trim();
+        }
+
+        if (window.NAVER_MAP_CLIENT_ID && String(window.NAVER_MAP_CLIENT_ID).trim()) {
+          return String(window.NAVER_MAP_CLIENT_ID).trim();
+        }
+
+        return '';
+      }
+
+      function loadNaverSdk(clientId) {
+        return new Promise(function(resolve, reject) {
+          if (typeof naver !== 'undefined' && naver.maps) {
+            resolve();
+            return;
+          }
+
+          var script = document.createElement('script');
+          script.src = 'https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' + encodeURIComponent(clientId);
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = function() {
+            reject(new Error('Naver SDK failed to load'));
+          };
+          document.head.appendChild(script);
+        });
+      }
+
+      function initMap() {
+        if (typeof naver === 'undefined' || !naver.maps) {
+          showMapStatus('Naver Maps SDK is not available. Your cafe list still works in the sidebar.');
+          return;
+        }
+
+        if (naverAuthFailed) {
+          showMapStatus('Naver API authentication failed. Check your map key ID and Web service URL settings.');
+          return;
+        }
+
+        var firstCafe = cafes[0];
+        var centerLat = firstCafe ? firstCafe.lat : 37.5665;
+        var centerLng = firstCafe ? firstCafe.lng : 126.9780;
+
+        try {
+          map = new naver.maps.Map(mapElement, {
+            center: new naver.maps.LatLng(centerLat, centerLng),
+            zoom: 12,
+            scrollWheel: false,
+            zoomControl: true,
+            zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT }
+          });
+        } catch (err) {
+          showMapStatus('Failed to initialize Naver map. Your cafe list is still available in the sidebar.');
+          return;
+        }
+
+        cafes.forEach(function(cafe) {
+          var position = new naver.maps.LatLng(cafe.lat, cafe.lng);
+          var marker = new naver.maps.Marker({
+            position: position,
+            map: map,
+            icon: markerIcon(false),
+            title: cafe.name
+          });
+
+          var info = new naver.maps.InfoWindow({
+            content:
+              '<div class="cafe-popup">' +
+                '<div class="cafe-popup-shell">' +
+                  '<strong>' + escapeHtml(cafe.name) + '</strong>' +
+                  '<span>' + escapeHtml(cafe.address || 'Address unavailable') + '</span>' +
+                '</div>' +
+              '</div>',
+            borderWidth: 0,
+            backgroundColor: 'transparent',
+            anchorColor: '#ffffff',
+            anchorSize: new naver.maps.Size(10, 10),
+            pixelOffset: new naver.maps.Point(0, -14)
+          });
+
+          markerById.set(cafe.id, marker);
+          infoById.set(cafe.id, info);
+
+          naver.maps.Event.addListener(marker, 'click', function() {
+            focusCafe(cafe.id, true);
+          });
+        });
+
+        clearMapStatus();
+        syncMarkerVisibility();
+
+        // Apply initial sidebar offset so the focus marker isn't hidden behind the panel.
+        var initialFocusCafe = firstCafe;
+        if (routePlan && Array.isArray(routePlan.orderIds) && routePlan.orderIds.length > 0) {
+          initialFocusCafe = cafeById[routePlan.orderIds[0]] || firstCafe;
+        }
+        if (initialFocusCafe) {
+          panToOffset(new naver.maps.LatLng(initialFocusCafe.lat, initialFocusCafe.lng), { duration: 0 });
+        }
+
+        if (routePlan && routePlan.orderIds && routePlan.orderIds.length > 1) {
+          drawRoutePolyline(routePlan.orderIds);
+        }
+      }
+
+      function renderAll() {
+        renderLocationChips();
+        renderCafeGroups();
+      }
+
+      chipsEl.addEventListener('click', function(event) {
+        var chip = event.target.closest('.chip');
+        if (!chip) return;
+
+        state.location = chip.dataset.location || state.location;
+        renderLocationChips();
+        renderCafeGroups();
+      });
+
+      searchInput.addEventListener('input', function() {
+        state.search = searchInput.value || '';
+        renderCafeGroups();
+      });
+
+      routeSelectedList.addEventListener('click', function(event) {
+        var chip = event.target.closest('.route-pick-chip');
+        if (!chip) return;
+        toggleRouteSelection(chip.dataset.cafeId);
+      });
+
+      routeResults.addEventListener('click', function(event) {
+        var stopButton = event.target.closest('.route-stop-focus');
+        if (!stopButton) return;
+        focusCafe(stopButton.dataset.cafeId, true);
+      });
+
+      clearRouteBtn.addEventListener('click', function() {
+        if (routeSelectionIds.length === 0) {
+          renderRouteResults('No picks to clear yet.');
+          return;
+        }
+        routeSelectionIds = [];
+        renderRouteSelectionSummary();
+        renderRouteSelectedList();
+        syncRouteButtons();
+        invalidateRoutePlan('Selection cleared. Pick 3 to 7 cafes to plan a route.');
+      });
+
+      optimizeRouteBtn.addEventListener('click', function() {
+        optimizeRouteSelection();
+      });
+
+      renderRouteSelectionSummary();
+      renderRouteSelectedList();
+      renderRouteResults();
+
+      if (cafes.length === 0) {
+        showMapStatus('No cafes were found in the shared bookmark data.');
+        if (statTotal)     statTotal.textContent     = '0';
+        if (statLocations) statLocations.textContent = '0';
+        emptyState.hidden = false;
+        emptyState.textContent = 'No cafes were loaded from the shared bookmark list.';
+        clearRouteBtn.disabled = true;
+        optimizeRouteBtn.disabled = true;
+        routeSelectionSummary.textContent = 'No cafes available for route planning.';
+        renderRouteSelectedList();
+        renderRouteResults('No cafes available for route planning.');
+        return;
+      }
+
+      renderAll();
+
+      onNaverAuthFailed = function() {
+        showMapStatus('Naver API authentication failed. Check map key ID and allowed Web service URL.');
+      };
+
+      if (window.location.hostname === '0.0.0.0') {
+        var fixedUrl = new URL(window.location.href);
+        fixedUrl.hostname = 'localhost';
+        window.location.replace(fixedUrl.toString());
+        return;
+      }
+
+      if (window.location.protocol === 'file:') {
+        showMapStatus('Naver Maps requires HTTP(S), not file://. Run this page from localhost or your deployed domain.');
+        return;
+      }
+
+      var clientId = getNaverClientId();
+
+      if (!clientId) {
+        showMapStatus('Missing Naver map key ID. Add it in meta[name="naver-map-client-id"] or window.NAVER_MAP_CLIENT_ID.');
+        return;
+      }
+
+      loadNaverSdk(clientId)
+        .then(initMap)
+        .catch(function() {
+          showMapStatus('Could not load Naver Maps SDK. Your searchable cafe list still works in the sidebar.');
+        });
+    });
+  </script>
+
+  <script src="nav.js"></script>
+</body>
+</html>
