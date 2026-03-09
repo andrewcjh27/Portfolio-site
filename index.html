@@ -2,97 +2,322 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>About Me | Junho Choi</title>
+  <title>Junho Choi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/jpeg" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Home page overrides ──────────────────────────────────────────────── */
+    html {
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      background: #000;
+      scroll-behavior: smooth;
+    }
+    body {
+      height: auto;
+      overflow: visible;
+      background: #000;
+    }
+
+    .site-header {
+      background: rgba(255, 255, 255, 0.96) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.055) !important;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .site-header.dark-header {
+      background: rgba(0, 0, 0, 0.85) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    .site-header.dark-header .logo { color: #eee; }
+    .site-header.dark-header .nav-link { color: #aaa; }
+    .site-header.dark-header .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .site-header.dark-header .nav-link.active { background: #fff; color: #111; }
+
+    /* ── Slide 1: Hero ──────────────────────────────────────────────────── */
+    .slide-hero {
+      position: relative;
+      height: 100vh;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .home-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-top: calc(57px + 7rem);
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .home-icon {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 1.0rem;
+      flex-shrink: 0;
+    }
+
+    .home-title {
+      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont,
+                   "Helvetica Neue", sans-serif;
+      font-size: clamp(2.4rem, 4vw, 4rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: #0f0f0f;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
+    }
+
+    .home-sub {
+      font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, sans-serif;
+      font-size: clamp(0.9rem, 1.1vw, 1.02rem);
+      color: #888;
+      line-height: 1.7;
+      white-space: nowrap;
+      font-weight: 400;
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    .home-visual {
+      display: flex;
+      justify-content: center;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      margin-top: -4.0rem;
+    }
+
+    .phone-mockup {
+      width: auto;
+      height: 260%;
+      max-height: none;
+      object-fit: contain;
+      object-position: top center;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.12));
+      /* zoom transform applied by JS — origin set dynamically to target shirt */
+      transform-origin: center 32%;
+      transition: none;
+      will-change: transform;
+    }
+
+    /* Hero text fades out on scroll */
+    .home-text-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      will-change: opacity, transform;
+    }
+
+    /* ── Slide 2: Black section ─────────────────────────────────────────── */
+    .slide-dark {
+      position: relative;
+      min-height: 100vh;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem;
+      color: #fff;
+    }
+
+    .dark-content {
+      max-width: 640px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .dark-content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .dark-content h2 {
+      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      line-height: 1.15;
+    }
+
+    .dark-content p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .dark-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+    }
+
+    .dark-link {
+      display: inline-block;
+      padding: 0.6rem 1.6rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .dark-link:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    /* Scroll hint arrow on first slide */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      animation: bounce 2s ease-in-out infinite;
+      opacity: 0.4;
+    }
+    .scroll-hint svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: #333;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── Mobile ──────────────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .home-wrap { padding-top: calc(57px + 2.5rem); }
+      .home-icon { width: 70px; height: 70px; }
+      .dark-content h2 { font-size: 1.8rem; }
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
+  <header class="site-header" id="siteHeader">
     <div class="logo">Junho Choi</div>
     <nav class="nav">
-      <a href="index.html" class="nav-link active">About</a>
+      <a href="index.html"  class="nav-link active">About</a>
       <a href="design.html" class="nav-link">Design</a>
-      <a href="photo.html" class="nav-link">Photography</a>
-      <a href="cafes.html" class="nav-link">Cafe Tours</a>
-      <a href="room.html" class="nav-link">Room Tour</a>
-      <a href="codes.html" class="nav-link">Codes</a>
+      <a href="photo.html"  class="nav-link">Photography</a>
+      <a href="cafes.html"  class="nav-link">Cafe Tours</a>
+      <a href="room.html"   class="nav-link">Room Tour</a>
+      <a href="codes.html"  class="nav-link">Codes</a>
+      <a href="soccer.html" class="nav-link">Soccer</a>
     </nav>
   </header>
 
-  <main class="page">
-    <!-- Hero -->
-    <section class="hero hero-home">
-      <div class="hero-text">
-        <p class="eyebrow">Portfolio</p>
-        <h1>Hi, I’m Junho.</h1>
-        <p>
-          I’m a student in Berkeley who loves designing interfaces, taking photos,
-          exploring cafes, and making small cozy spaces feel intentional.
-        </p>
-        <p>
-          This site is where I collect my design work, cafe tour logs, room
-          interiors, and everyday photos.
-        </p>
-        <div class="hero-actions">
-          <a href="design.html" class="button-primary">View design projects</a>
-          <a href="about.html" class="button-ghost">More about me</a>
-        </div>
+  <!-- ── Slide 1: White hero ───────────────────────────────────────────── -->
+  <section class="slide-hero" id="slideHero">
+    <div class="home-wrap">
+      <div class="home-text-group" id="homeText">
+        <img src="images/user.png" alt="User icon" class="home-icon" />
+        <h1 class="home-title">Hi, I'm Junho.</h1>
+        <p class="home-sub">This site is where I collect my work, hobbies, and everyday photos.</p>
       </div>
-  
-      <div class="hero-photo">
-        <div class="hero-photo-frame">
-          <!-- Replace with a real image path -->
-          <img src="images/home-hero.jpg" alt="Junho’s desk and notebook" />
-        </div>
-        <p class="hero-caption">
-          Currently: coding, drawing layouts, and rating lattes around Berkeley.
-        </p>
+      <div class="home-visual">
+        <img src="images/phone-mockup.png" alt="Junho Choi" class="phone-mockup" id="phoneMockup" />
       </div>
-    </section>
-  
-    <!-- Now / intro -->
-    <section class="section section-now">
-      <h2>What I’m doing now</h2>
-      <p>
-        I’m experimenting with interface design, building small apps, and
-        documenting the spaces I spend time in – from cafe corners to my own
-        room.
-      </p>
-    </section>
-  
-    <!-- Quick links to your sections -->
-    <section class="section">
-      <h2>Explore this site</h2>
-      <div class="grid">
-        <article class="card">
-          <h3>Design projects</h3>
-          <p>UI ideas, app concepts, and visual experiments I’m learning from.</p>
-          <a href="design.html" class="card-link">Go to design →</a>
-        </article>
-        <article class="card">
-          <h3>Photography</h3>
-          <p>Photos from walks and cafe visits, focusing on light and small details.</p>
-          <a href="photo.html" class="card-link">Go to photography →</a>
-        </article>
-        <article class="card">
-          <h3>Cafe tours</h3>
-          <p>Logs of cafes I visit with notes on vibe, drinks, and favorite seats.</p>
-          <a href="cafes.html" class="card-link">Go to cafe tours →</a>
-        </article>
-        <article class="card">
-          <h3>Room interiors</h3>
-          <p>How I’m arranging my room to feel like a tiny studio and reading nook.</p>
-          <a href="room.html" class="card-link">Go to room →</a>
-        </article>
-      </div>
-    </section>
-  </main>
-  
+    </div>
+    <div class="scroll-hint" id="scrollHint">
+      <svg viewBox="0 0 24 24"><polyline points="6,9 12,15 18,9"/></svg>
+    </div>
+  </section>
 
-  <footer class="site-footer">
-    <p>© 2026 Junho C</p>
-  </footer>
+  <!-- ── Slide 2: Black section ────────────────────────────────────────── -->
+  <section class="slide-dark" id="slideDark">
+    <div class="dark-content" id="darkContent">
+      <h2>Explore my world.</h2>
+      <p>Design, photography, code, cafe tours, and more — all in one place.</p>
+      <div class="dark-links">
+        <a href="design.html" class="dark-link">Design</a>
+        <a href="photo.html"  class="dark-link">Photography</a>
+        <a href="cafes.html"  class="dark-link">Cafe Tours</a>
+        <a href="room.html"   class="dark-link">Room Tour</a>
+        <a href="codes.html"  class="dark-link">Codes</a>
+        <a href="soccer.html" class="dark-link">Soccer</a>
+      </div>
+    </div>
+  </section>
 
+  <script>
+    (function() {
+      const hero     = document.getElementById('slideHero');
+      const phone    = document.getElementById('phoneMockup');
+      const homeText = document.getElementById('homeText');
+      const header   = document.getElementById('siteHeader');
+      const hint     = document.getElementById('scrollHint');
+      const darkC    = document.getElementById('darkContent');
+
+      // Scroll-driven zoom: as user scrolls through the hero section,
+      // the phone scales up (zooming into the shirt area) and text fades out.
+      // By the time slide 2 is in view, the phone has zoomed enough that
+      // its dark shirt fills the screen, creating a seamless transition to black.
+
+      function onScroll() {
+        const scrollY  = window.scrollY;
+        const heroH    = hero.offsetHeight;
+        const progress = Math.min(Math.max(scrollY / heroH, 0), 1); // 0→1
+
+        // Phone zoom: scale from 1 → 12 targeting the shirt area
+        // Use eased progress so it accelerates into the zoom
+        const eased = progress * progress;
+        const scale = 1 + eased * 11;
+        phone.style.transform = 'scale(' + scale + ')';
+
+        // Text fades out quickly in the first 30% of scroll
+        const textFade = 1 - Math.min(progress / 0.3, 1);
+        homeText.style.opacity = textFade;
+        homeText.style.transform = 'translateY(' + (-progress * 60) + 'px)';
+
+        // Scroll hint fades out
+        hint.style.opacity = Math.max(0.4 - progress * 2, 0);
+
+        // Hero background transitions white → black (accelerates with zoom)
+        const bgProgress = Math.min(progress * 1.5, 1);
+        const bg = Math.round(255 * (1 - bgProgress * bgProgress));
+        hero.style.background = 'rgb(' + bg + ',' + bg + ',' + bg + ')';
+
+        // Header switches to dark mode when past 60%
+        if (progress > 0.6) {
+          header.classList.add('dark-header');
+        } else {
+          header.classList.remove('dark-header');
+        }
+
+        // Dark content fades in when slide 2 is in view
+        const darkStart = heroH * 0.8;
+        if (scrollY > darkStart) {
+          darkC.classList.add('visible');
+        } else {
+          darkC.classList.remove('visible');
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll(); // init
+    })();
+  </script>
   <script src="script.js"></script>
 </body>
 </html>

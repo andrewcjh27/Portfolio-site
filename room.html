@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>My Room | Junho Choi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <style>
     /* ── Full-page room override ──────────────────────────────────────────── */
@@ -49,7 +50,7 @@
       z-index: 10;
     }
 
-    /* ── Hotspot markers ─────────────────────────────────────────────────── */
+    /* ── Hotspot dot markers ─────────────────────────────────────────────── */
     .hotspot {
       position: absolute;
       transform: translate(-50%, -50%);
@@ -58,91 +59,121 @@
     }
 
     .hs-btn {
-      width: 34px;
-      height: 34px;
-      background: rgba(22, 22, 20, 0.85);
-      border: 1.5px solid rgba(220, 212, 198, 0.7);
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.92);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
       cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-      animation: hs-pulse 2.8s ease-in-out infinite;
+      transition: transform 0.2s ease;
+      animation: hs-pulse 3s ease-in-out infinite;
       user-select: none;
       -webkit-user-select: none;
     }
 
-    .hs-btn:hover { transform: scale(1.18); }
+    .hs-btn:hover { transform: scale(1.7); }
 
     @keyframes hs-pulse {
-      0%, 100% { box-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 0 0 0 rgba(220,212,198,0.5); }
-      50%       { box-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 0 0 10px rgba(220,212,198,0); }
+      0%, 100% { box-shadow: 0 0 0 0   rgba(255, 255, 255, 0.55); }
+      50%       { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);    }
     }
 
-    /* ── Popup card — full-focus, viewport-safe ──────────────────────────── */
-    .hs-popup {
+    /* ── Full-screen lightbox ────────────────────────────────────────────── */
+    .room-lightbox {
       position: absolute;
-      /* --px is set by JS to clamp horizontal position within viewport      */
-      left: calc(50% + var(--px, 0px));
-      bottom: calc(100% + 20px);
-      transform: translateX(-50%) translateY(16px);
-      /* Responsive width: up to 480px but never wider than the screen       */
-      width: min(480px, calc(100vw - 32px));
-      background: rgba(14, 14, 12, 0.94);
-      border: 1px solid rgba(218, 208, 190, 0.16);
-      border-radius: 20px;
-      padding: 0.6rem 0.6rem 1rem;
-      box-shadow: 0 28px 72px rgba(0, 0, 0, 0.72),
-                  0 0 0 1px rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      inset: 0;
+      display: flex;
+      align-items: stretch;
+      background: rgba(8, 8, 7, 0.94);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 50;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease,
-                  transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
-      z-index: 20;
+      transition: opacity 0.45s ease;
     }
-
-    .hotspot:hover .hs-popup,
-    .hotspot.open   .hs-popup {
+    .room-lightbox.visible {
       opacity: 1;
       pointer-events: auto;
-      transform: translateX(-50%) translateY(0);
     }
 
-    /* Flip below when not enough space above */
-    .hotspot.flip-down .hs-popup {
-      bottom: auto;
-      top: calc(100% + 20px);
-      transform: translateX(-50%) translateY(-16px);
+    /* Photo side — left 62% */
+    .lb-photo {
+      flex: 0 0 62%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a09;
+      padding: 32px;
+      box-sizing: border-box;
     }
-    .hotspot.flip-down:hover .hs-popup,
-    .hotspot.flip-down.open  .hs-popup {
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .hs-popup img {
-      width: 100%;
-      /* Tall image: up to 55% of viewport height so it always fits on screen */
-      height: min(360px, 55vh);
-      object-fit: cover;
-      border-radius: 14px;
+    .lb-photo img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
       display: block;
-      background: #28251f;
+      border-radius: 6px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.55s ease 0.1s,
+                  transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+    }
+    .room-lightbox.visible .lb-photo img {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .hs-label {
-      display: block;
-      margin-top: 0.7rem;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
+    /* Text side — right 38% */
+    .lb-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 56px;
+      border-left: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .lb-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: rgba(205, 196, 180, 0.65);
-      text-align: center;
-      font-family: system-ui, -apple-system, sans-serif;
-      padding-bottom: 0.1rem;
+      color: rgba(200, 192, 178, 0.45);
+      margin: 0 0 18px;
+      font-family: system-ui, sans-serif;
+    }
+    .lb-title {
+      font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      color: rgba(248, 244, 238, 0.95);
+      margin: 0 0 22px;
+      font-family: system-ui, sans-serif;
+      line-height: 1.18;
+    }
+    .lb-desc {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: rgba(195, 187, 172, 0.65);
+      margin: 0 0 44px;
+      font-family: system-ui, sans-serif;
+    }
+    .lb-close {
+      align-self: flex-start;
+      padding: 0.55rem 1.6rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      color: rgba(220, 213, 200, 0.8);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-family: system-ui, sans-serif;
+    }
+    .lb-close:hover {
+      background: rgba(255, 255, 255, 0.13);
+      color: rgba(248, 244, 238, 1);
     }
   </style>
 </head>
@@ -150,11 +181,13 @@
   <header class="site-header">
     <div class="logo">Junho Choi</div>
     <nav class="nav">
-      <a href="index.html" class="nav-link">About</a>
+      <a href="index.html"  class="nav-link">About</a>
       <a href="design.html" class="nav-link">Design</a>
-      <a href="photo.html" class="nav-link">Photography</a>
-      <a href="cafes.html" class="nav-link">Cafe Tours</a>
-      <a href="room.html" class="nav-link active">Room</a>
+      <a href="photo.html"  class="nav-link">Photography</a>
+      <a href="cafes.html"  class="nav-link">Cafe Tours</a>
+      <a href="room.html"   class="nav-link active">Room Tour</a>
+      <a href="codes.html"  class="nav-link">Codes</a>
+      <a href="soccer.html" class="nav-link">Soccer</a>
     </nav>
   </header>
 
@@ -165,72 +198,29 @@
     <!-- ── Hotspots ── hover to see a photo of that room section ───────── -->
     <!-- 💡 To swap a photo: change the src="images/..." on each hotspot   -->
 
-    <!-- Desk left -->
-    <div class="hotspot" id="hs-desk1">
-      <div class="hs-btn">🔍</div>
-      <div class="hs-popup">
-        <img src="images/Room/IMG_5183.JPG" alt="Desk left" />
-        <span class="hs-label">Desk-Left</span>
+    <!-- Dot markers — click to zoom in and open photo panel -->
+    <div class="hotspot" id="hs-desk1"><div class="hs-btn"></div></div>
+    <div class="hotspot" id="hs-desk2"><div class="hs-btn"></div></div>
+    <div class="hotspot" id="hs-desk3"><div class="hs-btn"></div></div>
+    <div class="hotspot" id="hs-bedside"><div class="hs-btn"></div></div>
+    <div class="hotspot" id="hs-corner1"><div class="hs-btn"></div></div>
+    <div class="hotspot" id="hs-corner2"><div class="hs-btn"></div></div>
+    <div class="hotspot" id="hs-projector"><div class="hs-btn"></div></div>
+
+    <!-- Full-screen lightbox (shown on dot click) -->
+    <div class="room-lightbox" id="room-lightbox">
+      <div class="lb-photo">
+        <img id="lb-img" src="" alt="" />
+      </div>
+      <div class="lb-text">
+        <p class="lb-eyebrow">My Room</p>
+        <h2 class="lb-title" id="lb-title"></h2>
+        <p class="lb-desc"  id="lb-desc"></p>
+        <button class="lb-close" id="lb-close-btn">← Back to room</button>
       </div>
     </div>
 
-    <!-- Desk mid -->
-    <div class="hotspot" id="hs-desk2">
-      <div class="hs-btn">🔍</div>
-      <div class="hs-popup">
-        <img src="images/Room/IMG_5182.JPG" alt="Desk mid" />
-        <span class="hs-label">Desk-Middle</span>
-      </div>
-    </div>
-
-    <!-- Desk right -->
-    <div class="hotspot" id="hs-desk3">
-      <div class="hs-btn">🔍</div>
-      <div class="hs-popup">
-        <img src="images/Room/IMG_5184.JPG" alt="Desk right" />
-        <span class="hs-label">Desk-Right</span>
-      </div>
-    </div>
-
-    <!-- Bed & nightstand -->
-    <div class="hotspot" id="hs-bedside">
-      <div class="hs-btn">🔍</div>
-      <div class="hs-popup">
-        <img src="images/Room/IMG_5213.JPG" alt="Bed & nightstand" />
-        <span class="hs-label">Bed &amp; nightstand</span>
-      </div>
-    </div>
-
-    <!-- Corner Shelf -->
-    <div class="hotspot" id="hs-corner1">
-      <div class="hs-btn">🔍</div>
-      <div class="hs-popup">
-        <img src="images/Room/IMG_5214.JPG" alt="Corner 1" />
-        <span class="hs-label">Corner Shelf</span>
-      </div>
-    </div>
-
-
-    <!-- Corner Lamp -->
-    <div class="hotspot" id="hs-corner2">
-        <div class="hs-btn">🔍</div>
-        <div class="hs-popup">
-          <img src="images/Room/IMG_5181.JPG" alt="Corner 2" />
-          <span class="hs-label">Corner Lamp</span>
-        </div>
-      </div>
-
-    
-    <!-- Projector -->
-    <div class="hotspot" id="hs-projector">
-        <div class="hs-btn">🔍</div>
-        <div class="hs-popup">
-          <img src="images/Room/IMG_5180.JPG" alt="Projector" />
-          <span class="hs-label">Projector</span>
-        </div>
-      </div>
-
-    <div class="room-hint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Hover 🔍 for photos</div>
+    <div class="room-hint">🖱 Drag to rotate &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Click · to explore</div>
   </div>
 
   <script src="script.js"></script>
@@ -274,42 +264,136 @@
     controls.maxDistance = 18;
     controls.target.set(0, 1, 0);
 
-    // ── Hotspot 3D anchor positions (updated for CAD layout) ─────────────────
-    // Each pos is the world-space point the 🔍 icon will float above.
-    // Adjust x/y/z here if you want to reposition a marker.
+    // ── Hotspot data — pos, photo, title and description ─────────────────────
+    // To reposition a dot: change the Vector3 values (x = left/right, y = height, z = front/back)
+    // To update a photo:   change the src string
+    // To update text:      change title / desc
     const HOTSPOTS = [
-      { id: 'hs-desk1',   pos: new THREE.Vector3(1.0,  1.0,  2.6)    },  // centre of main room
-      { id: 'hs-desk2',    pos: new THREE.Vector3(0,  1.0,  2.6)  },  // back-left zone
-      { id: 'hs-desk3',  pos: new THREE.Vector3(-1.0,  1.0,  2.6)  },  // back-left corner
-      { id: 'hs-bedside', pos: new THREE.Vector3(-1.5,  1.0,  -0.1)  },  // right section
-      { id: 'hs-corner1', pos: new THREE.Vector3(3.2,  0.5,   -1.2)  },  // right section
-      { id: 'hs-corner2', pos: new THREE.Vector3(3.9,  1.7,   -2.3)  },  // right section
-      { id: 'hs-projector', pos: new THREE.Vector3(1.0,  1.0,  -1.5)  },  // right section
+      {
+        id:    'hs-desk1',
+        pos:   new THREE.Vector3(1.0, 1.0, 2.6),
+        src:   'images/Room/IMG_5183.JPG',
+        title: 'Desk — Left',
+        desc:  'The left side of my workspace. Kept clean and minimal for focused work sessions.'
+      },
+      {
+        id:    'hs-desk2',
+        pos:   new THREE.Vector3(0, 1.0, 2.6),
+        src:   'images/Room/IMG_5182.JPG',
+        title: 'Desk — Centre',
+        desc:  'Main work area. The centre of the setup where everything comes together.'
+      },
+      {
+        id:    'hs-desk3',
+        pos:   new THREE.Vector3(-1.0, 1.0, 2.6),
+        src:   'images/Room/IMG_5184.JPG',
+        title: 'Desk — Right',
+        desc:  'Right side of the desk. Extra space for notes, books, or whatever the day calls for.'
+      },
+      {
+        id:    'hs-bedside',
+        pos:   new THREE.Vector3(-1.5, 1.0, -0.1),
+        src:   'images/Room/IMG_5213.JPG',
+        title: 'Bed & Nightstand',
+        desc:  'Cozy corner for winding down. A good lamp and a few things within reach is all you need.'
+      },
+      {
+        id:    'hs-corner1',
+        pos:   new THREE.Vector3(3.2, 0.5, -1.2),
+        src:   'images/Room/IMG_5214.JPG',
+        title: 'Corner Shelf',
+        desc:  'A shelf filled with small things that matter — books, objects, and a bit of personality.'
+      },
+      {
+        id:    'hs-corner2',
+        pos:   new THREE.Vector3(3.9, 1.7, -2.3),
+        src:   'images/Room/IMG_5181.JPG',
+        title: 'Corner Lamp',
+        desc:  'Warm ambient lighting to balance the room at night. Details in the corners make the space.'
+      },
+      {
+        id:    'hs-projector',
+        pos:   new THREE.Vector3(1.0, 1.0, -1.5),
+        src:   'images/Room/IMG_5180.JPG',
+        title: 'Projector',
+        desc:  'For films, shows, and the occasional late-night playlist visualiser. Big screen, small room.'
+      },
     ];
 
-    // ── Mobile: tap icon to toggle popup ─────────────────────────────────────
-    document.querySelectorAll('.hotspot').forEach(el => {
+    // ── Camera animation state ────────────────────────────────────────────────
+    const CAM_HOME_POS    = new THREE.Vector3(9, 7, 8);
+    const CAM_HOME_TARGET = new THREE.Vector3(0, 1, 0);
+    let camAnim = null;
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    function animCam(toPos, toTarget, duration, onDone) {
+      camAnim = {
+        t0:    performance.now(),
+        dur:   duration,
+        fp:    camera.position.clone(),
+        ft:    controls.target.clone(),
+        toPos: toPos.clone(),
+        toTgt: toTarget.clone(),
+        cb:    onDone || null
+      };
+    }
+
+    // ── Lightbox helpers ──────────────────────────────────────────────────────
+    const lightbox  = document.getElementById('room-lightbox');
+    const lbImg     = document.getElementById('lb-img');
+    const lbTitle   = document.getElementById('lb-title');
+    const lbDesc    = document.getElementById('lb-desc');
+    const lbCloseBtn = document.getElementById('lb-close-btn');
+
+    function openLightbox(hs) {
+      lbImg.src          = hs.src;
+      lbTitle.textContent = hs.title;
+      lbDesc.textContent  = hs.desc;
+      lightbox.classList.add('visible');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('visible');
+      // Animate camera back home
+      animCam(CAM_HOME_POS, CAM_HOME_TARGET, 900, () => {
+        controls.enabled = true;
+      });
+    }
+
+    lbCloseBtn.addEventListener('click', closeLightbox);
+    // Also close on backdrop click (clicking the photo side)
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox || e.target === lbImg) closeLightbox();
+    });
+
+    // ── Dot click → zoom in → open lightbox ──────────────────────────────────
+    HOTSPOTS.forEach(hs => {
+      const el = document.getElementById(hs.id);
+      if (!el) return;
       el.querySelector('.hs-btn').addEventListener('click', e => {
         e.stopPropagation();
-        const wasOpen = el.classList.contains('open');
-        document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('open'));
-        if (!wasOpen) el.classList.add('open');
+        controls.enabled = false;
+
+        // Move camera to a point ~3 units away from the hotspot, same angle
+        const dir     = new THREE.Vector3().subVectors(camera.position, hs.pos).normalize();
+        const zoomPos = new THREE.Vector3().addVectors(hs.pos, dir.multiplyScalar(3.2));
+        zoomPos.y     = Math.max(zoomPos.y, 1.2); // stay above floor
+
+        animCam(zoomPos, hs.pos, 950, () => openLightbox(hs));
       });
     });
-    document.addEventListener('click', () =>
-      document.querySelectorAll('.hotspot').forEach(h => h.classList.remove('open'))
-    );
 
     // ── Materials — CAD dark-theme palette ───────────────────────────────────
     const wall = new THREE.MeshStandardMaterial({
-      color: 0xf0ece2,    // light warm plaster — matches photo reference
-      roughness: 0.6,
+      color: 0xffffff,    // pure white
+      roughness: 0.55,
       metalness: 0.0,
       side: THREE.DoubleSide
     });
     const floor = new THREE.MeshStandardMaterial({
-      color: 0xe9e5db,    // same warm off-white, fractionally more muted for the slab
-      roughness: 0.92,
+      color: 0x1a1816,    // dark warm charcoal
+      roughness: 0.96,
     });
 
     // ── Geometry helper ───────────────────────────────────────────────────────
@@ -404,37 +488,14 @@
       const wrap = canvas.parentElement;
       const W = wrap.clientWidth, H = wrap.clientHeight;
 
-      // Match the CSS min(480px, 100vw-32px) and min(360px, 55vh) values
-      const POPUP_W   = Math.min(480, W - 32);
-      const IMG_H     = Math.min(360, H * 0.55);
-      const POPUP_H   = IMG_H + 80;  // image + label + padding
-      const GAP       = 20;
-      const EDGE      = 16;           // minimum margin from viewport edge
-
       HOTSPOTS.forEach(({ id, pos }) => {
         const el = document.getElementById(id);
         if (!el) return;
-
         const ndc = pos.clone().project(camera);
         if (ndc.z >= 1) { el.style.visibility = 'hidden'; return; }
         el.style.visibility = 'visible';
-
-        const x = (ndc.x + 1) / 2 * W;
-        const y = (-ndc.y + 1) / 2 * H;
-        el.style.left = x + 'px';
-        el.style.top  = y + 'px';
-
-        // ── Vertical: flip down when there's not enough room above ──────────
-        el.classList.toggle('flip-down', y < POPUP_H + GAP);
-
-        // ── Horizontal: clamp popup center so it never exits the viewport ───
-        // The popup is centered on the hotspot by default (translateX -50%).
-        // --px shifts the left: 50% anchor so the popup stays on screen.
-        const idealCenter  = x;
-        const clampedCenter = Math.max(POPUP_W / 2 + EDGE,
-                                       Math.min(W - POPUP_W / 2 - EDGE, idealCenter));
-        const px = clampedCenter - idealCenter;  // offset relative to hotspot
-        el.style.setProperty('--px', px + 'px');
+        el.style.left = ((ndc.x + 1) / 2 * W) + 'px';
+        el.style.top  = ((-ndc.y + 1) / 2 * H) + 'px';
       });
     }
 
@@ -451,9 +512,19 @@
     // ── Render loop ───────────────────────────────────────────────────────────
     (function animate() {
       requestAnimationFrame(animate);
+
+      // Tick camera animation (zoom in / zoom out)
+      if (camAnim) {
+        const t = Math.min((performance.now() - camAnim.t0) / camAnim.dur, 1);
+        const e = easeOutCubic(t);
+        camera.position.lerpVectors(camAnim.fp, camAnim.toPos, e);
+        controls.target.lerpVectors(camAnim.ft, camAnim.toTgt, e);
+        if (t >= 1) { const cb = camAnim.cb; camAnim = null; if (cb) cb(); }
+      }
+
       controls.update();
       renderer.render(scene, camera);
-      updateHotspots(); // keep hotspot icons locked to their 3D positions
+      updateHotspots();
     })();
   </script>
 </body>

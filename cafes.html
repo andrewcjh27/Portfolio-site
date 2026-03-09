@@ -2,60 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Cafe Tours | Junho C</title>
+  <title>Cafe Tours | Junho Choi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Main site styles -->
+  <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Leaflet map styles -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
+  <style>
+    body { background: #ffffff; }
+    .site-header {
+      background: rgba(255, 255, 255, 0.96) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.055) !important;
+    }
+    #naver-map {
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .site-footer { border-top: 1px solid rgba(0, 0, 0, 0.06); }
+  </style>
 </head>
-<script
-  type="text/javascript"
-  src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oxk2p3pllg"
-></script>
-<script src="script.js"></script>
-</body>
-</html>
 <body>
   <header class="site-header">
-    <div class="logo">Junho C</div>
+    <div class="logo">Junho Choi</div>
     <nav class="nav">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="about.html" class="nav-link">About</a>
+      <a href="index.html"  class="nav-link">About</a>
       <a href="design.html" class="nav-link">Design</a>
-      <a href="photo.html" class="nav-link">Photography</a>
-      <a href="cafes.html" class="nav-link active">Cafe Tours</a>
-      <a href="room.html" class="nav-link">Room Tour</a>
+      <a href="photo.html"  class="nav-link">Photography</a>
+      <a href="cafes.html"  class="nav-link active">Cafe Tours</a>
+      <a href="room.html"   class="nav-link">Room Tour</a>
+      <a href="codes.html"  class="nav-link">Codes</a>
+      <a href="soccer.html" class="nav-link">Soccer</a>
     </nav>
   </header>
 
   <main class="page">
     <section class="section">
       <h1>Cafe tours (Naver Map)</h1>
-      <p>Zoom and drag around. I’ll pin cafes I visit here.</p>
+      <p>Zoom and drag around. I'll pin cafes I visit here.</p>
       <div id="naver-map"></div>
     </section>
   </main>
-  
+
   <footer class="site-footer">
-    <p>© 2026 Junho C</p>
+    <p>&copy; 2026 Junho Choi</p>
   </footer>
 
-  <!-- Leaflet JS -->
+  <script
+    type="text/javascript"
+    src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=oxk2p3pllg"
+  ></script>
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIJ5H1A7CqT6tG2aXbEgm/9p1+1r/tU="
     crossorigin=""
   ></script>
-
-  <!-- Your site JS (handles nav active + cafes map markers) -->
   <script src="script.js"></script>
 </body>
 </html>

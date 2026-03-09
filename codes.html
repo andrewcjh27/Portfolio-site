@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Codes | Junho Choi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: #ffffff; }
+    .site-header {
+      background: rgba(255, 255, 255, 0.96) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.055) !important;
+    }
+    .site-footer { border-top: 1px solid rgba(0, 0, 0, 0.06); }
+
+    /* ── Codes page styles ─────────────────────────────────────────────────── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .project-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.6rem 1.5rem;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    .project-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.45rem;
+      color: #111;
+    }
+
+    .project-card p {
+      font-size: 0.88rem;
+      color: #666;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: #f0f0f0;
+      color: #555;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #333;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .project-link:hover { color: #000; }
+
+    .project-link svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    @media (max-width: 640px) {
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">Junho Choi</div>
+    <nav class="nav">
+      <a href="index.html"  class="nav-link">About</a>
+      <a href="design.html" class="nav-link">Design</a>
+      <a href="photo.html"  class="nav-link">Photography</a>
+      <a href="cafes.html"  class="nav-link">Cafe Tours</a>
+      <a href="room.html"   class="nav-link">Room Tour</a>
+      <a href="codes.html"  class="nav-link active">Codes</a>
+      <a href="soccer.html" class="nav-link">Soccer</a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <h1>Codes</h1>
+      <p>A collection of projects I've built — from web apps to experiments. Source on GitHub.</p>
+    </section>
+
+    <section class="section">
+      <div class="project-grid">
+
+        <!-- ── Card 1 ──────────────────────────────────────────────────────── -->
+        <article class="project-card">
+          <h3>Portfolio Site</h3>
+          <p>This very site — a minimal portfolio built from scratch with vanilla HTML, CSS, and Three.js for the interactive room tour.</p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Three.js</span>
+          </div>
+          <a class="project-link" href="https://github.com/junhochoi" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            View on GitHub
+          </a>
+        </article>
+
+        <!-- ── Card 2 ──────────────────────────────────────────────────────── -->
+        <article class="project-card">
+          <h3>Project Two</h3>
+          <p>Replace this with your second project description — what it does, what you learned, and the stack you used.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Flask</span>
+          </div>
+          <a class="project-link" href="https://github.com/junhochoi" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            View on GitHub
+          </a>
+        </article>
+
+        <!-- ── Card 3 ──────────────────────────────────────────────────────── -->
+        <article class="project-card">
+          <h3>Project Three</h3>
+          <p>Replace this with your third project description — tools, purpose, and key takeaways.</p>
+          <div class="project-tags">
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">MongoDB</span>
+          </div>
+          <a class="project-link" href="https://github.com/junhochoi" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            View on GitHub
+          </a>
+        </article>
+
+        <!--
+          To add more projects, copy a <article class="project-card"> block
+          and update the h3, p, tags, and GitHub link.
+        -->
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Junho Choi</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
