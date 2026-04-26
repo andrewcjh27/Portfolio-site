@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resume | Junho Choi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { background: #fff; }
+
+    /* ── Header (light over hero, dark over body) ───────────────────── */
+    .site-header {
+      background: rgba(255,255,255,0.96) !important;
+      border-bottom: 1px solid rgba(0,0,0,0.055) !important;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      transition: background 0.5s, border-color 0.5s;
+    }
+    .site-header.dark-header {
+      background: rgba(0,0,0,0.88) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    .site-header.dark-header .logo { color: #eee; }
+    .site-header.dark-header .hamburger svg { stroke: #ccc; }
+    .site-header.dark-header .nav-link { color: #aaa; }
+    .site-header.dark-header .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .site-header.dark-header .nav-link.active { background: #fff; color: #111; }
+
+    /* ── Animations ─────────────────────────────────────────────────── */
+    .anim {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .anim.visible { opacity: 1; transform: translateY(0); }
+    .anim-d1 { transition-delay: 0.08s; }
+    .anim-d2 { transition-delay: 0.16s; }
+    .anim-d3 { transition-delay: 0.24s; }
+    .anim-d4 { transition-delay: 0.32s; }
+
+    /* ══════════════════════════════════════════════════════════════════
+       Hero (white)
+       ══════════════════════════════════════════════════════════════════ */
+    .resume-hero {
+      min-height: 80vh;
+      padding: 120px 4% 6rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+    }
+    .resume-eyebrow {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 1.5rem;
+    }
+    .resume-title {
+      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
+      font-size: clamp(4rem, 11vw, 11rem);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
+      color: #000;
+    }
+    .resume-meta {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.4rem;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .resume-meta a {
+      color: #555;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .resume-meta a:hover { color: #111; border-color: #111; }
+    .resume-meta-dot {
+      color: #c0c0c0;
+    }
+    .resume-download {
+      margin-top: 2.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.75rem 1.6rem;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 999px;
+      color: #111;
+      text-decoration: none;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.92rem;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      align-self: flex-start;
+    }
+    .resume-download:hover {
+      background: #111;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+    .resume-download svg {
+      width: 16px; height: 16px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       Body sections (black)
+       ══════════════════════════════════════════════════════════════════ */
+    .resume-body {
+      background: #000;
+      color: #fff;
+    }
+
+    .resume-section {
+      padding: 5rem 4%;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+    .resume-section:first-child { border-top: none; }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(180px, 220px) 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .section-label {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      padding-top: 0.6rem;
+    }
+    .section-content { max-width: 880px; }
+
+    /* Education / Skills compact entries */
+    .entry {
+      margin-bottom: 2.4rem;
+    }
+    .entry:last-child { margin-bottom: 0; }
+
+    .entry-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+    .entry-title {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+    }
+    .entry-date {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .entry-sub {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 0.9rem;
+    }
+    .entry-sub strong {
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .entry-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .entry-list li {
+      position: relative;
+      padding-left: 1.4rem;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.65;
+      margin-bottom: 0.75rem;
+    }
+    .entry-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.7em;
+      width: 14px;
+      height: 1px;
+      background: rgba(255,255,255,0.4);
+    }
+    .entry-list strong {
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* Skills two-column grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem 2.5rem;
+    }
+    .skill-row dt {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 0.4rem;
+    }
+    .skill-row dd {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.98rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* Project subgroups */
+    .project-group {
+      margin-bottom: 2.5rem;
+    }
+    .project-group:last-child { margin-bottom: 0; }
+    .project-group-label {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 1.3rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .project-card {
+      margin-bottom: 1.6rem;
+    }
+    .project-card:last-child { margin-bottom: 0; }
+    .project-name {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 0.55rem;
+      letter-spacing: -0.005em;
+    }
+    .project-card .entry-list li {
+      font-size: 0.92rem;
+      margin-bottom: 0.55rem;
+    }
+
+    /* Footer */
+    .resume-footer {
+      background: #000;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 3rem 4% 2.5rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.85rem;
+    }
+    .resume-footer a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      margin: 0 0.8rem;
+      transition: color 0.2s;
+    }
+    .resume-footer a:hover { color: #fff; }
+
+    /* ── Mobile ─────────────────────────────────────────────────────── */
+    @media (max-width: 820px) {
+      .resume-hero { padding: 100px 6% 4rem; min-height: 60vh; }
+      .resume-title { font-size: 4.2rem; }
+      .section-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .entry-head { flex-direction: column; gap: 0.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="logo">JUNHO CHOI</div>
+    <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')">
+      <svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <nav class="nav">
+      <a href="index.html"      class="nav-link">About</a>
+      <a href="resume.html"     class="nav-link active">Resume</a>
+      <a href="experience.html" class="nav-link">Experience</a>
+      <div class="nav-more">
+        <button class="nav-more-toggle nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+          More
+          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+        </button>
+        <div class="nav-more-panel" role="menu">
+          <div>
+            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-list">
+              <a href="design.html">Design</a>
+              <a href="photo.html">Photography</a>
+              <a href="cafes.html">Cafes</a>
+              <a href="codes.html">Codes</a>
+              <a href="soccer.html">Soccer</a>
+            </div>
+          </div>
+          <a href="photo.html" class="nav-more-feature">
+            <h3>Photography &rarr;</h3>
+            <p>A growing visual diary of cities, water, and quiet moments.</p>
+          </a>
+          <div class="nav-more-footer">
+            <a href="resume.html">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ═══ Hero ════════════════════════════════════════════════════════ -->
+  <section class="resume-hero" id="heroSection">
+    <div class="resume-eyebrow anim">Resume — Spring 2026</div>
+    <h1 class="resume-title anim anim-d1">Junho<br>Andrew Choi</h1>
+    <div class="resume-meta anim anim-d2">
+      <span>Berkeley, CA</span>
+      <span class="resume-meta-dot">·</span>
+      <a href="tel:+15107349646">510-734-9646</a>
+      <span class="resume-meta-dot">·</span>
+      <a href="mailto:andrewc27@berkeley.edu">andrewc27@berkeley.edu</a>
+      <span class="resume-meta-dot">·</span>
+      <a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <a class="resume-download anim anim-d3"
+       href="Resume (Spring 2026 - D).pdf"
+       download="Junho_Choi_Resume.pdf">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Download PDF
+    </a>
+  </section>
+
+  <!-- ═══ Body ═══════════════════════════════════════════════════════ -->
+  <main class="resume-body">
+
+    <!-- Education -->
+    <section class="resume-section">
+      <div class="section-grid">
+        <div class="section-label anim">01 — Education</div>
+        <div class="section-content">
+          <div class="entry anim anim-d1">
+            <div class="entry-head">
+              <h2 class="entry-title">University of California, Berkeley</h2>
+              <span class="entry-date">Expected May 2027</span>
+            </div>
+            <p class="entry-sub">
+              <strong>Bachelor of Arts (B.A.)</strong> — Data Science, Integrative Biology<br>
+              Berkeley Certificate in Design Innovation
+            </p>
+            <ul class="entry-list">
+              <li><strong>Coursework:</strong> Data Structures, Principles &amp; Techniques of Data Science, Probability for Data Science, Optimization Modeling, Structure and Interpretation of Computer Programs, Multivariable Calculus, Linear Algebra &amp; Differential Equations, General Biology, Organic Chemistry</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="resume-section">
+      <div class="section-grid">
+        <div class="section-label anim">02 — Skills</div>
+        <div class="section-content">
+          <dl class="skills-grid">
+            <div class="skill-row anim anim-d1">
+              <dt>Programming</dt>
+              <dd>Python, R, Java, SQL</dd>
+            </div>
+            <div class="skill-row anim anim-d2">
+              <dt>ML / Data Science</dt>
+              <dd>PyTorch, Scikit-learn, NumPy, Pandas, SHAP, EDA, Feature Engineering, Model Evaluation, Visualization</dd>
+            </div>
+            <div class="skill-row anim anim-d3">
+              <dt>Systems &amp; Tools</dt>
+              <dd>Git, React, Vite, Figma, Jupyter, Microsoft Office Suite, Photoshop</dd>
+            </div>
+            <div class="skill-row anim anim-d4">
+              <dt>Bioinformatics &amp; Lab</dt>
+              <dd>PCR, FACS Analysis, HPLC, Cell Culturing, In-vivo Testing</dd>
+            </div>
+            <div class="skill-row anim anim-d4">
+              <dt>Languages</dt>
+              <dd>Korean, Mandarin</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="resume-section">
+      <div class="section-grid">
+        <div class="section-label anim">03 — Experience</div>
+        <div class="section-content">
+
+          <div class="entry anim anim-d1">
+            <div class="entry-head">
+              <h2 class="entry-title">AI Research Intern</h2>
+              <span class="entry-date">May 2025 — Aug. 2025</span>
+            </div>
+            <p class="entry-sub"><strong>Asan Medical Center (AMC)</strong>, Seoul, Republic of Korea</p>
+            <ul class="entry-list">
+              <li>Processed and analyzed high-dimensional clinical datasets in Python and Jupyter to identify key data patterns, informing feature selection and team strategy in a multi-institutional classification challenge to <strong>place 7th</strong>.</li>
+              <li>Built automated data preprocessing pipelines for 3D medical imaging and clinical records to streamline data preparation across multiple modalities, reducing manual processing time for the research team.</li>
+              <li>Implemented interpretability techniques (<strong>SHAP, Grad-CAM</strong>) to validate model outputs and communicate feature importance to non-technical stakeholders, increasing trust in data-driven clinical predictions.</li>
+            </ul>
+          </div>
+
+          <div class="entry anim anim-d2">
+            <div class="entry-head">
+              <h2 class="entry-title">IT Consultant — Mozilla Firefox</h2>
+              <span class="entry-date">Aug. 2025 — Feb. 2026</span>
+            </div>
+            <p class="entry-sub"><strong>Invention Corps of Berkeley</strong></p>
+            <ul class="entry-list">
+              <li>Engineered a Firefox performance monitoring extension using <strong>React and Vite</strong> that tracked, filtered, and sorted 50+ concurrent tabs by memory and CPU usage in real time, helping users identify and manage high-resource processes.</li>
+              <li>Led user research through surveys to assess Adaptive Performance perceptions, analyzing feedback to translate user needs into feature requirements and UI designs in <strong>Figma</strong>, collaborating with 12 team members across frontend and backend tracks.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="resume-section">
+      <div class="section-grid">
+        <div class="section-label anim">04 — Projects</div>
+        <div class="section-content">
+
+          <div class="project-group anim anim-d1">
+            <div class="project-group-label">Data Science &amp; Optimization</div>
+
+            <div class="project-card">
+              <h3 class="project-name">AI Tactical Assistant</h3>
+              <ul class="entry-list">
+                <li>Designed and trained a neural network using <strong>PyTorch</strong> to predict match outcomes from collected historical player and team data, improving prediction accuracy through feature engineering and hyperparameter tuning.</li>
+                <li>Built a constrained optimization system using <strong>PuLP linear programming</strong> to automate team formation decisions based on model predictions, leading to <strong>winning a 6v6 soccer league</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="project-card">
+              <h3 class="project-name">Geospatial Route Optimizer</h3>
+              <ul class="entry-list">
+                <li>Developed a route optimization engine using <strong>depth-first search with branch-and-bound pruning</strong> to compute pairwise distances across 200+ real-world coordinates, identifying globally optimal traversal paths to minimize total travel distance.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="project-group anim anim-d2">
+            <div class="project-group-label">Machine Learning &amp; Classification</div>
+
+            <div class="project-card">
+              <h3 class="project-name">Heart Disease Predictor</h3>
+              <ul class="entry-list">
+                <li>Built an end-to-end data pipeline to classify cardiovascular risk using the <strong>UCI Cleveland</strong> dataset by implementing data preprocessing, feature engineering, and model selection, achieving <strong>87.3% accuracy</strong> while prioritizing recall to reduce missed diagnoses of at-risk patients.</li>
+              </ul>
+            </div>
+
+            <div class="project-card">
+              <h3 class="project-name">Spam Classifier</h3>
+              <ul class="entry-list">
+                <li>Developed an email classification system using the <strong>SpamAssassin</strong> dataset by performing exploratory data analysis and feature engineering on 8,000+ examples, optimizing precision–recall tradeoffs to minimize false positives and improve filtering reliability.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="project-group anim anim-d3">
+            <div class="project-group-label">Biomedical &amp; Clinical ML</div>
+
+            <div class="project-card">
+              <h3 class="project-name">Activation Domain Prediction Pipeline</h3>
+              <ul class="entry-list">
+                <li>Designed a <strong>CNN–BiLSTM</strong> deep learning pipeline to classify protein <strong>activation domains</strong> across <strong>10 AD subclasses</strong>, engineering sliding-window features over biological sequence data to capture local and contextual motifs.</li>
+                <li>Achieved <strong>F1 = 0.95</strong> on the held-out test set, applying <strong>SHAP</strong> for residue-level interpretability and <strong>K-means clustering</strong> to surface latent subgroup structure within predicted classes.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Leadership & Awards -->
+    <section class="resume-section">
+      <div class="section-grid">
+        <div class="section-label anim">05 — Leadership &amp; Awards</div>
+        <div class="section-content">
+          <div class="entry anim anim-d1">
+            <div class="entry-head">
+              <h2 class="entry-title">Non-Commissioned Officer</h2>
+              <span class="entry-date">Sep. 2022 — Mar. 2024</span>
+            </div>
+            <p class="entry-sub"><strong>US 8th Army, 2ID HHBN</strong></p>
+            <ul class="entry-list">
+              <li>Led a platoon of <strong>40+ soldiers</strong> as a bilingual Korean-English Platoon Leader, translating and delivering ACFT training and basic military coursework, resulting in a <strong>96% pass rate</strong> across the entire platoon.</li>
+              <li>Awarded the <strong>US Army Certificate of Achievement</strong> (Mar. 2024) for outstanding leadership and bilingual communication.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="resume-footer">
+    <span>&copy; 2026 Junho Choi</span>
+    <span style="margin: 0 0.5rem;">·</span>
+    <a href="mailto:andrewc27@berkeley.edu">Email</a>
+    <a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="Resume (Spring 2026 - D).pdf" download="Junho_Choi_Resume.pdf">PDF</a>
+  </footer>
+
+  <script>
+    (function () {
+      var header = document.getElementById('siteHeader');
+      var hero = document.getElementById('heroSection');
+
+      function onScroll() {
+        var heroBottom = hero.offsetTop + hero.offsetHeight;
+        if (window.scrollY > heroBottom - 80) header.classList.add('dark-header');
+        else header.classList.remove('dark-header');
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.anim').forEach(function (el) { io.observe(el); });
+      } else {
+        document.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
+      }
+    })();
+  </script>
+  <script src="nav.js"></script>
+</body>
+</html>

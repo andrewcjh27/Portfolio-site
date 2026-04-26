@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Experience | Junho Choi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="nav.css" />
+  <style>
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { background: #fff; }
+
+    /* ── Header ─────────────────────────────────────────────────────── */
+    .site-header {
+      background: rgba(255,255,255,0.96) !important;
+      border-bottom: 1px solid rgba(0,0,0,0.055) !important;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      transition: background 0.5s, border-color 0.5s;
+    }
+    .site-header.dark-header {
+      background: rgba(0,0,0,0.88) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    .site-header.dark-header .logo { color: #eee; }
+    .site-header.dark-header .hamburger svg { stroke: #ccc; }
+    .site-header.dark-header .nav-link { color: #aaa; }
+    .site-header.dark-header .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .site-header.dark-header .nav-link.active { background: #fff; color: #111; }
+
+    /* ── Animations ─────────────────────────────────────────────────── */
+    .anim {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .anim.visible { opacity: 1; transform: translateY(0); }
+    .anim-d1 { transition-delay: 0.08s; }
+    .anim-d2 { transition-delay: 0.16s; }
+    .anim-d3 { transition-delay: 0.24s; }
+
+    /* ══════════════════════════════════════════════════════════════════
+       Hero
+       ══════════════════════════════════════════════════════════════════ */
+    .exp-hero {
+      min-height: 70vh;
+      padding: 120px 4% 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .exp-eyebrow {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 1.5rem;
+    }
+    .exp-title {
+      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
+      font-size: clamp(4rem, 11vw, 11rem);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
+      color: #000;
+    }
+    .exp-lead {
+      margin-top: 2rem;
+      max-width: 640px;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 1.05rem;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       Body — black, large cards on a vertical timeline
+       ══════════════════════════════════════════════════════════════════ */
+    .exp-body {
+      background: #000;
+      color: #fff;
+      padding: 5rem 4% 7rem;
+    }
+
+    .exp-track {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .exp-track::before {
+      content: "";
+      position: absolute;
+      left: 11px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .exp-card {
+      position: relative;
+      padding: 0 0 4rem 3rem;
+    }
+    .exp-card:last-child { padding-bottom: 0; }
+    .exp-card::before {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 0.4rem;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.08);
+    }
+
+    .exp-card-date {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 0.6rem;
+    }
+    .exp-card-title {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin-bottom: 0.6rem;
+    }
+    .exp-card-org {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 1.3rem;
+    }
+    .exp-card-org .loc {
+      font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      margin-left: 0.4rem;
+    }
+
+    .exp-card-body {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      max-width: 880px;
+    }
+    .exp-card-body p {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.78);
+    }
+    .exp-card-body p strong { color: #fff; font-weight: 500; }
+
+    .exp-tags {
+      margin-top: 1.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+    .exp-tag {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 0.32rem 0.85rem;
+    }
+
+    .exp-cta {
+      margin-top: 5rem;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      padding-left: 3rem;
+    }
+    .exp-cta a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.7rem 1.5rem;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 999px;
+      color: #fff;
+      text-decoration: none;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.92rem;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .exp-cta a:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .exp-footer {
+      background: #000;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 2.5rem 4%;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.85rem;
+    }
+    .exp-footer a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      margin: 0 0.7rem;
+      transition: color 0.2s;
+    }
+    .exp-footer a:hover { color: #fff; }
+
+    @media (max-width: 720px) {
+      .exp-hero { padding: 100px 6% 4rem; min-height: 50vh; }
+      .exp-title { font-size: 4rem; }
+      .exp-card { padding-left: 2.2rem; padding-bottom: 3rem; }
+      .exp-cta { padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="siteHeader">
+    <div class="logo">JUNHO CHOI</div>
+    <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')">
+      <svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <nav class="nav">
+      <a href="index.html"      class="nav-link">About</a>
+      <a href="resume.html"     class="nav-link">Resume</a>
+      <a href="experience.html" class="nav-link active">Experience</a>
+      <div class="nav-more">
+        <button class="nav-more-toggle nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+          More
+          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+        </button>
+        <div class="nav-more-panel" role="menu">
+          <div>
+            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-list">
+              <a href="design.html">Design</a>
+              <a href="photo.html">Photography</a>
+              <a href="cafes.html">Cafes</a>
+              <a href="codes.html">Codes</a>
+              <a href="soccer.html">Soccer</a>
+            </div>
+          </div>
+          <a href="photo.html" class="nav-more-feature">
+            <h3>Photography &rarr;</h3>
+            <p>A growing visual diary of cities, water, and quiet moments.</p>
+          </a>
+          <div class="nav-more-footer">
+            <a href="resume.html">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ═══ Hero ════════════════════════════════════════════════════════ -->
+  <section class="exp-hero" id="heroSection">
+    <div class="exp-eyebrow anim">Experience</div>
+    <h1 class="exp-title anim anim-d1">Where I've<br>worked.</h1>
+    <p class="exp-lead anim anim-d2">
+      A timeline of the roles I've held — from leading a bilingual platoon
+      in the US Army to building developer tools for Mozilla Firefox and
+      data pipelines at one of Korea's largest medical centers.
+    </p>
+  </section>
+
+  <!-- ═══ Body — vertical timeline ════════════════════════════════════ -->
+  <section class="exp-body">
+    <div class="exp-track">
+
+      <article class="exp-card anim">
+        <div class="exp-card-date">Aug 2025 — Feb 2026 · Active</div>
+        <h2 class="exp-card-title">IT Consultant — Mozilla Firefox</h2>
+        <p class="exp-card-org">
+          Invention Corps of Berkeley
+          <span class="loc">· Berkeley, CA</span>
+        </p>
+        <div class="exp-card-body">
+          <p>
+            Engineered a Firefox performance monitoring extension using
+            <strong>React and Vite</strong> that tracked, filtered, and sorted
+            <strong>50+ concurrent tabs</strong> by memory and CPU usage in real time,
+            helping users identify and manage high-resource processes.
+          </p>
+          <p>
+            Led user research through surveys to assess Adaptive Performance
+            perceptions, analyzing feedback to translate user needs into feature
+            requirements and UI designs in <strong>Figma</strong>, collaborating
+            with 12 team members across frontend and backend tracks.
+          </p>
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">React</span>
+          <span class="exp-tag">Vite</span>
+          <span class="exp-tag">Figma</span>
+          <span class="exp-tag">User Research</span>
+        </div>
+      </article>
+
+      <article class="exp-card anim">
+        <div class="exp-card-date">May 2025 — Aug 2025</div>
+        <h2 class="exp-card-title">AI Research Intern</h2>
+        <p class="exp-card-org">
+          Asan Medical Center (AMC)
+          <span class="loc">· Seoul, Republic of Korea</span>
+        </p>
+        <div class="exp-card-body">
+          <p>
+            Processed and analyzed high-dimensional clinical datasets in Python
+            and Jupyter to identify key data patterns, informing feature selection
+            and team strategy in a multi-institutional classification challenge to
+            <strong>place 7th</strong>.
+          </p>
+          <p>
+            Built automated data preprocessing pipelines for
+            <strong>3D medical imaging and clinical records</strong> to streamline data
+            preparation across multiple modalities, reducing manual processing time
+            for the research team.
+          </p>
+          <p>
+            Implemented interpretability techniques (<strong>SHAP, Grad-CAM</strong>)
+            to validate model outputs and communicate feature importance to
+            non-technical stakeholders, increasing trust in data-driven clinical
+            predictions.
+          </p>
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Python</span>
+          <span class="exp-tag">PyTorch</span>
+          <span class="exp-tag">3D U-Net</span>
+          <span class="exp-tag">ResNet3D</span>
+          <span class="exp-tag">HCC</span>
+          <span class="exp-tag">SHAP</span>
+          <span class="exp-tag">Grad-CAM</span>
+          <span class="exp-tag">Medical Imaging</span>
+        </div>
+      </article>
+
+      <article class="exp-card anim">
+        <div class="exp-card-date">Jan 2025 — May 2025</div>
+        <h2 class="exp-card-title">UI/UX Consultant — Braven</h2>
+        <p class="exp-card-org">
+          Berkeley Consulting Collaborative
+          <span class="loc">· Berkeley, CA</span>
+        </p>
+        <div class="exp-card-body">
+          <p>
+            Collaborated with a team of <strong>8 consultants</strong> to synthesize
+            multi-channel UX research for Braven — including
+            <strong>survey data, competitive benchmarking, and affinity mapping</strong>
+            — quantifying user pain points to inform a data-driven design strategy.
+          </p>
+          <p>
+            Systematized mobile app design iterations by validating user needs
+            through rigorous <strong>qualitative and quantitative analysis</strong>,
+            producing a measurable increase in engagement and interface usability.
+          </p>
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">UX Research</span>
+          <span class="exp-tag">Affinity Mapping</span>
+          <span class="exp-tag">Benchmarking</span>
+          <span class="exp-tag">Mobile UI</span>
+          <span class="exp-tag">Figma</span>
+        </div>
+      </article>
+
+      <article class="exp-card anim">
+        <div class="exp-card-date">May 2024 — Aug 2024</div>
+        <h2 class="exp-card-title">Research Intern</h2>
+        <p class="exp-card-org">
+          Biosolution Co., Ltd.
+          <span class="loc">· Seoul, Republic of Korea</span>
+        </p>
+        <div class="exp-card-body">
+          <p>
+            Investigated <strong>microRNA (mirBase)</strong> regulators of
+            <strong>osteoarthritis</strong> by designing and running molecular
+            biology assays — <strong>PCR, FACS analysis, and HPLC</strong> — to
+            characterize candidate targets at the cellular level.
+          </p>
+          <p>
+            Performed <strong>cell culturing</strong> and <strong>in-vivo rat
+            testing</strong> across the full preclinical workflow, supporting
+            validation of therapeutic hypotheses with reproducible experimental
+            data.
+          </p>
+          <p>
+            Supported the company's <strong>CAR T-cell therapy</strong> program
+            by assisting in immunological assays and process documentation,
+            contributing to early-stage translational research.
+          </p>
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">PCR</span>
+          <span class="exp-tag">FACS</span>
+          <span class="exp-tag">HPLC</span>
+          <span class="exp-tag">Cell Culturing</span>
+          <span class="exp-tag">In-vivo Testing</span>
+          <span class="exp-tag">CAR T-cell</span>
+        </div>
+      </article>
+
+      <article class="exp-card anim">
+        <div class="exp-card-date">Sep 2022 — Mar 2024</div>
+        <h2 class="exp-card-title">Non-Commissioned Officer</h2>
+        <p class="exp-card-org">
+          US 8th Army, 2ID HHBN
+          <span class="loc">· Camp, Humphreys, Republic of Korea</span>
+        </p>
+        <div class="exp-card-body">
+          <p>
+            Led a platoon of <strong>40+ soldiers</strong> as a bilingual
+            Korean-English Platoon Leader, translating and delivering ACFT training
+            and basic military coursework, resulting in a <strong>96% pass rate</strong>
+            across the entire platoon.
+          </p>
+          <p>
+            Awarded the <strong>US Army Certificate of Achievement</strong> (Mar.
+            2024) for outstanding leadership and bilingual communication.
+          </p>
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Leadership</span>
+          <span class="exp-tag">Bilingual (KR/EN)</span>
+          <span class="exp-tag">Training</span>
+        </div>
+      </article>
+
+      <article class="exp-card anim">
+        <div class="exp-card-date">Aug 2021 — May 2022</div>
+        <h2 class="exp-card-title">Telehealth Coordinator — Student Volunteer</h2>
+        <p class="exp-card-org">
+          UCSF (University of California, San Francisco)
+          <span class="loc">· San Francisco, CA</span>
+        </p>
+        <div class="exp-card-body">
+          <p>
+            Quantified <strong>telehealth service utilization trends</strong> by
+            systematizing the collection and organization of patient data,
+            identifying critical workflow bottlenecks through
+            <strong>longitudinal analysis</strong>.
+          </p>
+          <p>
+            Optimized clinical delivery frameworks at UCSF by applying data-driven
+            insights to service metrics, enhancing <strong>operational efficiency
+            and resource allocation</strong> for telehealth systems.
+          </p>
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Healthcare Data</span>
+          <span class="exp-tag">Longitudinal Analysis</span>
+          <span class="exp-tag">Operations</span>
+          <span class="exp-tag">Telehealth</span>
+        </div>
+      </article>
+
+      <div class="exp-cta anim">
+        <a href="resume.html">View Full Resume</a>
+        <a href="mailto:andrewc27@berkeley.edu">Get in Touch</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="exp-footer">
+    <span>&copy; 2026 Junho Choi</span>
+    <span style="margin: 0 0.5rem;">·</span>
+    <a href="mailto:andrewc27@berkeley.edu">Email</a>
+    <a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="resume.html">Resume</a>
+  </footer>
+
+  <script>
+    (function () {
+      var header = document.getElementById('siteHeader');
+      var hero = document.getElementById('heroSection');
+
+      function onScroll() {
+        var heroBottom = hero.offsetTop + hero.offsetHeight;
+        if (window.scrollY > heroBottom - 80) header.classList.add('dark-header');
+        else header.classList.remove('dark-header');
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.anim').forEach(function (el) { io.observe(el); });
+      } else {
+        document.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
+      }
+    })();
+  </script>
+  <script src="nav.js"></script>
+</body>
+</html>
