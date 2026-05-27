@@ -9,229 +9,559 @@
   <link rel="stylesheet" href="nav.css" />
   <style>
     html { scroll-behavior: smooth; overflow-x: hidden; }
-    body { background: #fff; }
+    body { background: #fff; color: #111; }
+    body.exp-panel-open { overflow: hidden; }
 
-    /* ── Header ─────────────────────────────────────────────────────── */
+    /* ── Header (always white on this page) ─────────────────────────── */
     .site-header {
       background: rgba(255,255,255,0.96) !important;
       border-bottom: 1px solid rgba(0,0,0,0.055) !important;
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      transition: background 0.5s, border-color 0.5s;
     }
-    .site-header.dark-header {
-      background: rgba(0,0,0,0.88) !important;
-      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-    }
-    .site-header.dark-header .logo { color: #eee; }
-    .site-header.dark-header .hamburger svg { stroke: #ccc; }
-    .site-header.dark-header .nav-link { color: #aaa; }
-    .site-header.dark-header .nav-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
-    .site-header.dark-header .nav-link.active { background: #fff; color: #111; }
 
-    /* ── Animations ─────────────────────────────────────────────────── */
-    .anim {
+    /* ══════════════════════════════════════════════════════════════════
+       Sticky scrolly-tell — one pinned viewport, 6 slides
+       ══════════════════════════════════════════════════════════════════ */
+    .exp-scrollytell {
+      position: relative;
+      height: 600vh;
+    }
+    .exp-pinned {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* Each slide now holds ONLY the left + right text — the figure lives
+       in a shared strip overlay (.exp-strip-frame) below. The middle
+       grid column is a placeholder so the title columns line up with
+       the figure strip behind them. */
+    .exp-slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(360px, 42vw) minmax(280px, 1fr);
+      align-items: center;
+      column-gap: 3vw;
+      padding: 6rem 2vw 6rem;
       opacity: 0;
       transform: translateY(40px);
-      transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-                  transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+      transition:
+        opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      z-index: 2; /* sits above the figure strip so text never gets blurred */
     }
-    .anim.visible { opacity: 1; transform: translateY(0); }
-    .anim-d1 { transition-delay: 0.08s; }
-    .anim-d2 { transition-delay: 0.16s; }
-    .anim-d3 { transition-delay: 0.24s; }
+    .exp-slide.is-active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
 
-    /* ══════════════════════════════════════════════════════════════════
-       Hero
-       ══════════════════════════════════════════════════════════════════ */
-    .exp-hero {
-      min-height: 70vh;
-      padding: 120px 4% 5rem;
+    /* Big title words on either side of the polygon */
+    .exp-word {
+      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 3.5rem);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 0.95;
+      color: #000;
+      margin: 0;
+      text-wrap: balance;
+    }
+    .exp-word.left  { text-align: left;  justify-self: start; }
+    .exp-word.right { text-align: right; justify-self: end; }
+
+    /* ──────────────────────────────────────────────────────────────────
+       Figure strip — vertical carousel sitting between left/right text.
+       Each polygon is clipped by its shape, and the strip translates Y
+       so the active figure ends up centered in the viewport.
+       The mask fades the top and bottom edges so neighbors blur out.
+       ────────────────────────────────────────────────────────────────── */
+    .exp-strip-frame {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      pointer-events: none;          /* only the active figure is clickable */
+      z-index: 1;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+              mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+    }
+    .exp-strip {
+      position: relative;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      align-items: center;
+      gap: 6vh;                       /* spacing between figures = how much "ghost" shows above/below */
+      transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
     }
-    .exp-eyebrow {
-      font-family: -apple-system, "SF Mono", Menlo, monospace;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: #888;
-      margin-bottom: 1.5rem;
+    /* Reset button defaults so figures inside <button> look right */
+    .exp-figure {
+      width: 38vw;
+      max-width: 500px;
+      aspect-ratio: 5 / 3;
+      flex: 0 0 auto;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: transparent;
+      cursor: default;
+      filter: blur(10px);
+      opacity: 0.22;
+      transform: scale(0.85);
+      transition:
+        opacity 0.6s cubic-bezier(0.22,1,0.36,1),
+        filter  0.6s cubic-bezier(0.22,1,0.36,1),
+        transform 0.6s cubic-bezier(0.22,1,0.36,1);
     }
-    .exp-title {
-      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
-      font-size: clamp(4rem, 11vw, 11rem);
-      font-weight: 600;
-      letter-spacing: -0.04em;
-      line-height: 0.9;
-      color: #000;
+    .exp-figure svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: drop-shadow(0 30px 60px rgba(0,0,0,0.18));
     }
-    .exp-lead {
-      margin-top: 2rem;
-      max-width: 640px;
+    /* Mid-blur for the figure immediately above or below the active one */
+    .exp-strip .exp-figure.is-near {
+      opacity: 0.45;
+      filter: blur(4px);
+      transform: scale(0.9);
+    }
+    /* The active centered figure is fully sharp and clickable */
+    .exp-strip .exp-figure.is-active {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+      cursor: zoom-in;
+      pointer-events: auto;
+    }
+    .exp-strip .exp-figure.is-active:hover {
+      transform: scale(1.02);
+    }
+    /* Ghost copies (UCSF above slide 1, Mozilla below slide 6) — for the loop effect */
+    .exp-figure.is-ghost { pointer-events: none; }
+
+    /* Each slide gets a distinct rounded angular shape via shared SVG clipPath defs */
+    .exp-figure.shape-1 { clip-path: url(#shape-1); }   /* down-pointing triangle */
+    .exp-figure.shape-2 { clip-path: url(#shape-2); }   /* slanted asymmetric quad */
+    .exp-figure.shape-3 { clip-path: url(#shape-3); }   /* tilted parallelogram */
+    .exp-figure.shape-4 { clip-path: url(#shape-4); }   /* asymmetric pentagon */
+    .exp-figure.shape-5 { clip-path: url(#shape-5); }   /* trapezoid w/ clipped BL */
+    .exp-figure.shape-6 { clip-path: url(#shape-6); }   /* diagonal stripe */
+
+    /* Right-column meta: role title on top, description stacked below */
+    .exp-right-col {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      gap: 1.4rem;
+      justify-self: end;
+      max-width: 320px;
+      position: relative;
+      z-index: 3;
+    }
+    .exp-meta {
       font-family: -apple-system, "SF Pro Text", sans-serif;
-      font-size: 1.05rem;
-      color: #555;
-      line-height: 1.6;
+      width: 100%;
     }
-
-    /* ══════════════════════════════════════════════════════════════════
-       Body — black, large cards on a vertical timeline
-       ══════════════════════════════════════════════════════════════════ */
-    .exp-body {
-      background: #000;
-      color: #fff;
-      padding: 5rem 4% 7rem;
-    }
-
-    .exp-track {
-      max-width: 1200px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .exp-track::before {
-      content: "";
-      position: absolute;
-      left: 11px;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: rgba(255,255,255,0.12);
-    }
-
-    .exp-card {
-      position: relative;
-      padding: 0 0 4rem 3rem;
-    }
-    .exp-card:last-child { padding-bottom: 0; }
-    .exp-card::before {
-      content: "";
-      position: absolute;
-      left: 5px;
-      top: 0.4rem;
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 0 0 4px rgba(255,255,255,0.08);
-    }
-
-    .exp-card-date {
+    .exp-meta-tag {
       font-family: -apple-system, "SF Mono", Menlo, monospace;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 500;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 0.6rem;
+      color: #888;
+      margin-bottom: 0.8rem;
+      display: block;
     }
-    .exp-card-title {
+    .exp-meta-loc {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #222;
+      margin-bottom: 0.55rem;
+    }
+    .exp-meta-summary {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #555;
+      margin: 0;
+    }
+
+    /* Inner-slide reveal animations driven by .is-active */
+    .exp-slide .exp-word.left  { opacity: 0; transform: translateX(-30px); transition: opacity 0.7s ease 0.05s, transform 0.7s cubic-bezier(0.22,1,0.36,1) 0.05s; }
+    .exp-slide .exp-word.right { opacity: 0; transform: translateX(30px);  transition: opacity 0.7s ease 0.05s, transform 0.7s cubic-bezier(0.22,1,0.36,1) 0.05s; }
+    .exp-slide .exp-right-col  { opacity: 0; transform: translateX(30px);  transition: opacity 0.7s ease 0.20s, transform 0.7s cubic-bezier(0.22,1,0.36,1) 0.20s; }
+    .exp-slide.is-active .exp-word.left,
+    .exp-slide.is-active .exp-word.right,
+    .exp-slide.is-active .exp-right-col { opacity: 1; transform: translateX(0); }
+
+    /* Bottom UI — section counter and progress bar */
+    .exp-ui {
+      position: absolute;
+      left: 5vw;
+      right: 5vw;
+      bottom: 2.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 4;
+    }
+    .exp-counter {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      color: #aaa;
+    }
+    .exp-counter strong { color: #111; font-weight: 600; }
+    .exp-progress {
+      flex: 1;
+      max-width: 460px;
+      height: 2px;
+      background: rgba(0,0,0,0.08);
+      margin: 0 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .exp-progress-fill {
+      position: absolute;
+      inset: 0;
+      background: #111;
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 0.18s linear;
+    }
+    .exp-drag-hint {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       Detail panel — slides in from the right on polygon click
+       ══════════════════════════════════════════════════════════════════ */
+    .exp-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 150;
+    }
+    .exp-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .exp-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 50vw;
+      max-width: 760px;
+      height: 100vh;
+      background: #fafaf7;
+      border-left: 1px solid rgba(0,0,0,0.08);
+      box-shadow: -30px 0 80px rgba(0,0,0,0.18);
+      transform: translateX(100%);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 200;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .exp-panel.is-open { transform: translateX(0); }
+    .exp-panel-close {
+      position: absolute;
+      top: 1.4rem;
+      right: 1.8rem;
+      background: rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.08);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      line-height: 1;
+      color: #111;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+      z-index: 2;
+    }
+    .exp-panel-close:hover { background: rgba(0,0,0,0.1); transform: rotate(90deg); }
+
+    .exp-panel-inner {
+      padding: 5rem 4rem 4rem;
+      max-width: 620px;
+    }
+    .exp-panel-hero {
+      width: 100%;
+      aspect-ratio: 5 / 3;
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.16));
+    }
+    .exp-panel-hero svg { width: 100%; height: 100%; display: block; }
+
+    .exp-panel-tag {
+      font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: 0.74rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888;
+      display: block;
+      margin-bottom: 0.7rem;
+    }
+    .exp-panel-title {
+      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
+      font-size: clamp(2rem, 3.2vw, 2.8rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: #111;
+      margin: 0 0 0.5rem;
+    }
+    .exp-panel-role {
       font-family: -apple-system, "SF Pro Display", sans-serif;
-      font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+      font-size: 1.15rem;
       font-weight: 500;
-      letter-spacing: -0.02em;
-      line-height: 1.05;
-      margin-bottom: 0.6rem;
+      color: #444;
+      margin: 0 0 1.2rem;
     }
-    .exp-card-org {
+    .exp-panel-org {
       font-family: -apple-system, "SF Pro Text", sans-serif;
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: rgba(255,255,255,0.8);
-      margin-bottom: 1.3rem;
+      font-size: 0.95rem;
+      color: #222;
+      margin: 0 0 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
     }
-    .exp-card-org .loc {
-      font-weight: 400;
-      color: rgba(255,255,255,0.5);
-      margin-left: 0.4rem;
+    .exp-panel-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
     }
-
-    .exp-card-body {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      max-width: 880px;
-    }
-    .exp-card-body p {
+    .exp-panel-body p {
       font-family: -apple-system, "SF Pro Text", sans-serif;
-      font-size: 0.98rem;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.78);
+      font-size: 1rem;
+      line-height: 1.65;
+      color: #333;
+      margin: 0;
     }
-    .exp-card-body p strong { color: #fff; font-weight: 500; }
+    .exp-panel-body strong { color: #111; font-weight: 600; }
 
-    .exp-tags {
-      margin-top: 1.4rem;
+    .exp-panel-tags {
+      margin-top: 2.2rem;
       display: flex;
       flex-wrap: wrap;
       gap: 0.45rem;
     }
-    .exp-tag {
+    .exp-panel-tags span {
       font-family: -apple-system, "SF Mono", Menlo, monospace;
       font-size: 0.72rem;
       letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.7);
-      border: 1px solid rgba(255,255,255,0.18);
+      color: #444;
+      border: 1px solid rgba(0,0,0,0.18);
       border-radius: 999px;
       padding: 0.32rem 0.85rem;
-    }
-
-    .exp-cta {
-      margin-top: 5rem;
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      padding-left: 3rem;
-    }
-    .exp-cta a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.7rem 1.5rem;
-      border: 1px solid rgba(255,255,255,0.22);
-      border-radius: 999px;
-      color: #fff;
-      text-decoration: none;
-      font-family: -apple-system, "SF Pro Text", sans-serif;
-      font-size: 0.92rem;
-      transition: background 0.2s, border-color 0.2s, transform 0.2s;
-    }
-    .exp-cta a:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.5);
-      transform: translateY(-2px);
+      background: #fff;
     }
 
     /* Footer */
     .exp-footer {
-      background: #000;
-      color: rgba(255,255,255,0.4);
+      background: #fff;
+      color: rgba(0,0,0,0.45);
       text-align: center;
       padding: 2.5rem 4%;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      border-top: 1px solid rgba(0,0,0,0.06);
       font-family: -apple-system, "SF Pro Text", sans-serif;
       font-size: 0.85rem;
     }
     .exp-footer a {
-      color: rgba(255,255,255,0.6);
+      color: rgba(0,0,0,0.65);
       text-decoration: none;
       margin: 0 0.7rem;
       transition: color 0.2s;
     }
-    .exp-footer a:hover { color: #fff; }
+    .exp-footer a:hover { color: #111; }
 
-    @media (max-width: 720px) {
-      .exp-hero { padding: 100px 6% 4rem; min-height: 50vh; }
-      .exp-title { font-size: 4rem; }
-      .exp-card { padding-left: 2.2rem; padding-bottom: 3rem; }
-      .exp-cta { padding-left: 0; }
+    /* ── Responsive ─────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .exp-scrollytell { height: 480vh; }
+      .exp-slide {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        row-gap: 1.4rem;
+        padding: 5rem 6vw 6rem;
+        align-content: center;
+      }
+      .exp-word { font-size: clamp(2rem, 8vw, 3.5rem); justify-self: start !important; text-align: left !important; }
+      .exp-figure { width: 80vw; max-width: 460px; }
+      .exp-right-col { align-items: flex-start; text-align: left; max-width: 100%; }
+      .exp-panel { width: 100vw; max-width: 100vw; }
+      .exp-panel-inner { padding: 5rem 1.5rem 3rem; }
+      .exp-ui { bottom: 1.2rem; }
     }
   </style>
 </head>
 <body>
+  <!-- ═══ Shared SVG defs — gradients, patterns, clipPaths, and per-project
+       visual <symbol>s. Anything inside <defs> isn't rendered directly;
+       it's used via fill="url(#…)", clip-path:url(#…), or <use href="#…">. -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
+    <defs>
+      <!-- Gradients -->
+      <linearGradient id="g-moz" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#ff7a18"/>
+        <stop offset="55%" stop-color="#e94e2b"/>
+        <stop offset="100%" stop-color="#b21d1d"/>
+      </linearGradient>
+      <linearGradient id="g-amc" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#3a4cff"/>
+        <stop offset="55%" stop-color="#6b3bcc"/>
+        <stop offset="100%" stop-color="#22154f"/>
+      </linearGradient>
+      <linearGradient id="g-bcc" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#1ac2a4"/>
+        <stop offset="55%" stop-color="#108a73"/>
+        <stop offset="100%" stop-color="#063b32"/>
+      </linearGradient>
+      <linearGradient id="g-bio" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#69d2ff"/>
+        <stop offset="55%" stop-color="#1f7eaa"/>
+        <stop offset="100%" stop-color="#0d2a44"/>
+      </linearGradient>
+      <linearGradient id="g-army" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#7d8a5b"/>
+        <stop offset="55%" stop-color="#4a5436"/>
+        <stop offset="100%" stop-color="#1f2615"/>
+      </linearGradient>
+      <linearGradient id="g-ucsf" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#34c0c5"/>
+        <stop offset="55%" stop-color="#0f6f8a"/>
+        <stop offset="100%" stop-color="#0a2a3a"/>
+      </linearGradient>
+      <pattern id="cells" x="0" y="0" width="36" height="36" patternUnits="userSpaceOnUse">
+        <circle cx="18" cy="18" r="3" fill="rgba(255,255,255,0.45)"/>
+      </pattern>
+
+      <!-- Rounded polygon clip paths (5% corner radius) -->
+      <clipPath id="shape-1" clipPathUnits="objectBoundingBox"><path d="M0.0500 0.0000L0.9500 0.0000Q1.0000 0.0000 0.9822 0.0467L0.6378 0.9533Q0.6200 1.0000 0.5937 0.9575L0.0263 0.0425Q0.0000 0.0000 0.0500 0.0000Z"/></clipPath>
+      <clipPath id="shape-2" clipPathUnits="objectBoundingBox"><path d="M0.1290 0.2100L0.9110 0.0500Q0.9600 0.0400 0.9627 0.0899L0.9973 0.7301Q1.0000 0.7800 0.9508 0.7889L0.0492 0.9511Q0.0000 0.9600 0.0054 0.9103L0.0746 0.2697Q0.0800 0.2200 0.1290 0.2100Z"/></clipPath>
+      <clipPath id="shape-3" clipPathUnits="objectBoundingBox"><path d="M0.0496 0.1140L0.9504 0.0060Q1.0000 0.0000 0.9893 0.0488L0.7907 0.9512Q0.7800 1.0000 0.7304 0.9936L0.0496 0.9064Q0.0000 0.9000 0.0000 0.8500L0.0000 0.1700Q0.0000 0.1200 0.0496 0.1140Z"/></clipPath>
+      <clipPath id="shape-4" clipPathUnits="objectBoundingBox"><path d="M0.2464 0.0186L0.9536 0.3014Q1.0000 0.3200 0.9899 0.3690L0.8701 0.9510Q0.8600 1.0000 0.8128 0.9835L0.0472 0.7165Q0.0000 0.7000 0.0000 0.6500L0.0000 0.2500Q0.0000 0.2000 0.0354 0.1646L0.1646 0.0354Q0.2000 0.0000 0.2464 0.0186Z"/></clipPath>
+      <clipPath id="shape-5" clipPathUnits="objectBoundingBox"><path d="M0.0500 0.0000L0.9500 0.0000Q1.0000 0.0000 1.0000 0.0500L1.0000 0.5500Q1.0000 0.6000 0.9580 0.6271L0.4220 0.9729Q0.3800 1.0000 0.3622 0.9533L0.0178 0.0467Q0.0000 0.0000 0.0500 0.0000Z"/></clipPath>
+      <clipPath id="shape-6" clipPathUnits="objectBoundingBox"><path d="M0.0473 0.2238L0.6527 0.0162Q0.7000 0.0000 0.7212 0.0453L0.9788 0.5947Q1.0000 0.6400 0.9558 0.6634L0.3642 0.9766Q0.3200 1.0000 0.3006 0.9539L0.0194 0.2861Q0.0000 0.2400 0.0473 0.2238Z"/></clipPath>
+
+      <!-- Per-project visual symbols. <use href="#vis-moz"/> drops the whole thing in. -->
+      <symbol id="vis-moz" viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice">
+        <rect width="500" height="320" fill="url(#g-moz)"/>
+        <g stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none">
+          <path d="M40 60 Q150 20 260 80 T 480 100"/>
+          <path d="M40 130 Q170 100 280 160 T 480 180"/>
+          <path d="M40 230 Q160 200 270 240 T 480 260"/>
+        </g>
+        <g fill="rgba(255,255,255,0.85)" font-family="ui-monospace, monospace" font-size="14">
+          <text x="60" y="55">&lt;tab.memory/&gt;</text>
+          <text x="230" y="170">› perf.extension</text>
+          <text x="60" y="280">react · vite · figma</text>
+        </g>
+      </symbol>
+
+      <symbol id="vis-amc" viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice">
+        <rect width="500" height="320" fill="url(#g-amc)"/>
+        <g stroke="rgba(255,255,255,0.18)" stroke-width="1" fill="none">
+          <path d="M0 80 H500 M0 160 H500 M0 240 H500"/>
+          <path d="M100 0 V320 M250 0 V320 M400 0 V320"/>
+        </g>
+        <g fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2">
+          <circle cx="250" cy="160" r="70" opacity="0.7"/>
+          <circle cx="250" cy="160" r="48" opacity="0.5"/>
+          <circle cx="250" cy="160" r="26" opacity="0.3"/>
+        </g>
+        <g fill="rgba(255,255,255,0.85)" font-family="ui-monospace, monospace" font-size="13">
+          <text x="60" y="55">› HCC.classification</text>
+          <text x="290" y="285">3D U-Net / SHAP</text>
+        </g>
+      </symbol>
+
+      <symbol id="vis-bcc" viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice">
+        <rect width="500" height="320" fill="url(#g-bcc)"/>
+        <g stroke="rgba(255,255,255,0.22)" stroke-width="1.4" fill="none">
+          <path d="M60 260 L 200 160 L 340 200 L 460 70"/>
+          <circle cx="60"  cy="260" r="6" fill="#fff"/>
+          <circle cx="200" cy="160" r="6" fill="#fff"/>
+          <circle cx="340" cy="200" r="6" fill="#fff"/>
+          <circle cx="460" cy="70"  r="6" fill="#fff"/>
+        </g>
+        <g fill="rgba(255,255,255,0.85)" font-family="ui-monospace, monospace" font-size="13">
+          <text x="60" y="50">braven · mobile</text>
+          <text x="240" y="285">affinity ▸ insight ▸ ship</text>
+        </g>
+      </symbol>
+
+      <symbol id="vis-bio" viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice">
+        <rect width="500" height="320" fill="url(#g-bio)"/>
+        <rect width="500" height="320" fill="url(#cells)" opacity="0.7"/>
+        <g fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2">
+          <path d="M120 160 Q 200 80 280 160 T 440 160" opacity="0.7"/>
+          <path d="M120 180 Q 200 260 280 180 T 440 180" opacity="0.5"/>
+        </g>
+        <g fill="rgba(255,255,255,0.9)" font-family="ui-monospace, monospace" font-size="13">
+          <text x="60" y="55">mirRNA · OA targets</text>
+          <text x="280" y="285">PCR / FACS / HPLC</text>
+        </g>
+      </symbol>
+
+      <symbol id="vis-army" viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice">
+        <rect width="500" height="320" fill="url(#g-army)"/>
+        <g fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="6" stroke-linecap="square">
+          <polyline points="60,110 250,40 440,110"/>
+          <polyline points="60,170 250,100 440,170"/>
+          <polyline points="60,230 250,160 440,230"/>
+          <polyline points="60,290 250,220 440,290"/>
+        </g>
+        <g fill="rgba(255,255,255,0.92)" font-family="ui-monospace, monospace" font-size="13">
+          <text x="60" y="50">2ID · HHBN</text>
+          <text x="310" y="285">96% pass rate</text>
+        </g>
+      </symbol>
+
+      <symbol id="vis-ucsf" viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice">
+        <rect width="500" height="320" fill="url(#g-ucsf)"/>
+        <g stroke="rgba(255,255,255,0.5)" stroke-width="1.2" fill="rgba(255,255,255,0.85)">
+          <line x1="90"  y1="80"  x2="220" y2="150"/>
+          <line x1="220" y1="150" x2="380" y2="100"/>
+          <line x1="220" y1="150" x2="300" y2="240"/>
+          <line x1="300" y1="240" x2="420" y2="210"/>
+          <line x1="90"  y1="80"  x2="120" y2="210"/>
+          <line x1="120" y1="210" x2="300" y2="240"/>
+          <circle cx="90"  cy="80"  r="6"/>
+          <circle cx="220" cy="150" r="8"/>
+          <circle cx="380" cy="100" r="5"/>
+          <circle cx="300" cy="240" r="7"/>
+          <circle cx="420" cy="210" r="5"/>
+          <circle cx="120" cy="210" r="5"/>
+        </g>
+        <g fill="rgba(255,255,255,0.9)" font-family="ui-monospace, monospace" font-size="13">
+          <text x="60" y="55">telehealth · utilization</text>
+          <text x="280" y="290">longitudinal analysis</text>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
   <header class="site-header" id="siteHeader">
     <div class="logo">JUNHO CHOI</div>
     <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')">
@@ -272,215 +602,232 @@
     </nav>
   </header>
 
-  <!-- ═══ Hero ════════════════════════════════════════════════════════ -->
-  <section class="exp-hero" id="heroSection">
-    <div class="exp-eyebrow anim">Experience</div>
-    <h1 class="exp-title anim anim-d1">Where I've<br>worked.</h1>
-    <p class="exp-lead anim anim-d2">
-      A timeline of the roles I've held — from leading a bilingual platoon
-      in the US Army to building developer tools for Mozilla Firefox and
-      data pipelines at one of Korea's largest medical centers.
-    </p>
-  </section>
+  <!-- ═══ Sticky scrolly-tell — 6 slides on one pinned viewport ═══════ -->
+  <div class="exp-scrollytell" id="expScrollWrap">
+    <div class="exp-pinned">
 
-  <!-- ═══ Body — vertical timeline ════════════════════════════════════ -->
-  <section class="exp-body">
-    <div class="exp-track">
-
-      <article class="exp-card anim">
-        <div class="exp-card-date">Aug 2025 — Feb 2026 · Active</div>
-        <h2 class="exp-card-title">IT Consultant — Mozilla Firefox</h2>
-        <p class="exp-card-org">
-          Invention Corps of Berkeley
-          <span class="loc">· Berkeley, CA</span>
-        </p>
-        <div class="exp-card-body">
-          <p>
-            Engineered a Firefox performance monitoring extension using
-            <strong>React and Vite</strong> that tracked, filtered, and sorted
-            <strong>50+ concurrent tabs</strong> by memory and CPU usage in real time,
-            helping users identify and manage high-resource processes.
-          </p>
-          <p>
-            Led user research through surveys to assess Adaptive Performance
-            perceptions, analyzing feedback to translate user needs into feature
-            requirements and UI designs in <strong>Figma</strong>, collaborating
-            with 12 team members across frontend and backend tracks.
-          </p>
-        </div>
-        <div class="exp-tags">
-          <span class="exp-tag">React</span>
-          <span class="exp-tag">Vite</span>
-          <span class="exp-tag">Figma</span>
-          <span class="exp-tag">User Research</span>
+      <!-- Left+right text per slide. Middle grid cell is empty —
+           the figure strip lives behind these articles. -->
+      <article class="exp-slide" data-i="0">
+        <h2 class="exp-word left">Mozilla<br>Firefox</h2>
+        <div aria-hidden="true"></div>
+        <div class="exp-right-col">
+          <h2 class="exp-word right">IT<br>Consultant</h2>
+          <div class="exp-meta">
+            <span class="exp-meta-tag">01 — Aug 2025 / Feb 2026 · Active</span>
+            <p class="exp-meta-loc">Invention Corps of Berkeley &middot; Berkeley, CA</p>
+            <p class="exp-meta-summary">Built a React + Vite performance extension tracking 50+ tabs in real time. Ran user research, translated findings into Figma UI, shipped with a 12-person team.</p>
+          </div>
         </div>
       </article>
 
-      <article class="exp-card anim">
-        <div class="exp-card-date">May 2025 — Aug 2025</div>
-        <h2 class="exp-card-title">AI Research Intern</h2>
-        <p class="exp-card-org">
-          Asan Medical Center (AMC)
-          <span class="loc">· Seoul, Republic of Korea</span>
-        </p>
-        <div class="exp-card-body">
-          <p>
-            Processed and analyzed high-dimensional clinical datasets in Python
-            and Jupyter to identify key data patterns, informing feature selection
-            and team strategy in a multi-institutional classification challenge to
-            <strong>place 7th</strong>.
-          </p>
-          <p>
-            Built automated data preprocessing pipelines for
-            <strong>3D medical imaging and clinical records</strong> to streamline data
-            preparation across multiple modalities, reducing manual processing time
-            for the research team.
-          </p>
-          <p>
-            Implemented interpretability techniques (<strong>SHAP, Grad-CAM</strong>)
-            to validate model outputs and communicate feature importance to
-            non-technical stakeholders, increasing trust in data-driven clinical
-            predictions.
-          </p>
-        </div>
-        <div class="exp-tags">
-          <span class="exp-tag">Python</span>
-          <span class="exp-tag">PyTorch</span>
-          <span class="exp-tag">3D U-Net</span>
-          <span class="exp-tag">ResNet3D</span>
-          <span class="exp-tag">HCC</span>
-          <span class="exp-tag">SHAP</span>
-          <span class="exp-tag">Grad-CAM</span>
-          <span class="exp-tag">Medical Imaging</span>
+      <article class="exp-slide" data-i="1">
+        <h2 class="exp-word left">Asan<br>Medical</h2>
+        <div aria-hidden="true"></div>
+        <div class="exp-right-col">
+          <h2 class="exp-word right">AI Research<br>Intern</h2>
+          <div class="exp-meta">
+            <span class="exp-meta-tag">02 — May 2025 / Aug 2025</span>
+            <p class="exp-meta-loc">Asan Medical Center (AMC) &middot; Seoul, Republic of Korea</p>
+            <p class="exp-meta-summary">Built 3D imaging pipelines for HCC classification. Applied SHAP and Grad-CAM to make model decisions legible to clinicians. Placed 7th in a multi-institutional challenge.</p>
+          </div>
         </div>
       </article>
 
-      <article class="exp-card anim">
-        <div class="exp-card-date">Jan 2025 — May 2025</div>
-        <h2 class="exp-card-title">UI/UX Consultant — Braven</h2>
-        <p class="exp-card-org">
-          Berkeley Consulting Collaborative
-          <span class="loc">· Berkeley, CA</span>
-        </p>
-        <div class="exp-card-body">
-          <p>
-            Collaborated with a team of <strong>8 consultants</strong> to synthesize
-            multi-channel UX research for Braven — including
-            <strong>survey data, competitive benchmarking, and affinity mapping</strong>
-            — quantifying user pain points to inform a data-driven design strategy.
-          </p>
-          <p>
-            Systematized mobile app design iterations by validating user needs
-            through rigorous <strong>qualitative and quantitative analysis</strong>,
-            producing a measurable increase in engagement and interface usability.
-          </p>
-        </div>
-        <div class="exp-tags">
-          <span class="exp-tag">UX Research</span>
-          <span class="exp-tag">Affinity Mapping</span>
-          <span class="exp-tag">Benchmarking</span>
-          <span class="exp-tag">Mobile UI</span>
-          <span class="exp-tag">Figma</span>
+      <article class="exp-slide" data-i="2">
+        <h2 class="exp-word left">Braven</h2>
+        <div aria-hidden="true"></div>
+        <div class="exp-right-col">
+          <h2 class="exp-word right">UI/UX<br>Consultant</h2>
+          <div class="exp-meta">
+            <span class="exp-meta-tag">03 — Jan 2025 / May 2025</span>
+            <p class="exp-meta-loc">Berkeley Consulting Collaborative &middot; Berkeley, CA</p>
+            <p class="exp-meta-summary">Synthesized survey, benchmarking, and affinity data for Braven with a team of 8 — driving the mobile app iterations that lifted engagement and usability.</p>
+          </div>
         </div>
       </article>
 
-      <article class="exp-card anim">
-        <div class="exp-card-date">May 2024 — Aug 2024</div>
-        <h2 class="exp-card-title">Research Intern</h2>
-        <p class="exp-card-org">
-          Biosolution Co., Ltd.
-          <span class="loc">· Seoul, Republic of Korea</span>
-        </p>
-        <div class="exp-card-body">
-          <p>
-            Investigated <strong>microRNA (mirBase)</strong> regulators of
-            <strong>osteoarthritis</strong> by designing and running molecular
-            biology assays — <strong>PCR, FACS analysis, and HPLC</strong> — to
-            characterize candidate targets at the cellular level.
-          </p>
-          <p>
-            Performed <strong>cell culturing</strong> and <strong>in-vivo rat
-            testing</strong> across the full preclinical workflow, supporting
-            validation of therapeutic hypotheses with reproducible experimental
-            data.
-          </p>
-          <p>
-            Supported the company's <strong>CAR T-cell therapy</strong> program
-            by assisting in immunological assays and process documentation,
-            contributing to early-stage translational research.
-          </p>
-        </div>
-        <div class="exp-tags">
-          <span class="exp-tag">PCR</span>
-          <span class="exp-tag">FACS</span>
-          <span class="exp-tag">HPLC</span>
-          <span class="exp-tag">Cell Culturing</span>
-          <span class="exp-tag">In-vivo Testing</span>
-          <span class="exp-tag">CAR T-cell</span>
+      <article class="exp-slide" data-i="3">
+        <h2 class="exp-word left">Biosolution</h2>
+        <div aria-hidden="true"></div>
+        <div class="exp-right-col">
+          <h2 class="exp-word right">Research<br>Intern</h2>
+          <div class="exp-meta">
+            <span class="exp-meta-tag">04 — May 2024 / Aug 2024</span>
+            <p class="exp-meta-loc">Biosolution Co., Ltd. &middot; Seoul, Republic of Korea</p>
+            <p class="exp-meta-summary">Designed microRNA assays — PCR, FACS, HPLC — to characterize osteoarthritis targets. Ran cell culture and in-vivo testing; supported the CAR T-cell program.</p>
+          </div>
         </div>
       </article>
 
-      <article class="exp-card anim">
-        <div class="exp-card-date">Sep 2022 — Mar 2024</div>
-        <h2 class="exp-card-title">Non-Commissioned Officer</h2>
-        <p class="exp-card-org">
-          US 8th Army, 2ID HHBN
-          <span class="loc">· Camp, Humphreys, Republic of Korea</span>
-        </p>
-        <div class="exp-card-body">
-          <p>
-            Led a platoon of <strong>40+ soldiers</strong> as a bilingual
-            Korean-English Platoon Leader, translating and delivering ACFT training
-            and basic military coursework, resulting in a <strong>96% pass rate</strong>
-            across the entire platoon.
-          </p>
-          <p>
-            Awarded the <strong>US Army Certificate of Achievement</strong> (Mar.
-            2024) for outstanding leadership and bilingual communication.
-          </p>
-        </div>
-        <div class="exp-tags">
-          <span class="exp-tag">Leadership</span>
-          <span class="exp-tag">Bilingual (KR/EN)</span>
-          <span class="exp-tag">Training</span>
+      <article class="exp-slide" data-i="4">
+        <h2 class="exp-word left">US 8th<br>Army</h2>
+        <div aria-hidden="true"></div>
+        <div class="exp-right-col">
+          <h2 class="exp-word right">Platoon<br>Leader</h2>
+          <div class="exp-meta">
+            <span class="exp-meta-tag">05 — Sep 2022 / Mar 2024</span>
+            <p class="exp-meta-loc">US 8th Army, 2ID HHBN &middot; Camp Humphreys, Republic of Korea</p>
+            <p class="exp-meta-summary">Led a bilingual 40-soldier platoon. Translated and delivered ACFT training to a 96% pass rate. Awarded the US Army Certificate of Achievement.</p>
+          </div>
         </div>
       </article>
 
-      <article class="exp-card anim">
-        <div class="exp-card-date">Aug 2021 — May 2022</div>
-        <h2 class="exp-card-title">Telehealth Coordinator — Student Volunteer</h2>
-        <p class="exp-card-org">
-          UCSF (University of California, San Francisco)
-          <span class="loc">· San Francisco, CA</span>
-        </p>
-        <div class="exp-card-body">
-          <p>
-            Quantified <strong>telehealth service utilization trends</strong> by
-            systematizing the collection and organization of patient data,
-            identifying critical workflow bottlenecks through
-            <strong>longitudinal analysis</strong>.
-          </p>
-          <p>
-            Optimized clinical delivery frameworks at UCSF by applying data-driven
-            insights to service metrics, enhancing <strong>operational efficiency
-            and resource allocation</strong> for telehealth systems.
-          </p>
-        </div>
-        <div class="exp-tags">
-          <span class="exp-tag">Healthcare Data</span>
-          <span class="exp-tag">Longitudinal Analysis</span>
-          <span class="exp-tag">Operations</span>
-          <span class="exp-tag">Telehealth</span>
+      <article class="exp-slide" data-i="5">
+        <h2 class="exp-word left">UCSF</h2>
+        <div aria-hidden="true"></div>
+        <div class="exp-right-col">
+          <h2 class="exp-word right">Telehealth<br>Coordinator</h2>
+          <div class="exp-meta">
+            <span class="exp-meta-tag">06 — Aug 2021 / May 2022</span>
+            <p class="exp-meta-loc">UCSF · University of California, San Francisco &middot; San Francisco, CA</p>
+            <p class="exp-meta-summary">Built longitudinal analyses of telehealth utilization, surfacing the workflow bottlenecks that reshaped clinical delivery and resource allocation.</p>
+          </div>
         </div>
       </article>
 
-      <div class="exp-cta anim">
-        <a href="resume.html">View Full Resume</a>
-        <a href="mailto:andrewc27@berkeley.edu">Get in Touch</a>
+      <!-- Shared figure strip — translates Y based on active index.
+           Ghost copies at start/end give the loop-wrap effect:
+           UCSF ghost above slide-1 (Mozilla), Mozilla ghost below slide-6 (UCSF). -->
+      <div class="exp-strip-frame">
+        <div class="exp-strip" id="figStrip">
+          <button class="exp-figure shape-6 is-ghost" data-i="5" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-ucsf"/></svg></button>
+
+          <button class="exp-figure shape-1" data-i="0" type="button" aria-label="Open Mozilla Firefox project details"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-moz"/></svg></button>
+          <button class="exp-figure shape-2" data-i="1" type="button" aria-label="Open Asan Medical Center project details"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-amc"/></svg></button>
+          <button class="exp-figure shape-3" data-i="2" type="button" aria-label="Open Braven project details"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-bcc"/></svg></button>
+          <button class="exp-figure shape-4" data-i="3" type="button" aria-label="Open Biosolution project details"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-bio"/></svg></button>
+          <button class="exp-figure shape-5" data-i="4" type="button" aria-label="Open US 8th Army project details"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-army"/></svg></button>
+          <button class="exp-figure shape-6" data-i="5" type="button" aria-label="Open UCSF Telehealth project details"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-ucsf"/></svg></button>
+
+          <button class="exp-figure shape-1 is-ghost" data-i="0" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-moz"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Bottom UI: counter + progress bar -->
+      <div class="exp-ui">
+        <span class="exp-counter"><strong id="expCurrent">01</strong> / 06</span>
+        <div class="exp-progress" aria-hidden="true">
+          <div class="exp-progress-fill" id="expProgFill"></div>
+        </div>
+        <span class="exp-drag-hint">Click polygon to expand</span>
       </div>
 
     </div>
-  </section>
+  </div>
+
+  <!-- ═══ Detail panels (one per experience, slides in from right) ════ -->
+  <div class="exp-overlay" id="expOverlay" aria-hidden="true"></div>
+
+  <aside class="exp-panel" data-panel="0" aria-hidden="true" aria-labelledby="panel-title-0">
+    <button class="exp-panel-close" aria-label="Close panel">×</button>
+    <div class="exp-panel-inner">
+      <div class="exp-panel-hero shape-1"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-moz"/></svg></div>
+      <span class="exp-panel-tag">01 — Aug 2025 / Feb 2026 · Active</span>
+      <h2 class="exp-panel-title" id="panel-title-0">Mozilla Firefox</h2>
+      <p class="exp-panel-role">IT Consultant</p>
+      <p class="exp-panel-org">Invention Corps of Berkeley · Berkeley, CA</p>
+      <div class="exp-panel-body">
+        <p>Engineered a Firefox performance monitoring extension using <strong>React and Vite</strong> that tracked, filtered, and sorted <strong>50+ concurrent tabs</strong> by memory and CPU usage in real time, helping users identify and manage high-resource processes.</p>
+        <p>Led user research through surveys to assess Adaptive Performance perceptions, analyzing feedback to translate user needs into feature requirements and UI designs in <strong>Figma</strong>, collaborating with 12 team members across frontend and backend tracks.</p>
+      </div>
+      <div class="exp-panel-tags">
+        <span>React</span><span>Vite</span><span>Figma</span><span>User Research</span>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="exp-panel" data-panel="1" aria-hidden="true" aria-labelledby="panel-title-1">
+    <button class="exp-panel-close" aria-label="Close panel">×</button>
+    <div class="exp-panel-inner">
+      <div class="exp-panel-hero shape-2"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-amc"/></svg></div>
+      <span class="exp-panel-tag">02 — May 2025 / Aug 2025</span>
+      <h2 class="exp-panel-title" id="panel-title-1">Asan Medical Center</h2>
+      <p class="exp-panel-role">AI Research Intern</p>
+      <p class="exp-panel-org">AMC · Seoul, Republic of Korea</p>
+      <div class="exp-panel-body">
+        <p>Processed and analyzed high-dimensional clinical datasets in Python and Jupyter to identify key data patterns, informing feature selection and team strategy in a multi-institutional classification challenge to <strong>place 7th</strong>.</p>
+        <p>Built automated data preprocessing pipelines for <strong>3D medical imaging and clinical records</strong> to streamline data preparation across multiple modalities, reducing manual processing time for the research team.</p>
+        <p>Implemented interpretability techniques (<strong>SHAP, Grad-CAM</strong>) to validate model outputs and communicate feature importance to non-technical stakeholders, increasing trust in data-driven clinical predictions.</p>
+      </div>
+      <div class="exp-panel-tags">
+        <span>Python</span><span>PyTorch</span><span>3D U-Net</span><span>ResNet3D</span><span>HCC</span><span>SHAP</span><span>Grad-CAM</span><span>Medical Imaging</span>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="exp-panel" data-panel="2" aria-hidden="true" aria-labelledby="panel-title-2">
+    <button class="exp-panel-close" aria-label="Close panel">×</button>
+    <div class="exp-panel-inner">
+      <div class="exp-panel-hero shape-3"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-bcc"/></svg></div>
+      <span class="exp-panel-tag">03 — Jan 2025 / May 2025</span>
+      <h2 class="exp-panel-title" id="panel-title-2">Braven</h2>
+      <p class="exp-panel-role">UI/UX Consultant</p>
+      <p class="exp-panel-org">Berkeley Consulting Collaborative · Berkeley, CA</p>
+      <div class="exp-panel-body">
+        <p>Collaborated with a team of <strong>8 consultants</strong> to synthesize multi-channel UX research for Braven — including <strong>survey data, competitive benchmarking, and affinity mapping</strong> — quantifying user pain points to inform a data-driven design strategy.</p>
+        <p>Systematized mobile app design iterations by validating user needs through rigorous <strong>qualitative and quantitative analysis</strong>, producing a measurable increase in engagement and interface usability.</p>
+      </div>
+      <div class="exp-panel-tags">
+        <span>UX Research</span><span>Affinity Mapping</span><span>Benchmarking</span><span>Mobile UI</span><span>Figma</span>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="exp-panel" data-panel="3" aria-hidden="true" aria-labelledby="panel-title-3">
+    <button class="exp-panel-close" aria-label="Close panel">×</button>
+    <div class="exp-panel-inner">
+      <div class="exp-panel-hero shape-4"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-bio"/></svg></div>
+      <span class="exp-panel-tag">04 — May 2024 / Aug 2024</span>
+      <h2 class="exp-panel-title" id="panel-title-3">Biosolution</h2>
+      <p class="exp-panel-role">Research Intern</p>
+      <p class="exp-panel-org">Biosolution Co., Ltd. · Seoul, Republic of Korea</p>
+      <div class="exp-panel-body">
+        <p>Investigated <strong>microRNA (mirBase)</strong> regulators of <strong>osteoarthritis</strong> by designing and running molecular biology assays — <strong>PCR, FACS analysis, and HPLC</strong> — to characterize candidate targets at the cellular level.</p>
+        <p>Performed <strong>cell culturing</strong> and <strong>in-vivo rat testing</strong> across the full preclinical workflow, supporting validation of therapeutic hypotheses with reproducible experimental data.</p>
+        <p>Supported the company's <strong>CAR T-cell therapy</strong> program by assisting in immunological assays and process documentation, contributing to early-stage translational research.</p>
+      </div>
+      <div class="exp-panel-tags">
+        <span>PCR</span><span>FACS</span><span>HPLC</span><span>Cell Culturing</span><span>In-vivo Testing</span><span>CAR T-cell</span>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="exp-panel" data-panel="4" aria-hidden="true" aria-labelledby="panel-title-4">
+    <button class="exp-panel-close" aria-label="Close panel">×</button>
+    <div class="exp-panel-inner">
+      <div class="exp-panel-hero shape-5"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-army"/></svg></div>
+      <span class="exp-panel-tag">05 — Sep 2022 / Mar 2024</span>
+      <h2 class="exp-panel-title" id="panel-title-4">US 8th Army</h2>
+      <p class="exp-panel-role">Non-Commissioned Officer · Platoon Leader</p>
+      <p class="exp-panel-org">US 8th Army, 2ID HHBN · Camp Humphreys, Republic of Korea</p>
+      <div class="exp-panel-body">
+        <p>Led a platoon of <strong>40+ soldiers</strong> as a bilingual Korean-English Platoon Leader, translating and delivering ACFT training and basic military coursework, resulting in a <strong>96% pass rate</strong> across the entire platoon.</p>
+        <p>Awarded the <strong>US Army Certificate of Achievement</strong> (March 2024) for outstanding leadership and bilingual communication.</p>
+      </div>
+      <div class="exp-panel-tags">
+        <span>Leadership</span><span>Bilingual (KR/EN)</span><span>Training</span>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="exp-panel" data-panel="5" aria-hidden="true" aria-labelledby="panel-title-5">
+    <button class="exp-panel-close" aria-label="Close panel">×</button>
+    <div class="exp-panel-inner">
+      <div class="exp-panel-hero shape-6"><svg viewBox="0 0 500 320" preserveAspectRatio="xMidYMid slice"><use href="#vis-ucsf"/></svg></div>
+      <span class="exp-panel-tag">06 — Aug 2021 / May 2022</span>
+      <h2 class="exp-panel-title" id="panel-title-5">UCSF</h2>
+      <p class="exp-panel-role">Telehealth Coordinator · Student Volunteer</p>
+      <p class="exp-panel-org">University of California, San Francisco · San Francisco, CA</p>
+      <div class="exp-panel-body">
+        <p>Quantified <strong>telehealth service utilization trends</strong> by systematizing the collection and organization of patient data, identifying critical workflow bottlenecks through <strong>longitudinal analysis</strong>.</p>
+        <p>Optimized clinical delivery frameworks at UCSF by applying data-driven insights to service metrics, enhancing <strong>operational efficiency and resource allocation</strong> for telehealth systems.</p>
+      </div>
+      <div class="exp-panel-tags">
+        <span>Healthcare Data</span><span>Longitudinal Analysis</span><span>Operations</span><span>Telehealth</span>
+      </div>
+    </div>
+  </aside>
 
   <footer class="exp-footer">
     <span>&copy; 2026 Junho Choi</span>
@@ -492,30 +839,115 @@
 
   <script>
     (function () {
-      var header = document.getElementById('siteHeader');
-      var hero = document.getElementById('heroSection');
+      var SLIDE_COUNT = 6;
+
+      var wrap     = document.getElementById('expScrollWrap');
+      var slides   = wrap ? wrap.querySelectorAll('.exp-slide') : [];
+      var strip    = document.getElementById('figStrip');
+      var allFigs  = strip ? strip.querySelectorAll('.exp-figure') : [];   // includes 2 ghost clones at start/end
+      var realFigs = strip ? strip.querySelectorAll('.exp-figure:not(.is-ghost)') : [];
+      var progFill = document.getElementById('expProgFill');
+      var currentEl= document.getElementById('expCurrent');
+      var lastIdx  = -1;
+      var ticking  = false;
+
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+      // Translate the strip so the figure at real-index `idx` is centered.
+      // The strip has 1 ghost-clone at index 0, so the real slide N lives at strip-child (N + 1).
+      // Because the strip-frame uses `align-items: center`, the strip is already centered
+      // in the frame — so we translate by (strip's own midpoint − active figure's midpoint).
+      function positionStrip(idx) {
+        if (!strip || !allFigs.length) return;
+        var slotIdx = idx + 1;
+        var active  = allFigs[slotIdx];
+        if (!active) return;
+        var stripH  = strip.offsetHeight;
+        var targetY = active.offsetTop + active.offsetHeight / 2;  // figure's midpoint within the strip
+        strip.style.transform = 'translateY(' + (stripH / 2 - targetY) + 'px)';
+
+        // Visual states across the whole strip (including ghosts)
+        allFigs.forEach(function (f, i) {
+          var d = Math.abs(i - slotIdx);
+          f.classList.toggle('is-active', d === 0);
+          f.classList.toggle('is-near',   d === 1);
+        });
+      }
+
+      function update() {
+        if (!wrap || slides.length === 0) return;
+        var rect = wrap.getBoundingClientRect();
+        var vh   = window.innerHeight || document.documentElement.clientHeight;
+        var total= wrap.offsetHeight - vh;
+        var raw  = -rect.top / total;
+        var progress = Math.max(0, Math.min(0.9999, raw));
+        var idx = Math.min(SLIDE_COUNT - 1, Math.floor(progress * SLIDE_COUNT));
+
+        if (idx !== lastIdx) {
+          slides.forEach(function (s, i) { s.classList.toggle('is-active', i === idx); });
+          if (currentEl) currentEl.textContent = pad(idx + 1);
+          positionStrip(idx);
+          lastIdx = idx;
+        }
+        if (progFill) progFill.style.transform = 'scaleX(' + progress + ')';
+        ticking = false;
+      }
 
       function onScroll() {
-        var heroBottom = hero.offsetTop + hero.offsetHeight;
-        if (window.scrollY > heroBottom - 80) header.classList.add('dark-header');
-        else header.classList.remove('dark-header');
+        if (!ticking) {
+          window.requestAnimationFrame(update);
+          ticking = true;
+        }
       }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
 
-      if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) {
-              e.target.classList.add('visible');
-              io.unobserve(e.target);
-            }
-          });
-        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-        document.querySelectorAll('.anim').forEach(function (el) { io.observe(el); });
-      } else {
-        document.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
+      // Initial render: activate slide 0 and position strip immediately
+      if (slides[0]) slides[0].classList.add('is-active');
+      // Defer one frame so layout is settled before measuring
+      requestAnimationFrame(function () { positionStrip(0); update(); });
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', function () { positionStrip(lastIdx < 0 ? 0 : lastIdx); onScroll(); }, { passive: true });
+
+      // ── Detail panel open/close ───────────────────────────────────
+      var overlay = document.getElementById('expOverlay');
+      var panels  = document.querySelectorAll('.exp-panel');
+
+      function openPanel(idx) {
+        var panel = document.querySelector('.exp-panel[data-panel="' + idx + '"]');
+        if (!panel) return;
+        // close any others first
+        panels.forEach(function (p) { p.classList.remove('is-open'); p.setAttribute('aria-hidden', 'true'); });
+        panel.classList.add('is-open');
+        panel.setAttribute('aria-hidden', 'false');
+        if (overlay) { overlay.classList.add('is-open'); overlay.setAttribute('aria-hidden', 'false'); }
+        document.body.classList.add('exp-panel-open');
+        var btn = panel.querySelector('.exp-panel-close');
+        if (btn) btn.focus();
       }
+      function closePanels() {
+        panels.forEach(function (p) { p.classList.remove('is-open'); p.setAttribute('aria-hidden', 'true'); });
+        if (overlay) { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden', 'true'); }
+        document.body.classList.remove('exp-panel-open');
+      }
+
+      // Clicks on figures in the strip — only the active one is pointer-enabled,
+      // but ghost clones are filtered explicitly anyway.
+      realFigs.forEach(function (fig) {
+        fig.addEventListener('click', function () {
+          if (!fig.classList.contains('is-active')) return;
+          var i = parseInt(fig.getAttribute('data-i'), 10);
+          if (!isNaN(i)) openPanel(i);
+        });
+      });
+
+      // Close handlers: × button, overlay click, ESC key
+      document.querySelectorAll('.exp-panel-close').forEach(function (btn) {
+        btn.addEventListener('click', closePanels);
+      });
+      if (overlay) overlay.addEventListener('click', closePanels);
+      window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closePanels();
+      });
     })();
   </script>
   <script src="nav.js"></script>
