@@ -26,8 +26,13 @@
       z-index: 100;
     }
     .site-header.dark-header {
-      background: rgba(0,0,0,0.88) !important;
+      /* Translucent so the gallery background image shows through;
+         backdrop blur (inherited from the base .site-header rule) keeps
+         the nav legible against any photo. */
+      background: rgba(0,0,0,0.40) !important;
       border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(1.1);
+              backdrop-filter: blur(22px) saturate(1.1);
     }
     .site-header.dark-header .logo { color: #eee; }
     .site-header.dark-header .hamburger svg { stroke: #ccc; }
@@ -181,15 +186,24 @@
        directly below the hero — no click-to-zoom needed)
        ══════════════════════════════════════════════════════════════════════ */
     .gallery-section {
-      background: #000;
+      /* Drop your chosen image at images/Photos/gallery-bg.jpg
+         (or change the URL below). The dark gradient overlay sits
+         on top so the gallery rail still reads cleanly against it. */
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('images/Photos/gallery-bg.jpg') center / cover no-repeat;
+      background-attachment: scroll, fixed;
+      background-color: #000;       /* fallback while the image loads */
       padding: 4.5rem 0 4rem;
     }
 
     .gallery-track {
       background: #e8e4db;
-      max-width: 1200px;
+      max-width: 1190px;
       width: calc(100% - 4rem);
       margin: 0 auto;
+      /* Symmetric 2.5rem padding on both sides — the gap before Panel 1
+         on the left matches the gap after Panel 3 on the right. */
       padding: 1.5rem 2.5rem;
       overflow-x: auto;
       overflow-y: hidden;
@@ -202,21 +216,84 @@
       background: rgba(0,0,0,0.15); border-radius: 3px;
     }
 
+    /* ── Gallery rail: panels sit side-by-side with the SAME gap that
+       separates images within a panel (12px), so the inter-panel seam
+       reads as just another grid gutter, not a wider divider. ── */
     .gallery-inner {
-      display: grid;
-      grid-auto-flow: column dense;
-      grid-template-rows: 160px 160px 160px;
-      grid-auto-columns: 225px;
-      gap: 14px;
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
       align-items: stretch;
     }
 
-    .themed-gallery { display: contents; }
+    /* Each panel shares one consistent layout:
+       Row 1-2 (tall): three vertical photos (c1, c2, c3) with negative
+                       space and the section's primary label between them.
+       Row 3 (shorter): a closing label, a square photo, a wider photo,
+                       and a final label on the right edge.
+       This matches the screenshot reference so all panels look like the
+       first slide just with different content. */
+    /* All panels share the same column widths, row heights, gap, and tile→area
+       mapping — but each has its own grid-template-areas so the photos and
+       labels land in different spots per panel. */
+    .themed-gallery {
+      display: grid;
+      grid-template-columns: repeat(5, 215px);
+      grid-template-rows: 165px 165px 150px;
+      gap: 12px;
+      flex: 0 0 auto;
+    }
+    .themed-gallery .tile-city-1  { grid-area: c1; }
+    .themed-gallery .tile-city-2  { grid-area: c2; }
+    .themed-gallery .tile-city-3  { grid-area: c3; }
+    .themed-gallery .tile-city-4  { display: none; }   /* layout shows 5 photos per panel */
+    .themed-gallery .tile-water-1 { grid-area: w1; }
+    .themed-gallery .tile-water-2 { grid-area: w2; }
+    .themed-gallery .label-city   { grid-area: lc; align-items: flex-end; padding: 0 0 0.2rem 0; }
+    .themed-gallery .label-water  { grid-area: lw; }
+    .themed-gallery .label-nature { grid-area: ln; }
+
+    /* ── PANEL 1: left-anchored.
+       Two tall photos on the left, big negative-space gap, one tall photo
+       on the right. "City" label hovers in the gap. Bottom: Water label
+       + square water tile + wide water tile + Nature label. */
+    .gallery-1 {
+      grid-template-areas:
+        "c1 c2 lc lc  c3"
+        "c1 c2 lc lc  c3"
+        "lw w1 w2 w2 ln";
+    }
+
+    /* ── PANEL 2: 2×2 hero on the LEFT, labels stacked in col 3,
+       two tall photos in cols 4-5, wide water bar fills the bottom.
+       Every cell holds either a photo or a label. */
+    .gallery-2 {
+      grid-template-areas:
+        "ln w1 . . c2"
+        "c1 c3 lw . c2"
+        "c1 c3 w2 w2 w2";
+    }
+
+    /* ── PANEL 3: mirror — 2×2 hero on the RIGHT, two tall photos
+       on the left, labels stacked in col 3. Panel 3's HTML has only
+       2 labels (no .label-nature), so we don't reference 'ln' here. */
+    .gallery-3 {
+      grid-template-areas:
+        "c1 c2 c2 c3 c3"
+        "c1 lc lc c3 c3"
+        "lw w1 w2 w2 w2";
+    }
+
+    /* Hide ONLY Panel 2's .label-city — that's the "Nature" word that
+       would otherwise duplicate Panel 1's closing "Nature" label at the
+       seam. Panel 3 only has 2 labels in the HTML, so both must show. */
+    .gallery-2 .label-city { display: none; }
 
     .photo-tile {
       overflow: hidden;
       background: #c4c4c4;
-      cursor: zoom-in;
+      cursor: pointer;           /* hand-click cursor over images */
+      min-width: 0;              /* let cell width drive image width */
     }
     .photo-tile img {
       width: 100%;
@@ -244,13 +321,11 @@
       padding: 0 0.3rem 0.25rem;
     }
 
-    .tile-city-1, .tile-city-2,
-    .tile-city-3, .tile-city-4 { grid-row: 1 / 3; }
-    .label-city   { grid-row: 1 / 3; grid-column: span 2; }
-    .label-water  { grid-row: 3 / 4; }
-    .tile-water-1 { grid-row: 3 / 4; }
-    .tile-water-2 { grid-row: 3 / 4; grid-column: span 2; }
-    .label-nature { grid-row: 3 / 4; grid-column: span 2; }
+    /* All three panels share the same grid above. They differ only by
+       which photos/labels live in each named area — the .gallery-1/2/3
+       wrapper class is still on each panel in the HTML so we can target
+       specific tweaks later if needed (e.g. swap a hero position or
+       hide one label) without breaking the others. */
 
     /* ══════════════════════════════════════════════════════════════════════
        Lightbox
@@ -309,11 +384,19 @@
 
     /* Dark footer */
     .contact-footer {
-      background: #000;
+      /* Mirror the gallery section so the footer reads as a continuation
+         of that image (same background photo, slightly darker overlay
+         to ground the bottom of the page). */
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.82)),
+        url('images/Photos/gallery-bg.jpg') center / cover no-repeat;
+      background-color: #000;       /* fallback while the image loads */
       border-top: 1px solid rgba(255,255,255,0.08);
+      -webkit-backdrop-filter: blur(18px);
+              backdrop-filter: blur(18px);
     }
-    .contact-footer-copy { color: rgba(255,255,255,0.3); }
-    .contact-footer-links a { color: rgba(255,255,255,0.45); }
+    .contact-footer-copy { color: rgba(255,255,255,0.45); }
+    .contact-footer-links a { color: rgba(255,255,255,0.6); }
     .contact-footer-links a:hover { color: #fff; }
 
     /* Mobile */
@@ -325,11 +408,14 @@
       .photo-desc     { width: 86vw; bottom: 1.5rem; font-size: 0.85rem; }
 
       .gallery-track { padding: 1.5rem; width: calc(100% - 2rem); }
-      .gallery-inner {
+      .gallery-inner { gap: 32px; }
+      .themed-gallery {
+        grid-template-columns: repeat(5, 130px);
         grid-template-rows: 110px 110px 110px;
-        grid-auto-columns: 110px;
+        gap: 10px;
       }
-      .theme-label { font-size: 1.6rem; }
+      .theme-label { font-size: 1.4rem; }
+      .gallery-3 .label-nature { padding: 0.3rem 0 0 0.2rem; }
     }
   </style>
 </head>
@@ -414,46 +500,53 @@
       <div class="gallery-track anim-scale">
         <div class="gallery-inner">
 
-          <!-- Panel 1: City / Water / Nature -->
-          <div class="themed-gallery">
-            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_0440.JPG"  alt="City 1" /></div>
-            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_1416.JPG"  alt="City 2" /></div>
-            <div class="theme-label label-city">City</div>
-            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_2470.JPG"  alt="City 3" /></div>
-            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_3170.JPG"  alt="City 4" /></div>
+          <!-- Panel 1: City / Water / Nature
+               Layout: cityscape hero on the left, water tiles wide across the bottom.
+               "City" label sits next to the urban photos; "Water" anchors the water
+               row; "Nature" closes the panel on the right edge. -->
+          <div class="themed-gallery gallery-1">
+            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_0440.JPG"  alt="City — skyline" /></div>
+            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_1416.JPG"  alt="City — street" /></div>
+            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_2470.JPG"  alt="City — alley" /></div>
+            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_3170.JPG"  alt="City — building" /></div>
+            <div class="theme-label label-city">People</div>
+
+            <div class="theme-label label-water">City</div>
+            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_6066.jpg" alt="Water — surface" /></div>
+            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_6772.jpg" alt="Water — shoreline" /></div>
+            <div class="theme-label label-nature">Scenes</div>
+          </div>
+
+          <!-- Panel 2: Nature / People / Cafes
+               Layout: mosaic with two anchor photos and a portrait column.
+               "Nature" sits top-left next to the green shots; "People" anchors
+               the portrait row; "Cafes" closes on the right. -->
+          <div class="themed-gallery gallery-2">
+            <div class="theme-label label-city">Scenes</div>
+            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_7656.jpg" alt="Nature — forest" /></div>
+            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_7775.JPG" alt="Nature — light" /></div>
+            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_8112.JPG" alt="Nature — coast" /></div>
+            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_9038.JPG" alt="Nature — close-up" /></div>
 
             <div class="theme-label label-water">Water</div>
-            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_6066.jpg" alt="Water 1" /></div>
-            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_6772.jpg" alt="Water 2" /></div>
-            <div class="theme-label label-nature">Nature</div>
+            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_9771.JPG" alt="People — portrait" /></div>
+            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_9794.JPG" alt="People — candid" /></div>
+            <div class="theme-label label-nature">Sky</div>
           </div>
 
-          <!-- Panel 2: Nature / People / Cafes -->
-          <div class="themed-gallery">
-            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_7656.jpg" alt="Nature 1" /></div>
-            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_7775.JPG" alt="Nature 2" /></div>
+          <!-- Panel 3: Cafes / Food / Moments
+               Layout: asymmetric portrait-heavy with a tall vertical "Moments"
+               label on the right edge as a closing statement. -->
+          <div class="themed-gallery gallery-3">
+            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_4958.jpg" alt="Cafe — interior" /></div>
+            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_5297.jpg" alt="Cafe — drink" /></div>
             <div class="theme-label label-city">Nature</div>
-            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_8112.JPG" alt="Nature 3" /></div>
-            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_9038.JPG" alt="Nature 4" /></div>
+            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_4284.jpg" alt="Cafe — table" /></div>
+            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_1023 2.JPG" alt="Cafe — window" /></div>
 
-            <div class="theme-label label-water">People</div>
-            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_9771.JPG" alt="People 1" /></div>
-            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_9794.JPG" alt="People 2" /></div>
-            <div class="theme-label label-nature">Cafes</div>
-          </div>
-
-          <!-- Panel 3: Cafes / Food / Moments -->
-          <div class="themed-gallery">
-            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_4958.jpg" alt="" /></div>
-            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_5297.jpg" alt="" /></div>
-            <div class="theme-label label-city">Cafes</div>
-            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_4284.jpg" alt="" /></div>
-            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_1023 2.JPG" alt="" /></div>
-
-            <div class="theme-label label-water">Food</div>
-            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_2530.JPG" alt="" /></div>
-            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_2766.JPG" alt="" /></div>
-            <div class="theme-label label-nature">Moments</div>
+            <div class="theme-label label-water">Moments</div>
+            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_2530.JPG" alt="Food — plate" /></div>
+            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_2766.JPG" alt="Food — dish" /></div>
           </div>
 
         </div>
