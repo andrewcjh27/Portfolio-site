@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Gallery Panel Planner</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px;
+    font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, Helvetica, sans-serif;
+    background: #1a1a1a;
+    color: #f1f1f1;
+    min-height: 100vh;
+  }
+  h1 { font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.4rem; }
+  .sub { color: #aaa; margin: 0 0 2rem; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 32px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  /* ── Left column: editor + legend ── */
+  .editor {
+    background: #222;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #333;
+  }
+  .editor label {
+    display: block;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    margin-bottom: 0.6rem;
+  }
+  textarea {
+    width: 100%;
+    height: 180px;
+    background: #111;
+    color: #f1f1f1;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 12px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+  textarea:focus { outline: none; border-color: #6b9eff; }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0 18px;
+  }
+  button {
+    padding: 8px 14px;
+    background: #6b9eff;
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button:hover { background: #5a8aef; }
+  button.ghost { background: #333; color: #f1f1f1; }
+  button.ghost:hover { background: #444; }
+
+  .legend {
+    margin-top: 18px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #ccc;
+  }
+  .legend code {
+    background: #111;
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: #6b9eff;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.78rem;
+  }
+
+  .preset {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 16px;
+  }
+  .preset button {
+    background: #2b3340;
+    color: #6b9eff;
+    padding: 6px 10px;
+    font-size: 0.74rem;
+  }
+  .preset button:hover { background: #354152; }
+
+  /* ── Right column: live preview ── */
+  .preview-wrap {
+    background: #2a2a2a;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #333;
+  }
+  .preview-wrap h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #aaa;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .preview-container {
+    background: #e8e4db;
+    padding: 1.5rem 2.5rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .preview-panel {
+    display: grid;
+    grid-template-columns: repeat(5, 195px);
+    grid-template-rows: 150px 150px 135px;
+    gap: 12px;
+    /* set via JS based on textarea */
+  }
+  .cell {
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    user-select: none;
+  }
+  .cell.photo {
+    background: linear-gradient(135deg, #333, #555);
+    color: #999;
+    border: 1px solid #222;
+  }
+  .cell.label {
+    background: transparent;
+    color: #111;
+    font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: -0.02em;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 0 0 6px 4px;
+  }
+  .cell.empty {
+    background: transparent;
+    color: #b8b3a7;
+    font-size: 0.7rem;
+  }
+
+  .error {
+    color: #ff7a7a;
+    font-size: 0.85rem;
+    margin-top: 12px;
+    min-height: 1.2em;
+  }
+
+  .output-css {
+    margin-top: 16px;
+    background: #111;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #b8d9b8;
+    white-space: pre-wrap;
+  }
+  .output-css .key { color: #888; }
+</style>
+</head>
+<body>
+
+<h1>Gallery layout planner</h1>
+<p class="sub">Sketch a panel grid below, see it rendered on the right, then copy the CSS into <code style="color:#6b9eff">photo.html</code> when you're happy.</p>
+
+<div class="layout">
+
+  <div class="editor">
+    <label for="grid-input">Grid template areas — 5 columns × 3 rows</label>
+    <textarea id="grid-input" spellcheck="false">"c1 c1 lw c2 c3"
+"c1 c1 ln c2 c3"
+"w1 w1 w2 w2 w2"</textarea>
+
+    <div class="actions">
+      <button id="preview-btn">Update preview</button>
+      <button id="copy-btn" class="ghost">Copy as CSS</button>
+    </div>
+
+    <div class="error" id="error"></div>
+
+    <label style="margin-top: 4px;">Quick presets</label>
+    <div class="preset">
+      <button data-preset='"c1 c2 .  .  c3"
+"c1 c2 lc .  c3"
+"lw w1 w2 w2 ln"'>Panel 1 current</button>
+      <button data-preset='"c1 c1 lw c2 c3"
+"c1 c1 ln c2 c3"
+"w1 w1 w2 w2 w2"'>Hero left</button>
+      <button data-preset='"c1 c2 lc c3 c3"
+"c1 c2 lw c3 c3"
+"w1 w1 w2 w2 w2"'>Hero right</button>
+      <button data-preset='"c1 c2 c2 c3 c3"
+"c1 c2 c2 c3 c3"
+"lw w1 w2 w2 ln"'>Centered hero</button>
+      <button data-preset='"lc c1 c2 c3 ln"
+".  c1 c2 c3 . "
+"w1 w1 lw w2 w2"'>Top labels</button>
+    </div>
+
+    <div class="legend">
+      <strong>Cell names you can use:</strong><br>
+      <code>c1</code> <code>c2</code> <code>c3</code> = city / nature / cafe photos (tall)<br>
+      <code>w1</code> <code>w2</code> = water / bottom photos<br>
+      <code>lc</code> <code>lw</code> <code>ln</code> = labels (city / water / nature)<br>
+      <code>.</code> = empty cell (creates negative space)<br><br>
+      <strong>Rules:</strong> adjacent cells with the same name merge into one area. Each area must be a rectangle.
+    </div>
+
+    <div class="output-css" id="output-css" aria-live="polite"></div>
+  </div>
+
+  <div class="preview-wrap">
+    <h2>Live preview</h2>
+    <div class="preview-container">
+      <div id="preview-panel" class="preview-panel"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const PHOTO_TILES = new Set(['c1','c2','c3','c4','w1','w2']);
+  const LABEL_TILES = { lc: 'City', lw: 'Water', ln: 'Nature' };
+  const LABEL_NAMES_SET = new Set(Object.keys(LABEL_TILES));
+
+  const input   = document.getElementById('grid-input');
+  const preview = document.getElementById('preview-panel');
+  const errorEl = document.getElementById('error');
+  const cssOut  = document.getElementById('output-css');
+
+  function parseTemplate(raw) {
+    const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length);
+    const grid = [];
+    for (const line of lines) {
+      // Strip quotes and split on whitespace
+      const cleaned = line.replace(/^"|"$/g, '').replace(/^"|"$/g, '');
+      const tokens = cleaned.split(/\s+/).filter(t => t.length);
+      grid.push(tokens);
+    }
+    return grid;
+  }
+
+  function render() {
+    errorEl.textContent = '';
+    const grid = parseTemplate(input.value);
+    if (grid.length === 0) {
+      errorEl.textContent = 'Empty input — paste a grid-template-areas value';
+      return;
+    }
+    const cols = grid[0].length;
+    if (!grid.every(row => row.length === cols)) {
+      errorEl.textContent = 'All rows must have the same number of columns';
+      return;
+    }
+
+    // Apply to preview (individual properties — grid-template shorthand
+    // parsing is fiddly across browsers).
+    const areasStr = grid.map(r => '"' + r.join(' ') + '"').join(' ');
+    preview.style.gridTemplateAreas   = areasStr;
+    preview.style.gridTemplateColumns = `repeat(${cols}, 195px)`;
+    preview.style.gridTemplateRows    = grid.map(() => '150px').join(' ');
+
+    // Build unique area set and place one cell per area
+    const seen = new Set();
+    preview.innerHTML = '';
+    for (const row of grid) {
+      for (const name of row) {
+        if (seen.has(name)) continue;
+        seen.add(name);
+        const div = document.createElement('div');
+        if (name === '.') {
+          div.className = 'cell empty';
+          div.textContent = '(empty)';
+        } else if (LABEL_NAMES_SET.has(name)) {
+          div.className = 'cell label';
+          div.textContent = LABEL_TILES[name];
+        } else {
+          div.className = 'cell photo';
+          div.textContent = name;
+        }
+        div.style.gridArea = name === '.' ? 'auto' : name;
+        if (name === '.') {
+          // For empty cells, place them at first occurrence position
+          // (we just append; they don't get a named area)
+          // To keep it visible, we use grid-row/grid-column based on the row+col found:
+          // Find the first row/col where this dot is
+          // (we treat each . as its own cell)
+        }
+        preview.appendChild(div);
+      }
+    }
+
+    // Empty cells: add one block per dot occurrence
+    for (let r = 0; r < grid.length; r++) {
+      for (let c = 0; c < grid[r].length; c++) {
+        if (grid[r][c] === '.') {
+          const empty = document.createElement('div');
+          empty.className = 'cell empty';
+          empty.textContent = '·';
+          empty.style.gridRow = (r + 1) + ' / span 1';
+          empty.style.gridColumn = (c + 1) + ' / span 1';
+          preview.appendChild(empty);
+        }
+      }
+    }
+
+    // Output the CSS-formatted block
+    const cssRows = grid.map(r => '        "' + r.join(' ') + '"').join('\n');
+    cssOut.innerHTML =
+      '<span class="key">.gallery-N {</span>\n' +
+      '  <span class="key">grid-template-areas:</span>\n' +
+      cssRows + ';\n' +
+      '<span class="key">}</span>';
+  }
+
+  document.getElementById('preview-btn').addEventListener('click', render);
+  input.addEventListener('input', render);
+
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const text = cssOut.innerText || cssOut.textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1400);
+    });
+  });
+
+  document.querySelectorAll('.preset button').forEach(b => {
+    b.addEventListener('click', () => {
+      input.value = b.dataset.preset;
+      render();
+    });
+  });
+
+  // Initial render
+  render();
+</script>
+</body>
+</html>

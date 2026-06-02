@@ -202,28 +202,29 @@
       max-width: 1190px;
       width: calc(100% - 4rem);
       margin: 0 auto;
-      /* Symmetric 2.5rem padding on both sides — the gap before Panel 1
-         on the left matches the gap after Panel 3 on the right. */
-      padding: 1.5rem 2.5rem;
+      /* Changed: Only vertical padding here now (1.5rem top/bottom, 0 left/right) */
+      padding: 1.5rem 0; 
       overflow-x: auto;
       overflow-y: hidden;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
-    .gallery-track::-webkit-scrollbar { height: 6px; }
-    .gallery-track::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.15); border-radius: 3px;
-    }
 
-    /* ── Gallery rail: panels sit side-by-side with the SAME gap that
-       separates images within a panel (12px), so the inter-panel seam
-       reads as just another grid gutter, not a wider divider. ── */
     .gallery-inner {
       display: flex;
       flex-direction: row;
       gap: 12px;
       align-items: stretch;
+      /* Added: Horizontal padding moved here so the browser can't clip it */
+      padding: 0 2.5rem; 
+      /* Added: Forces the container to wrap all images + padding without shrinking */
+      width: max-content; 
+    }
+
+    .gallery-track::-webkit-scrollbar { height: 6px; }
+    .gallery-track::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.15); border-radius: 3px;
     }
 
     /* Each panel shares one consistent layout:
@@ -407,8 +408,8 @@
       .marquee-word   { font-size: clamp(4rem, 22vw, 7rem); padding-right: 6vw; }
       .photo-desc     { width: 86vw; bottom: 1.5rem; font-size: 0.85rem; }
 
-      .gallery-track { padding: 1.5rem; width: calc(100% - 2rem); }
-      .gallery-inner { gap: 32px; }
+      .gallery-track { padding: 1.5rem 0; width: calc(100% - 2rem); }
+      .gallery-inner { gap: 32px; padding: 0 1.5rem; }
       .themed-gallery {
         grid-template-columns: repeat(5, 130px);
         grid-template-rows: 110px 110px 110px;

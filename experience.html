@@ -694,7 +694,7 @@
       let wheelTimeout;
       window.addEventListener('wheel', (e) => {
         if (document.body.classList.contains('exp-panel-open')) return;
-        targetProgress += (e.deltaY + e.deltaX) * 0.00027; 
+        targetProgress += (e.deltaY + e.deltaX) * 0.00037; 
         
         clearTimeout(wheelTimeout);
         wheelTimeout = setTimeout(() => {
