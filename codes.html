@@ -27,12 +27,24 @@
     .site-header .nav-more-toggle {
       color: rgba(0,0,0,0.78);
       text-shadow: 0 1px 10px rgba(255,255,255,0.75);
-      transition: color 0.35s ease, background 0.25s ease;
+      transition: color 0.35s ease, background 0.25s ease, text-shadow 0.35s ease;
     }
     .site-header .hamburger svg {
       stroke: rgba(0,0,0,0.78);
       filter: drop-shadow(0 1px 6px rgba(255,255,255,0.75));
-      transition: stroke 0.35s ease;
+      transition: stroke 0.35s ease, filter 0.35s ease;
+    }
+
+    /* Zoomed state for the header navigation */
+    .site-header.zoomed .logo,
+    .site-header.zoomed .nav-link,
+    .site-header.zoomed .nav-more-toggle {
+      color: #fff;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+    }
+    .site-header.zoomed .hamburger svg {
+      stroke: #fff;
+      filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
     }
 
     /* ══════════════════════════════════════════════════════════════════
@@ -40,7 +52,6 @@
        ══════════════════════════════════════════════════════════════════ */
     .codes-stage {
       position: relative;
-      /* 0–vh: zoom transition. vh–end: folder app interactive while pinned. */
       height: 280vh;
       background: #fff;
     }
@@ -52,26 +63,23 @@
       background: #fff;
     }
 
-    /* Two-element setup so centering (translate) and scaling (scale) don't
-       fight over the single 'transform' property.
-       .mockup-wrap stays centered in the pinned viewport.
-       .mac-mockup inside it is scaled by JS via the transform property. */
     .mockup-wrap {
       position: absolute;
-      top: 50%;
+      top: 53.7%;
       left: 50%;
-      width: min(88vw, 1500px);
+      width: min(82.7vw, 1300px);
       transform: translate(-50%, -50%);
     }
     .mac-mockup {
       position: relative;
       width: 100%;
-      aspect-ratio: 3000 / 2250;   /* matches the PNG: 4:3 */
-      /* Scale around the mockup's center. The JS-applied transform combines
-         scale + translate so the screen rect ends up exactly at viewport
-         center at full zoom (despite being off-center within the mockup). */
+      aspect-ratio: 3000 / 2250;
       transform-origin: 50% 50%;
+      /* Hardware acceleration flags to fix scroll lag */
       will-change: transform;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      -webkit-font-smoothing: antialiased; /* Stops text from jittering during scale */
     }
     .mockup-image {
       position: absolute;
@@ -84,32 +92,43 @@
     }
 
     /* ══════════════════════════════════════════════════════════════════
-       Folder app — positioned over the white screen area of the PNG.
-       Tightened so the dark bezel/frame of the Studio Display is visible
-       around the screen content. Adjust if the screen rectangle in your
-       PNG is different — these are the four numbers to tune.
+       Folder app
        ══════════════════════════════════════════════════════════════════ */
-    .folder-app {
+/* The outer container (Solid dark background) */
+.folder-app {
       position: absolute;
-      /* Pixel-measured from the actual PNG (3000×2250):
-         top=406, left=460, right=2441, bottom=1523. */
-      top: 18.04%;
-      left: 15.33%;
-      width: 66.03%;
-      height: 49.64%;
+      top: 17.84%;    /* Decreased to move the top edge UP */
+      left: 15.13%;   /* Decreased to move the left edge LEFT */
+      width: 66.43%;  /* Increased to stretch the right edge RIGHT */
+      height: 50.04%;
       z-index: 2;
-      padding: 2.5% 3%;
+      padding: 2.5% 2.5% 0 2.5%;
       display: block;
       color: #fff;
+      background: #1C0730; /* Solid dark purple matching the screenshot */
+      border-radius: 0.4%;
+      overflow: hidden;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+    }
+
+    /* NEW: The inner vibrant card layer */
+    .folder-inner-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px 20px 0 0;
       background:
         radial-gradient(circle at 18% 20%, rgba(0, 180, 255, 0.42) 0%, transparent 30%),
         radial-gradient(circle at 78% 24%, rgba(255, 45, 171, 0.52) 0%, transparent 34%),
         radial-gradient(circle at 54% 88%, rgba(255, 126, 45, 0.45) 0%, transparent 34%),
         linear-gradient(135deg, #120322 0%, #23043d 36%, #831a71 66%, #08276e 100%);
-      border-radius: 0.4%;
       overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
-    .folder-app::before {
+
+    /* The glowing blur effect (Moved to the inner card) */
+    .folder-inner-card::before {
       content: '';
       position: absolute;
       inset: -18%;
@@ -119,16 +138,44 @@
       filter: blur(22px);
       opacity: 0.9;
       pointer-events: none;
+      transform: translateZ(0);
+      will-change: transform, filter;
     }
+    .folder-hero-text {
+      position: absolute;
+      top: 15%; /* Positions the text block near the top */
+      left: 0;
+      right: 0;
+      text-align: center;
+      z-index: 5;
+      padding: 0 4%;
+    }
+    .folder-hero-text h2 {
+      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
+      font-size: 1.8em;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 0.3em 0;
+      letter-spacing: -0.02em;
+    }
+    .folder-hero-text p {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.75em;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0;
+      line-height: 1.4;
+    }
+
     .folder-app-bar {
       position: absolute;
-      top: 6%;
+      top: 36%;
       left: 6%;
       right: 6%;
       z-index: 5;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center; /* Centered Search Bar */
       gap: 1rem;
       margin-bottom: 0;
     }
@@ -140,19 +187,81 @@
       text-transform: uppercase;
       color: rgba(255,255,255,0.7);
     }
-    .folder-app-search {
-      width: 38%;
-      padding: 0.45em 0.9em;
+/* The Glassmorphism pill container */
+.search-wrapper {
+      display: flex;
+      align-items: center;
+      
+      /* CHANGED: Reduced width and max-width to make it horizontally smaller */
+      width: 30%; 
+      max-width: 260px; 
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.08);
+      
+      /* CHANGED: Tighter padding around the edges */
+      padding: 0.15em; 
+      
+      transition: border-color 0.3s ease, background 0.3s ease;
+      will-change: transform, backdrop-filter;
+    }
+    .search-wrapper:focus-within {
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    /* The transparent input field */
+    .folder-app-search {
+      flex: 1;
+      background: transparent;
+      border: none;
       color: #fff;
       font-family: -apple-system, "SF Pro Text", sans-serif;
-      font-size: 0.6em;
+      
+      /* CHANGED: Smaller font size */
+      font-size: 0.55em; 
+      
+      /* CHANGED: Thinner padding to reduce height */
+      padding: 0.35em 0.5em 0.35em 1em; 
+      
       outline: none;
+      text-align: left;
     }
-    .folder-app-search::placeholder { color: rgba(255,255,255,0.5); }
-    .folder-app-search:focus { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); }
+    .folder-app-search::placeholder { 
+      color: rgba(255,255,255,0.4); 
+    }
+
+    /* The vibrant pink submit button */
+    .search-btn {
+      background: #FF0063;
+      background: linear-gradient(135deg, #ff007f, #ff0033);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      
+      /* CHANGED: Reduced padding to match the new slimmer height */
+      padding: 0.35em 1em; 
+      
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      
+      /* CHANGED: Smaller font size */
+      font-size: 0.55em; 
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 0, 85, 0.3);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .search-btn:hover {
+      transform: scale(1.03);
+      filter: brightness(1.1);
+    }
+    .search-btn:active {
+      transform: scale(0.97);
+    }
 
     .folder-strip {
       position: absolute;
@@ -164,22 +273,30 @@
       cursor: grab;
       user-select: none;
       touch-action: pan-x;
-      perspective: 900px;
-      transform-style: preserve-3d;
+      
+      perspective: 1200px; /* Slightly increased for smoother 3D angles */
+      
+      /* THE FIX: Force the container to stack cards by z-index instead of 3D geometry */
+      transform-style: flat; 
     }
+
     .folder-strip.dragging {
       cursor: grabbing;
     }
     .folder-tab {
       position: absolute;
-      top: 62%;
+      top: 85%;
       left: 50%;
-      width: min(78%, 34em);
-      height: 58%;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.34), rgba(255,255,255,0.11)),
-        radial-gradient(circle at 18% 8%, rgba(255,255,255,0.42), transparent 26%),
-        linear-gradient(135deg, var(--panel-a, #ff2f91), var(--panel-b, #3f63ff));
+      width: min(50%, 25em); 
+      height: 45%; 
+      
+      /* Safely transparent background (no blur needed) */
+      background: linear-gradient(
+        135deg, 
+        color-mix(in srgb, var(--panel-a) 92%, transparent), 
+        color-mix(in srgb, var(--panel-b) 92%, transparent)
+      );
+      
       color: #fff;
       border: 1px solid rgba(255,255,255,0.26);
       padding: 1.15em 1.25em 1em;
@@ -195,37 +312,31 @@
       font-size: 0.86em;
       letter-spacing: -0.01em;
       line-height: 1.1;
+      
       transform:
         translate(-50%, -50%)
-        translate3d(var(--stack-x, 0), var(--stack-y, 0), var(--stack-z, 0))
+        translate3d(var(--stack-x, 0), var(--stack-y, 0), var(--stack-z, 0)) 
         rotateX(var(--stack-rx, 0deg))
         rotateY(var(--stack-ry, 0deg))
         rotateZ(var(--stack-rz, 0deg))
         scale(var(--stack-scale, 1));
+        
       opacity: var(--stack-opacity, 1);
       pointer-events: var(--stack-events, auto);
-      transition:
-        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 0.3s ease,
-        box-shadow 0.35s ease,
-        filter 0.35s ease;
-      box-shadow:
-        0 28px 70px rgba(0,0,0,0.38),
-        0 0 42px rgba(255,40,170,0.22),
-        inset 0 1px 0 rgba(255,255,255,0.42);
-      backdrop-filter: blur(18px) saturate(1.24);
-      -webkit-backdrop-filter: blur(18px) saturate(1.24);
-      filter: saturate(var(--stack-saturate, 1)) brightness(var(--stack-brightness, 1));
+      
+      /* CHANGED: Removed the filter transitions to speed up rendering */
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+        
+      /* THE FIX: backdrop-filter and normal filter completely removed here */
+      
       overflow: hidden;
+      backface-visibility: hidden;
+      transform-style: flat; 
+      will-change: transform; 
     }
+
     .folder-tab::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,0.28), transparent 38%),
-        radial-gradient(circle at 90% 8%, rgba(255,255,255,0.32), transparent 22%);
-      pointer-events: none;
+      display: none;
     }
     .folder-tab::after {
       content: '';
@@ -274,12 +385,9 @@
       transition: opacity 0.25s ease, transform 0.25s ease;
     }
     .folder-tab.is-front {
-      z-index: 30 !important;
-      box-shadow:
-        0 36px 90px rgba(0,0,0,0.48),
-        0 0 54px rgba(255,45,171,0.34),
-        0 0 90px rgba(0,180,255,0.18),
-        inset 0 1px 0 rgba(255,255,255,0.48);
+      /* THE FIX: Increased from 30 to 100 to ensure it always renders on top */
+      z-index: 100 !important; 
+    
     }
     .folder-tab.is-front .folder-tab-meta,
     .folder-tab.is-front .folder-tab-summary {
@@ -300,7 +408,144 @@
     }
 
     /* ══════════════════════════════════════════════════════════════════
-       Active-folder mode — clicked folder zooms forward
+       In-place zoom — the clicked card itself enlarges and centers WITHIN
+       the mockup screen (folder-app), and the rest of the screen blurs.
+       The actual tab element morphs (its CSS transform transitions); no
+       separate detail card.
+       ══════════════════════════════════════════════════════════════════ */
+    .folder-app-blur {
+      position: absolute;
+      inset: -100%;                         /* extend past the strip to cover hero/search too */
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(22px) saturate(1.2);
+      -webkit-backdrop-filter: blur(22px) saturate(1.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease;
+      z-index: 150;
+    }
+    .folder-app.has-zoomed .folder-app-blur {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Fade and slightly blur the non-zoomed cards while one is zoomed,
+       so the focused card is unmistakably the foreground. */
+    .folder-app.has-zoomed .folder-tab:not(.is-zoomed) {
+      opacity: 0.18;
+      filter: blur(4px);
+      pointer-events: none;
+    }
+    /* Dim the hero text and search bar at the top of the screen while
+       a card is zoomed — keeps focus on the open project. */
+    .folder-app.has-zoomed .folder-hero-text,
+    .folder-app.has-zoomed .folder-app-bar {
+      opacity: 0.18;
+      filter: blur(4px);
+      pointer-events: none;
+      transition: opacity 0.4s, filter 0.4s;
+    }
+    .folder-hero-text,
+    .folder-app-bar {
+      transition: opacity 0.4s, filter 0.4s;
+    }
+
+    /* When a tab is in its zoomed state, override the 3D stack transform
+       and pin it to the center of the strip at a larger size. CSS transition
+       on transform/width/height plays the morph from the coverflow position. */
+    .folder-tab.is-zoomed {
+      width: min(82%, 42em) !important;
+      height: 80% !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      z-index: 200 !important;
+      pointer-events: auto !important;
+      cursor: default !important;
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+    }
+    .folder-tab.is-zoomed .folder-tab-meta,
+    .folder-tab.is-zoomed .folder-tab-summary {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    /* Close button — visible only when the tab is zoomed */
+    .folder-tab-close {
+      position: absolute;
+      top: 0.7em;
+      right: 0.7em;
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-size: 1.05em;
+      line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      font-family: -apple-system, sans-serif;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .folder-tab.is-zoomed .folder-tab-close {
+      display: flex;
+    }
+    .folder-tab-close:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: rotate(90deg);
+    }
+
+    /* "View on GitHub" link — visible only when the tab is zoomed */
+    .folder-tab-repo {
+      display: none;
+      align-items: center;
+      gap: 0.45em;
+      padding: 0.55em 1.1em;
+      background: rgba(0, 0, 0, 0.45);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.7em;
+      font-weight: 500;
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      letter-spacing: 0.01em;
+      margin-top: 1.2em;
+      align-self: flex-start;
+      transition: transform 0.2s, background 0.2s;
+      position: relative;
+      z-index: 2;
+    }
+    .folder-tab.is-zoomed .folder-tab-repo {
+      display: inline-flex;
+    }
+    .folder-tab-repo:hover {
+      background: rgba(0, 0, 0, 0.65);
+      transform: translateY(-2px);
+    }
+    .folder-tab-repo svg {
+      width: 1.05em;
+      height: 1.05em;
+      fill: currentColor;
+    }
+
+    /* Smooth the morph for size changes — transform was already transitioned
+       in the original .folder-tab rule, so we add width/height here. */
+    .folder-tab {
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  width    0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  height   0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity  0.3s ease;
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       Legacy detail panel (no longer used — kept hidden for safety)
        ══════════════════════════════════════════════════════════════════ */
     .folder-backdrop {
       position: fixed;
@@ -318,6 +563,9 @@
       pointer-events: auto;
     }
 
+    /* Detail panel — positioned/animated entirely via inline styles in JS so
+       the FLIP morph from the clicked tab is precise. The CSS just provides
+       the resting visual style (white card, rounded, big shadow). */
     .folder-detail {
       position: fixed;
       top: 50%; left: 50%;
@@ -332,12 +580,8 @@
       box-shadow: 0 40px 100px rgba(0,0,0,0.28), 0 8px 24px rgba(0,0,0,0.12);
       padding: 2.4rem 2.6rem 2.2rem;
       overflow-y: auto;
-      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
-    }
-    body.folder-open .folder-detail {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-      pointer-events: auto;
+      transform-origin: center center;
+      will-change: transform, opacity;
     }
     .folder-detail::before {
       content: '';
@@ -490,17 +734,33 @@
 
       <div class="mockup-wrap">
         <div class="mac-mockup" id="macMockup">
-          <!-- The PNG (display + stand + Mac Studio cube). Drop your image at:
-               images/mac-studio-mockup.png  (PNG with transparent background;
-               the white rectangle = the screen area we fill below). -->
           <img class="mockup-image" src="images/mac-studio-mockup.png" alt="" aria-hidden="true" />
-
-          <!-- Folder app, positioned absolutely over the screen rectangle of the PNG -->
           <div class="folder-app" id="folderApp">
-            <div class="folder-app-bar">
-              <input id="projectSearch" class="folder-app-search" type="search" placeholder="Search projects..." autocomplete="off" />
-            </div>
-            <div class="folder-strip" id="folderStrip"></div>
+            
+            <!-- NEW: The inner vibrant card -->
+            <div class="folder-inner-card">
+              
+              <div class="folder-hero-text">
+                <h2>Code Collection</h2>
+                <p>Ideas translated into logic. Welcome to my project portfolio.</p>
+              </div>
+
+              <div class="folder-app-bar">
+                <div class="search-wrapper">
+                  <input id="projectSearch" class="folder-app-search" type="search" placeholder="Search for Projects" autocomplete="off" />
+                  <button class="search-btn">Submit</button>
+                </div>
+              </div>
+              
+              <div class="folder-strip" id="folderStrip">
+                <!-- Click target / dim overlay shown when a card is zoomed.
+                     Lives inside the strip so it stacks correctly between
+                     the non-zoomed tabs and the zoomed tab. -->
+                <div class="folder-app-blur" id="folderAppBlur" aria-hidden="true"></div>
+              </div>
+
+            </div> <!-- End inner card -->
+
           </div>
         </div>
       </div>
@@ -576,7 +836,25 @@
         const summary = document.createElement('span');
         summary.className = 'folder-tab-summary';
         summary.textContent = p.desc;
-        btn.append(title, meta, summary);
+
+        // Close button — only visible when the tab is in its zoomed state.
+        const close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'folder-tab-close';
+        close.setAttribute('aria-label', 'Close project');
+        close.textContent = '×';
+
+        // "View on GitHub" link — only visible when the tab is zoomed.
+        const repo = document.createElement('a');
+        repo.className = 'folder-tab-repo';
+        repo.href = p.repo;
+        repo.target = '_blank';
+        repo.rel = 'noopener';
+        repo.innerHTML =
+          '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>' +
+          '<span>View on GitHub</span>';
+
+        btn.append(close, title, meta, summary, repo);
         strip.appendChild(btn);
       });
       let dragStartX = 0;
@@ -646,7 +924,10 @@
       strip.addEventListener('pointermove', e => {
         if (!strip.classList.contains('dragging')) return;
         const dx = e.clientX - dragStartX;
-        if (Math.abs(dx) > 3) didDragFolder = true;
+        // 12px threshold — any real click stays well under this, only an
+        // intentional swipe trips it. Smaller values were eating clicks
+        // because mice/trackpads jitter 1-5px during a normal click.
+        if (Math.abs(dx) > 12) didDragFolder = true;
         if (Math.abs(dx) > 48) {
           const visible = visibleFolderIndexes();
           if (visible.length) {
@@ -678,71 +959,92 @@
       const stage     = document.getElementById('codesStage');
       const mockup    = document.getElementById('macMockup');
       const folderApp = document.getElementById('folderApp');
+      const header    = document.getElementById('siteHeader'); 
       let ticking = false;
+      
+      // Cached layout variables to prevent frame drops
       let maxScale = 1;
+      let cachedTotalScroll = 0;
+      let cachedVh = 0;
+      let cachedStageTop = 0;
 
-      // Screen position WITHIN the mockup PNG, in %. Must match the values on
-      // .folder-app above (top/left/width/height). Used to compute the
-      // translate needed to bring the screen center to the mockup center
-      // (and therefore the viewport center) at full zoom.
-      const SCREEN_TOP_PCT    = 18.04;
-      const SCREEN_LEFT_PCT   = 15.33;
-      const SCREEN_WIDTH_PCT  = 66.03;
-      const SCREEN_HEIGHT_PCT = 49.64;
-      const SCREEN_CX_PCT     = SCREEN_LEFT_PCT + SCREEN_WIDTH_PCT  / 2;   // ≈ 48.35
-      const SCREEN_CY_PCT     = SCREEN_TOP_PCT  + SCREEN_HEIGHT_PCT / 2;   // ≈ 42.86
+      const SCREEN_TOP_PCT    = 19.3;
+      const SCREEN_LEFT_PCT   = 15.13;
+      const SCREEN_WIDTH_PCT  = 66.43;
+      const SCREEN_HEIGHT_PCT = 50.04;
+      const SCREEN_CX_PCT     = SCREEN_LEFT_PCT + SCREEN_WIDTH_PCT  / 2;
+      const SCREEN_CY_PCT     = SCREEN_TOP_PCT  + SCREEN_HEIGHT_PCT / 2;
       const SCREEN_OVERSCAN   = 1.035;
-      // How far we need to translate (as % of mockup) to move screen center to mockup center.
-      const TARGET_TX_PCT = 50 - SCREEN_CX_PCT;   // ≈  1.65
-      const TARGET_TY_PCT = 50 - SCREEN_CY_PCT;   // ≈  7.14
+      const TARGET_TX_PCT = 50 - SCREEN_CX_PCT;
+      const TARGET_TY_PCT = 50 - SCREEN_CY_PCT;
 
-      // Compute the scale needed for the screen overlay to FILL the viewport
-      // (cover, not fit). max(sx, sy) — the larger dimension overflows and is
-      // cropped by overflow:hidden. Net effect: at full zoom ONLY the screen
-      // content is visible; mockup bezel/stand/cube are pushed off-screen.
-      function computeMaxScale() {
+      // Run this ONLY on load and resize, never during scroll
+      function cacheLayout() {
         const prev = mockup.style.transform;
         mockup.style.transform = '';
         const rect = folderApp.getBoundingClientRect();
         mockup.style.transform = prev;
-        if (!rect.width || !rect.height) return 1;
+        
+        cachedVh = window.innerHeight;
+        cachedTotalScroll = stage.offsetHeight - cachedVh;
+        
+        // Get absolute position of the stage from the top of the document
+        const stageRect = stage.getBoundingClientRect();
+        cachedStageTop = stageRect.top + window.scrollY;
+
+        if (!rect.width || !rect.height) {
+          maxScale = 1;
+          return;
+        }
+
+        const navHeight = 80;
+        const availableHeight = cachedVh - navHeight;
         const sx = window.innerWidth  / rect.width;
-        const sy = window.innerHeight / rect.height;
-        return Math.max(sx, sy) * SCREEN_OVERSCAN;
+        const sy = availableHeight / rect.height;
+        maxScale = Math.max(sx, sy) * SCREEN_OVERSCAN;
       }
 
       function update() {
-        const rect = stage.getBoundingClientRect();
-        const vh   = window.innerHeight;
-        const totalScroll = stage.offsetHeight - vh;
-        const raw = -rect.top / totalScroll;
-        const progress = Math.max(0, Math.min(1, raw));
-        const zoomProgress = Math.min(1, progress * (totalScroll / vh));
+        // Use cheap window.scrollY instead of expensive getBoundingClientRect()
+        const scrolledIntoStage = window.scrollY - cachedStageTop;
+        const rawProgress = scrolledIntoStage / cachedTotalScroll;
+        
+        const progress = Math.max(0, Math.min(1, rawProgress));
+        const zoomProgress = Math.min(1, progress * (cachedTotalScroll / cachedVh));
         const scale = 1 + zoomProgress * (maxScale - 1);
-        // translate(X%, Y%) is % of element's own (unscaled) box.
-        // Because translate is applied AFTER scale in `scale(s) translate(...)`
-        // the translation is effectively scaled too, which is exactly what we
-        // want — the offset grows with zoom so screen center lands on viewport
-        // center at full scale.
+
         const tx = zoomProgress * TARGET_TX_PCT;
         const ty = zoomProgress * TARGET_TY_PCT;
-        mockup.style.transform = `scale(${scale}) translate(${tx}%, ${ty}%)`;
+        const yOffset = zoomProgress * (40); // Half of nav height (80/2)
+
+        mockup.style.transform = `translate3d(0, ${yOffset}px, 0) scale(${scale}) translate3d(${tx}%, ${ty}%, 0)`;
+
+        if (zoomProgress > 0.85) {
+          header.classList.add('zoomed');
+        } else {
+          header.classList.remove('zoomed');
+        }
+
         ticking = false;
       }
+
       function onScroll() {
         if (!ticking) {
           window.requestAnimationFrame(update);
           ticking = true;
         }
       }
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', () => { maxScale = computeMaxScale(); onScroll(); }, { passive: true });
 
-      // Recompute max scale once the mockup image has loaded (and on first paint)
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', () => { cacheLayout(); onScroll(); }, { passive: true });
+
       const mockupImg = document.querySelector('.mockup-image');
-      function init() { maxScale = computeMaxScale(); update(); }
-      if (mockupImg && !mockupImg.complete) mockupImg.addEventListener('load', init, { once: true });
-      requestAnimationFrame(init);
+      function init() { cacheLayout(); update(); }
+      if (mockupImg && !mockupImg.complete) {
+        mockupImg.addEventListener('load', init, { once: true });
+      } else {
+        requestAnimationFrame(init);
+      }
 
       // ── Search filter ──────────────────────────────────────────────
       const search = document.getElementById('projectSearch');
@@ -758,59 +1060,72 @@
       });
       search.addEventListener('keydown', e => e.stopPropagation());
 
-      // ── Folder click → zoom to front (FLIP-style animation) ───────
+      // ── Folder click → zoom to front ───────────────────────────────
       const backdrop  = document.getElementById('folderBackdrop');
       const detail    = document.getElementById('folderDetail');
       const detailInn = document.getElementById('folderDetailInner');
       const detailClose = document.getElementById('folderDetailClose');
 
-      function openFolder(idx) {
-        const p = PROJECTS[idx];
-        if (!p) return;
-        detailInn.innerHTML = '';
-        const tag = document.createElement('span'); tag.className = 'detail-tag';
-        tag.textContent = String(idx + 1).padStart(2, '0') + ' / 10 — Repository';
-        const title = document.createElement('h2'); title.className = 'detail-title'; title.textContent = p.name;
-        const desc  = document.createElement('p'); desc.className = 'detail-desc'; desc.textContent = p.desc;
-        const tags  = document.createElement('div'); tags.className = 'detail-tags';
-        p.tags.forEach(([t, c]) => {
-          const s = document.createElement('span');
-          s.style.setProperty('--lang-color', c);
-          s.textContent = t;
-          tags.appendChild(s);
-        });
-        const repo  = document.createElement('a');
-        repo.className = 'detail-repo';
-        repo.href = p.repo;
-        repo.target = '_blank';
-        repo.rel = 'noopener';
-        repo.innerHTML = '<svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>View on GitHub';
-        detailInn.append(tag, title, desc, tags, repo);
+      // The currently-zoomed tab, so closeFolder() can find it again.
+      let _zoomedTab = null;
 
-        document.body.classList.add('folder-open');
-        backdrop.setAttribute('aria-hidden', 'false');
-        detail.setAttribute('aria-hidden', 'false');
+      // The clicked tab itself becomes the zoomed card — no separate detail
+       // panel. CSS .is-zoomed overrides its 3D-stack transform to center
+       // and enlarge it within the mockup's screen area (folder-app).
+      function openFolder(idx, tabEl) {
+        if (!tabEl) tabEl = document.querySelector('.folder-tab[data-i="' + idx + '"]');
+        if (!tabEl) return;
+        // Clear any previous zoom first
+        const prev = document.querySelector('.folder-tab.is-zoomed');
+        if (prev && prev !== tabEl) prev.classList.remove('is-zoomed');
+        tabEl.classList.add('is-zoomed');
+        folderApp.classList.add('has-zoomed');
+        _zoomedTab = tabEl;
       }
+
       function closeFolder() {
-        document.body.classList.remove('folder-open');
-        backdrop.setAttribute('aria-hidden', 'true');
-        detail.setAttribute('aria-hidden', 'true');
+        if (_zoomedTab) {
+          _zoomedTab.classList.remove('is-zoomed');
+          _zoomedTab = null;
+        } else {
+          document.querySelectorAll('.folder-tab.is-zoomed').forEach(t => t.classList.remove('is-zoomed'));
+        }
+        folderApp.classList.remove('has-zoomed');
       }
+
+      // The blur overlay inside the screen is what catches outside-clicks.
+      const folderAppBlur = document.getElementById('folderAppBlur');
+      if (folderAppBlur) folderAppBlur.addEventListener('click', closeFolder);
 
       strip.addEventListener('click', e => {
         if (didDragFolder) {
           didDragFolder = false;
           return;
         }
-        const tab = e.target.closest('.folder-tab');
+        // Close button inside the currently-zoomed tab → close.
+        if (e.target.closest('.folder-tab-close')) {
+          closeFolder();
+          return;
+        }
+        // GitHub link → let default navigation happen (opens in new tab).
+        if (e.target.closest('.folder-tab-repo')) return;
+
+        // Because pointer capture re-targets pointerup/click to the capturing
+        // element (.folder-strip), e.target is usually the strip itself rather
+        // than the clicked tab. Look up the real element at the cursor
+        // position to find which tab was actually clicked.
+        const hit = document.elementFromPoint(e.clientX, e.clientY);
+        const tab = (hit && hit.closest('.folder-tab')) ||
+                    e.target.closest('.folder-tab');
         if (!tab) return;
+        // Clicking a tab that's already zoomed does nothing — close via × or
+        // backdrop or Esc.
+        if (tab.classList.contains('is-zoomed')) return;
         const i = parseInt(tab.dataset.i, 10);
-        if (!isNaN(i)) openFolder(i);
+        if (!isNaN(i)) openFolder(i, tab);
       });
-      detailClose.addEventListener('click', closeFolder);
-      backdrop.addEventListener('click', closeFolder);
       window.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && document.body.classList.contains('folder-open')) closeFolder();
+        if (e.key === 'Escape' && folderApp.classList.contains('has-zoomed')) closeFolder();
       });
 
     })();

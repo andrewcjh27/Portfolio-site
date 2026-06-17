@@ -5,20 +5,71 @@
   <title>Soccer | Junho Choi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="soccer-ai-endpoint" content="http://127.0.0.1:5051/api/chat" />
+
+  <!-- Force every refresh / direct visit to start at the top of the page
+       so the cinematic intro begins on the title card + first frame of the
+       video. Browsers default to restoring the previous scroll position;
+       this opts out for this page only. Runs as early as possible (before
+       layout) so the browser never gets a chance to scroll on its own. -->
+  <script>
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    // In case the browser restored before the JS landed (some browsers
+    // restore on the first frame), force-reset on both DOMContentLoaded
+    // and on full load.
+    window.addEventListener('beforeunload', function () { window.scrollTo(0, 0); });
+    document.addEventListener('DOMContentLoaded', function () { window.scrollTo(0, 0); });
+    window.addEventListener('load',              function () { window.scrollTo(0, 0); });
+  </script>
+
   <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
   <style>
     html { scroll-behavior: smooth; overflow-x: hidden; }
-    body { background: #fff; }
+    body { background: #f6f4ee; }   /* matches the soccer cream so the seam disappears */
 
     /* Header — light over hero, dark over body */
+    /* Transparent over the cinematic intro so the video shows through.
+       Logo / nav links are recolored white for legibility, with a soft
+       gradient at the very top so the text doesn't disappear over bright
+       frames of the video. Switches to the dark variant past the hero. */
     .site-header {
-      background: rgba(255,255,255,0.96) !important;
-      border-bottom: 1px solid rgba(0,0,0,0.055) !important;
+      background: transparent !important;
+      border-bottom: 1px solid transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+    /* Subtle top-down gradient sits behind the nav over the video — keeps
+       white text legible even when the video frame is bright. */
+    .site-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.38), rgba(0,0,0,0));
+      pointer-events: none;
+      z-index: -1;
+    }
+    .site-header .logo {
+      color: #fff !important;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+    }
+    .site-header .nav-link {
+      color: rgba(255,255,255,0.9) !important;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .site-header .nav-link:hover {
+      background: rgba(255,255,255,0.12) !important;
+      color: #fff !important;
+    }
+    .site-header .nav-link.active {
+      background: rgba(255,255,255,0.18) !important;
+      color: #fff !important;
+    }
+    .site-header .hamburger svg { stroke: #fff; }
       transition: background 0.5s, border-color 0.5s;
     }
     .site-header.dark-header {
@@ -46,11 +97,29 @@
     /* ══════════════════════════════════════════════════════════════════
        CINEMATIC SCROLL — title → tunnel zoom → field sweep → goal
        ══════════════════════════════════════════════════════════════════ */
+    /* Stage uses 900vh: 5 PLAY sections × 100vh + 4 HOLD sections × 100vh.
+       Adjust here if you want each section longer/shorter. */
     .cinematic {
       position: relative;
       width: 100%;
-      height: 600vh;            /* total scroll length of the cinematic */
-      background: #fff;
+      height: 900vh;            /* 9 sections × 100vh: 5 PLAY + 4 HOLD */
+      background: #f6f4ee;      /* cream behind the video */
+      z-index: 1;
+    }
+    /* The next section overlaps the cinematic's sticky-release tail by
+       100vh — so as you scroll past the last PLAY, it physically rises up
+       and covers the video instead of leaving a cream gap. */
+    .soccer-about {
+      position: relative;
+      z-index: 2;
+      margin-top: -100vh;
+    }
+    /* Video gets blurred/faded out by the JS during the last fraction of
+       the stage — these transitions just make the property changes feel
+       silky if the user scrolls past them mid-animation. */
+    .cine-tunnel-frame video {
+      transition: filter 0.18s linear, opacity 0.18s linear;
+      will-change: filter, opacity;
     }
     .cine-stage {
       position: sticky;
@@ -60,7 +129,7 @@
       overflow: hidden;
       perspective: 1600px;
       perspective-origin: 50% 50%;
-      background: #fff;
+      background: transparent;   /* let the cream of .cinematic show through */
     }
     .cine-layer {
       position: absolute;
@@ -85,14 +154,16 @@
       font-weight: 700;
       letter-spacing: -0.025em;
       line-height: 0.95;
-      color: #111;
+      color: #fff;
+      text-shadow: 0 4px 22px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.45);
       margin: 0 0 1.4rem;
       max-width: 14ch;
     }
     .cine-title p {
       font-family: -apple-system, "SF Pro Text", sans-serif;
       font-size: clamp(0.88rem, 1vw, 1.05rem);
-      color: #444;
+      color: rgba(255,255,255,0.92);
+      text-shadow: 0 2px 14px rgba(0,0,0,0.55);
       font-weight: 600;
       max-width: 460px;
       line-height: 1.55;
@@ -107,7 +178,8 @@
       font-size: 0.7rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #888;
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.55);
       animation: cineNudge 1.8s ease-in-out infinite;
       pointer-events: none;
     }
@@ -123,23 +195,21 @@
       justify-content: center;
       overflow: hidden;
     }
+    /* The video sits behind everything filling the viewport. JS scrubs
+       its currentTime against scroll progress. */
     .cine-tunnel-frame {
       position: absolute;
-      left: 50%;
-      bottom: 0;
+      left: 0;
+      top: 0;
       width: 100%;
-      height: 60vh;
-      transform: translateX(-50%);
+      height: 100%;
       overflow: hidden;
-      will-change: transform, height, opacity;
     }
-    .cine-tunnel-frame img {
+    .cine-tunnel-frame video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 38%;
       display: block;
-      will-change: transform;
     }
 
     /* Layer — Field scene (revealed once we exit the tunnel) */
@@ -689,6 +759,214 @@
     }
     .soccer-footer a:hover { color: #fff; }
 
+    /* ══════════════════════════════════════════════════════════════════
+       Light soccer theme — all sections AFTER the cinematic intro
+       ──────────────────────────────────────────────────────────────────
+       Overrides the dark colors above with a warm cream/pitch-green
+       palette. Pure white cards on warm off-white background, deep
+       forest green text, classic pitch-green accent for actions.
+       Tweak the four palette values at the top to taste.
+       ══════════════════════════════════════════════════════════════════ */
+    :root {
+      --soccer-bg:       #f6f4ee;  /* warm pitch-side cream */
+      --soccer-bg-card:  #ffffff;  /* match cards / panels */
+      --soccer-ink:      #142318;  /* deep forest text */
+      --soccer-green:    #1b5e20;  /* pitch grass accent */
+    }
+
+    .soccer-about,
+    .scores-section,
+    .coach-section,
+    .soccer-cta {
+      background: var(--soccer-bg);
+      color: var(--soccer-ink);
+    }
+
+    .section-label,
+    .about-paragraph,
+    .scores-side p,
+    .coach-side p {
+      color: rgba(20, 35, 24, 0.65);
+    }
+    .about-title,
+    .scores-side h2,
+    .coach-side h2,
+    .soccer-cta-title {
+      color: #0e1812;
+    }
+
+    /* Add-match + send button — solid pitch green pill */
+    .add-match-btn,
+    .coach-send-btn {
+      background: var(--soccer-green);
+      color: #fff;
+      border: 1px solid var(--soccer-green);
+    }
+    .add-match-btn:hover,
+    .coach-send-btn:hover {
+      background: #2e7d32;
+      border-color: #2e7d32;
+    }
+
+    /* Match cards — white tiles on cream with subtle shadow */
+    .match-card {
+      background: var(--soccer-bg-card);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    }
+    .match-card:hover {
+      background: var(--soccer-bg-card);
+      border-color: rgba(0, 0, 0, 0.14);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+    }
+    .match-date  { color: rgba(20, 35, 24, 0.55); }
+    .match-teams { color: var(--soccer-ink); }
+    .match-vs    { color: rgba(20, 35, 24, 0.4); }
+    .match-score { color: #0e1812; }
+
+    /* W / L / D result chips */
+    .result-w {
+      background: rgba(27, 94, 32, 0.12);
+      color: var(--soccer-green);
+      border: 1px solid rgba(27, 94, 32, 0.35);
+    }
+    .result-l {
+      background: rgba(198, 40, 40, 0.1);
+      color: #c62828;
+      border: 1px solid rgba(198, 40, 40, 0.3);
+    }
+    .result-d {
+      background: rgba(20, 35, 24, 0.06);
+      color: rgba(20, 35, 24, 0.6);
+      border: 1px solid rgba(20, 35, 24, 0.15);
+    }
+
+    /* Editable cells */
+    [contenteditable]:hover { border-bottom-color: rgba(20, 35, 24, 0.2); }
+    [contenteditable]:focus { border-bottom-color: var(--soccer-green); }
+
+    .delete-btn { color: rgba(20, 35, 24, 0.35); }
+    .delete-btn:hover {
+      color: #c62828;
+      background: rgba(198, 40, 40, 0.08);
+    }
+
+    /* Coach status pill */
+    .coach-status {
+      border-color: rgba(20, 35, 24, 0.18);
+      background: rgba(20, 35, 24, 0.04);
+      color: rgba(20, 35, 24, 0.62);
+    }
+    .coach-status.online {
+      color: var(--soccer-green);
+      border-color: rgba(27, 94, 32, 0.4);
+      background: rgba(46, 125, 50, 0.12);
+    }
+    .coach-status.error {
+      color: #c62828;
+      border-color: rgba(198, 40, 40, 0.4);
+      background: rgba(198, 40, 40, 0.1);
+    }
+
+    /* Coach panel + chat log */
+    .coach-panel {
+      background: var(--soccer-bg-card);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05);
+    }
+    .coach-log {
+      background: #faf8f3;
+      border-color: rgba(0, 0, 0, 0.06);
+      scrollbar-color: rgba(20, 35, 24, 0.18) #faf8f3;
+    }
+    .coach-msg.user {
+      background: var(--soccer-green);
+      color: #fff;
+      border: 1px solid var(--soccer-green);
+    }
+    .coach-msg.assistant {
+      background: var(--soccer-bg-card);
+      color: var(--soccer-ink);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+    .coach-msg.error {
+      background: rgba(198, 40, 40, 0.08);
+      color: #8a1f1f;
+      border: 1px solid rgba(198, 40, 40, 0.32);
+    }
+    .coach-input {
+      background: #faf8f3;
+      color: var(--soccer-ink);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+    .coach-input:focus {
+      border-color: var(--soccer-green);
+      box-shadow: 0 0 0 3px rgba(27, 94, 32, 0.12);
+    }
+    .coach-hint      { color: rgba(20, 35, 24, 0.5); }
+    .coach-hint code {
+      background: rgba(20, 35, 24, 0.07);
+      color: var(--soccer-ink);
+    }
+    .coach-end-btn {
+      color: rgba(20, 35, 24, 0.65);
+      border-color: rgba(20, 35, 24, 0.2);
+    }
+    .coach-end-btn:hover {
+      background: rgba(20, 35, 24, 0.05);
+      border-color: rgba(20, 35, 24, 0.35);
+      color: var(--soccer-ink);
+    }
+
+    /* CTA section */
+    .soccer-cta-sub  { color: rgba(20, 35, 24, 0.7); }
+    .soccer-pill {
+      border: 1px solid rgba(20, 35, 24, 0.2);
+      color: var(--soccer-ink);
+    }
+    .soccer-pill:hover {
+      background: var(--soccer-green);
+      border-color: var(--soccer-green);
+      color: #fff;
+    }
+
+    /* Footer matches the page */
+    .soccer-footer {
+      background: var(--soccer-bg);
+      color: rgba(20, 35, 24, 0.55);
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .soccer-footer a       { color: rgba(20, 35, 24, 0.7); }
+    .soccer-footer a:hover { color: var(--soccer-green); }
+
+    /* Header switches to a clean light state once past the hero
+       (instead of the dark variant). The transparent style during
+       the cinematic intro stays as it is. */
+    .site-header.dark-header {
+      background: rgba(246, 244, 238, 0.92) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .site-header.dark-header::before { display: none; }
+    .site-header.dark-header .logo {
+      color: var(--soccer-ink) !important;
+      text-shadow: none !important;
+    }
+    .site-header.dark-header .nav-link {
+      color: rgba(20, 35, 24, 0.72) !important;
+      text-shadow: none !important;
+    }
+    .site-header.dark-header .nav-link:hover {
+      background: rgba(20, 35, 24, 0.07) !important;
+      color: var(--soccer-ink) !important;
+    }
+    .site-header.dark-header .nav-link.active {
+      background: var(--soccer-green) !important;
+      color: #fff !important;
+    }
+    .site-header.dark-header .hamburger svg { stroke: var(--soccer-ink); }
+
     @media (max-width: 980px) {
       .scores-grid, .coach-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     }
@@ -761,10 +1039,22 @@
         <span class="cine-scroll-hint">Scroll to enter</span>
       </div>
 
-      <!-- Layer: tunnel image (camera flies into this) -->
+      <!-- Layer: scroll-scrubbed video. JS sets video.currentTime based on
+           scroll progress. Five PLAY sections (each 2s of clip) interleaved
+           with four HOLD sections (video frozen, overlay slides past). -->
       <div class="cine-layer cine-tunnel" aria-hidden="true">
         <div class="cine-tunnel-frame">
-          <img src="images/Soccer/tunnel.jpg" alt="Player tunnel leading to the stadium" />
+          <video
+            id="cineVideo"
+            src="images/Soccer/tunnel-scrub.mp4"
+            preload="auto"
+            muted
+            playsinline
+            disablepictureinpicture
+            disableremoteplayback
+            style="width: 100%; height: 100%; object-fit: cover; display: block;"
+            aria-hidden="true"
+          ></video>
         </div>
       </div>
 
@@ -975,25 +1265,58 @@
     (function () {
       var stack  = document.querySelector('.cinematic');
       if (!stack) return;
-      var title       = document.querySelector('.cine-title');
-      var tunnelBox   = document.querySelector('.cine-tunnel');
-      var tunnelFrame = document.querySelector('.cine-tunnel-frame');
-      var tunnelImg   = tunnelFrame ? tunnelFrame.querySelector('img') : null;
-      var field       = document.querySelector('.cine-field');
-      var fieldLines  = document.querySelector('.cine-field-perspective');
-      var fieldSun    = document.querySelector('.cine-field-sun');
-      var cardTeam    = document.querySelector('.cine-card-team');
+      var video    = document.getElementById('cineVideo');
+      var title    = document.querySelector('.cine-title');
+      var hint     = document.querySelector('.cine-scroll-hint');
+      var cardTeam = document.querySelector('.cine-card-team');
       var cardMatches = document.querySelector('.cine-card-matches');
-      var cardAi      = document.querySelector('.cine-card-ai');
-      var goal        = document.querySelector('.cine-goal');
-      var hint        = document.querySelector('.cine-scroll-hint');
+      var cardAi   = document.querySelector('.cine-card-ai');
+
+      // ── Stage schedule ────────────────────────────────────────────────
+      // Each entry = one screen-height worth of scroll.
+      //   PLAY: video scrubs from `start` → `end` as you scroll that section
+      //   HOLD: video is frozen at `time`, overlay #`overlay` fades in/out
+      // Edit this array later to change the cut points or add/remove holds.
+      var SECTIONS = [
+        { type: 'HOLD', time: 0,  overlay: 0 },     // Opening title (white over the first frame)
+        { type: 'PLAY', start: 0,  end: 2  },
+        { type: 'HOLD', time: 2,  overlay: 1 },     // Team card
+        { type: 'PLAY', start: 2,  end: 4  },
+        { type: 'HOLD', time: 4,  overlay: 2 },     // Matches card
+        { type: 'PLAY', start: 4,  end: 6  },
+        { type: 'HOLD', time: 6,  overlay: 3 },     // AI Coach card
+        { type: 'PLAY', start: 6,  end: 8  },
+        { type: 'PLAY', start: 8,  end: 10 }
+      ];
+      var OVERLAYS = [title, cardTeam, cardMatches, cardAi];
+      var VIDEO_END = 9.99;               // sit just under the duration to avoid black frame
+
+      // ── Exit-transition tuning ────────────────────────────────────────
+      // The next section (.soccer-about) overlaps the cinematic by 100vh
+      // via CSS negative margin, so it physically rises up to cover the
+      // video as the stage's sticky stops pinning. The JS adds a gentle
+      // fade + slight upward drift so the seam is butter-smooth instead
+      // of a hard edge where the next section's content meets the video.
+      var TRANS_START      = 0.75;        // % of stage at which the exit begins (early so it lines up with the next section rising)
+      var TRANS_CLAMP_TIME = 9.0;         // seconds — last frame we ever show
+      var TRANS_PUSH_VH    = 40;          // gentle drift upward; CSS overlap does the heavy lifting
+      var TRANS_FADE_TO    = 0;           // ending opacity
 
       function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
       function smoothstep(a, b, t) {
         var x = clamp((t - a) / (b - a), 0, 1);
         return x * x * (3 - 2 * x);
       }
-      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      // Set every overlay's resting style. The FIRST overlay starts at full
+      // opacity so it's already there on landing (before any scroll). Others
+      // start at 0 and fade in when their HOLD section becomes active.
+      OVERLAYS.forEach(function (el, i) {
+        if (!el) return;
+        el.style.opacity = i === 0 ? '1' : '0';
+        el.style.transition = 'opacity 0.15s linear';
+      });
+      if (hint) { hint.style.opacity = '1'; hint.style.transition = 'opacity 0.15s'; }
 
       var ticking = false;
       function tick() {
@@ -1002,76 +1325,70 @@
         var scrollLength = stack.offsetHeight - window.innerHeight;
         var p = clamp(-rect.top / scrollLength, 0, 1);
 
-        // 0.00 – 0.20: title sits, then floats up & fades
-        var titleOut = smoothstep(0.04, 0.20, p);
-        if (title) {
-          title.style.opacity   = String(1 - titleOut);
-          title.style.transform = 'translateY(' + (-titleOut * 70) + 'px)';
-        }
-        if (hint) hint.style.opacity = String(1 - smoothstep(0.02, 0.10, p));
+        // Which of the SECTIONS are we in, and how far through it?
+        var raw = p * SECTIONS.length;
+        var idx = Math.min(SECTIONS.length - 1, Math.floor(raw));
+        var local = raw - idx;     // 0..1 within current section
+        var section = SECTIONS[idx];
 
-        // 0.00 – 0.50: tunnel rises into frame, then scales up like the camera entering it
-        var tunnelRise  = smoothstep(0.00, 0.18, p); // from sitting at bottom 60vh to filling height
-        var tunnelGrow  = smoothstep(0.18, 0.50, p); // image scales from 1 → ~6
-        var tunnelLeave = smoothstep(0.46, 0.62, p); // fade out as we exit
-        if (tunnelFrame) {
-          var frameHeight = lerp(60, 100, tunnelRise);
-          tunnelFrame.style.height    = frameHeight + 'vh';
-          tunnelFrame.style.opacity   = String(1 - tunnelLeave);
-          tunnelFrame.style.transform = 'translateX(-50%) translateY(' + ((1 - tunnelRise) * 8) + 'vh)';
-        }
-        if (tunnelImg) {
-          var s = lerp(1.0, 6.5, tunnelGrow);
-          tunnelImg.style.transform = 'scale(' + s + ')';
-        }
+        var videoTime;
+        var activeHold = -1;
+        var holdProgress = 0;
 
-        // 0.40 – 0.95: field reveals, perspective lines drift toward the camera
-        var fieldIn  = smoothstep(0.42, 0.62, p);
-        var fieldOut = smoothstep(0.94, 1.00, p);
-        if (field) field.style.opacity = String(fieldIn * (1 - fieldOut * 0.5));
-        if (fieldLines) {
-          var lineP = smoothstep(0.50, 1.00, p);
-          fieldLines.style.backgroundPosition = '0 ' + (lineP * 480) + 'px';
+        if (section.type === 'PLAY') {
+          videoTime = section.start + local * (section.end - section.start);
+        } else {                                            // HOLD
+          videoTime = section.time;
+          activeHold = section.overlay;
+          holdProgress = local;
         }
-        if (fieldSun) {
-          fieldSun.style.opacity   = String(fieldIn * (1 - smoothstep(0.85, 1, p)));
-          fieldSun.style.transform = 'translateX(-50%) scale(' + lerp(0.6, 1.6, fieldIn) + ')';
-        }
+        videoTime = Math.min(videoTime, VIDEO_END);
 
-        // Floating cards: each fades in, holds, fades out
-        // Team card: 0.52 – 0.70
-        var t1in  = smoothstep(0.50, 0.60, p);
-        var t1out = smoothstep(0.66, 0.74, p);
-        if (cardTeam) {
-          cardTeam.style.opacity   = String(t1in * (1 - t1out));
-          cardTeam.style.transform =
-            'translate3d(' + lerp(-160, 0, t1in) + 'px, 0, ' + lerp(-220, 0, t1in) + 'px)';
+        // Exit transition — push the video up AND fade it out together.
+        var exitT = 0;
+        if (p > TRANS_START) {
+          exitT = smoothstep(TRANS_START, 1.0, p);
+          // Hold the clip at TRANS_CLAMP_TIME so we don't drift into the
+          // dark frames at the very end during the push.
+          videoTime = Math.min(videoTime, TRANS_CLAMP_TIME);
+        }
+        if (video) {
+          var pushY = -exitT * TRANS_PUSH_VH;             // vh, negative = up
+          var op    = 1 - exitT * (1 - TRANS_FADE_TO);    // 1 → TRANS_FADE_TO
+          video.style.transform = 'translateY(' + pushY + 'vh)';
+          video.style.opacity   = String(op);
+          video.style.filter    = '';
         }
 
-        // Matches card: 0.62 – 0.82
-        var t2in  = smoothstep(0.62, 0.72, p);
-        var t2out = smoothstep(0.78, 0.86, p);
-        if (cardMatches) {
-          cardMatches.style.opacity   = String(t2in * (1 - t2out));
-          cardMatches.style.transform =
-            'translate3d(' + lerp(160, 0, t2in) + 'px, 0, ' + lerp(-220, 0, t2in) + 'px)';
+        // Apply the video scrub. Guard against the metadata not being loaded
+        // yet, and only update when the change is meaningful (avoids stutter).
+        if (video && !isNaN(video.duration) && video.readyState >= 1) {
+          if (Math.abs(video.currentTime - videoTime) > 0.03) {
+            try { video.currentTime = videoTime; } catch (e) { /* seek before ready */ }
+          }
         }
 
-        // AI Coach card: 0.76 – 0.96 (centered, scales in)
-        var t3in  = smoothstep(0.74, 0.86, p);
-        var t3out = smoothstep(0.94, 1.00, p);
-        if (cardAi) {
-          cardAi.style.opacity = String(t3in * (1 - t3out));
-          cardAi.style.transform =
-            'translate3d(-50%, ' + lerp(70, 0, t3in) + 'px, 0) scale(' + lerp(0.88, 1, t3in) + ')';
-        }
+        // Drive the overlay fades. The FIRST overlay (idx 0 = title) is the
+        // landing state: it starts fully visible and only fades out as the
+        // user scrolls past it. All other overlays ramp in, hold, ramp out.
+        OVERLAYS.forEach(function (el, i) {
+          if (!el) return;
+          var op = 0;
+          if (i === activeHold) {
+            if (idx === 0) {
+              // Landing HOLD — visible at scroll 0, fade out near the end
+              op = 1 - smoothstep(0.55, 1.0, holdProgress);
+            } else {
+              op = smoothstep(0, 0.22, holdProgress) *
+                   (1 - smoothstep(0.78, 1.0, holdProgress));
+            }
+          }
+          el.style.opacity = String(op);
+          el.style.pointerEvents = op > 0.5 ? 'auto' : 'none';
+        });
 
-        // Goal arrival at the end (0.88 – 1.00)
-        var goalIn = smoothstep(0.88, 1.00, p);
-        if (goal) {
-          goal.style.opacity   = String(goalIn);
-          goal.style.transform = 'scale(' + lerp(0.55, 1, goalIn) + ')';
-        }
+        // Scroll hint shows on landing, fades out as soon as you start scrolling.
+        if (hint) hint.style.opacity = String(1 - smoothstep(0.0, 0.04, p));
       }
 
       function onScrollRAF() {
@@ -1082,6 +1399,14 @@
       }
       window.addEventListener('scroll', onScrollRAF, { passive: true });
       window.addEventListener('resize', onScrollRAF, { passive: true });
+
+      // Kick the video to load (some browsers won't even fetch the file
+      // for a muted <video> until interaction). Also seek to 0 on metadata
+      // load so the first frame paints immediately.
+      if (video) {
+        video.addEventListener('loadedmetadata', function () { tick(); }, { once: true });
+        video.load();
+      }
       tick();
     })();
 
