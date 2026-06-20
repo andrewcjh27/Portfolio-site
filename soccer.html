@@ -114,6 +114,21 @@
       z-index: 2;
       margin-top: -100vh;
     }
+    /* No top gradient/divider — the section's cream is identical to the
+       cinematic's, so as long as nothing fades to transparent, the seam
+       between them is literally invisible. */
+    /* All sections that follow the cinematic also need a higher z-index
+       than the cinematic block (.cinematic has z-index: 1). Without this,
+       wherever they happen to overlap the cinematic's 900vh box in normal
+       flow, the cinematic paints over them and clips the top of the
+       content (this was cutting the "Recent matches." / "+ Add match"
+       column). position: relative is required for z-index to take effect. */
+    .scores-section,
+    .coach-section,
+    .soccer-cta {
+      position: relative;
+      z-index: 2;
+    }
     /* Video gets blurred/faded out by the JS during the last fraction of
        the stage — these transitions just make the property changes feel
        silky if the user scrolls past them mid-animation. */
@@ -245,47 +260,235 @@
       pointer-events: none;
     }
 
-    /* Floating teaser cards during the field sweep */
+    /* Minimal but bold timeline cards. No backdrop, no box, no border —
+       just the logo and the type, stacked vertically, sized large enough
+       to physically occupy half the screen. Contrast is created entirely
+       by multi-layer text-shadows (a wide ambient halo + a directional
+       shadow + a sharp shadow). The logo gets the same treatment via
+       layered drop-shadows. */
     .cine-cards { z-index: 7; pointer-events: none; }
+
+    /* Backdrop-blur layer — fades in whenever an overlay card is up.
+       Sits BELOW the cards (z 7) and BELOW the title (z 8) but ABOVE
+       the tunnel video (z 5), so backdrop-filter blurs only the video
+       behind it, leaving cards and title razor-sharp on top.
+       The actual blur strength is driven by a CSS custom property so
+       the JS can swap it (heavier blur under the title, lighter under
+       the timeline cards). */
+    .cine-blur {
+      z-index: 6;
+      background: rgba(0, 0, 0, 0.12);
+      --blur-amount: 20px;
+      backdrop-filter: blur(var(--blur-amount)) saturate(110%);
+      -webkit-backdrop-filter: blur(var(--blur-amount)) saturate(110%);
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity;
+    }
     .cine-card {
       position: absolute;
-      background: rgba(255,255,255,0.94);
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(0,0,0,0.06);
-      border-radius: 18px;
-      padding: 1.4rem 1.6rem;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.22);
-      max-width: 320px;
+      background: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      width: 44vw;
+      max-width: 700px;
       opacity: 0;
       will-change: transform, opacity;
     }
     .cine-card .card-eyebrow {
-      font-family: "SF Mono", monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.95rem;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: #777;
-      margin-bottom: 0.55rem;
+      color: rgba(255, 255, 255, 0.92);
+      margin-bottom: 1.4rem;
+      text-shadow:
+        0 0 28px rgba(0, 0, 0, 0.75),
+        0 2px 14px rgba(0, 0, 0, 0.65),
+        0 1px 4px rgba(0, 0, 0, 0.5);
     }
     .cine-card h3 {
       font-family: -apple-system, "SF Pro Display", sans-serif;
-      font-size: 1.4rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      color: #111;
-      margin: 0 0 0.55rem;
+      font-size: clamp(2.2rem, 3.6vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: #fff;
+      margin: 0 0 0.7rem;
+      line-height: 1.05;
+      text-shadow:
+        0 0 36px rgba(0, 0, 0, 0.75),
+        0 4px 24px rgba(0, 0, 0, 0.7),
+        0 2px 6px rgba(0, 0, 0, 0.55);
     }
     .cine-card p {
       font-family: -apple-system, "SF Pro Text", sans-serif;
-      font-size: 0.85rem;
-      line-height: 1.55;
-      color: #555;
+      font-size: 1.1rem;
+      line-height: 1.4;
+      color: rgba(255, 255, 255, 0.95);
       margin: 0;
+      text-shadow:
+        0 0 24px rgba(0, 0, 0, 0.7),
+        0 2px 14px rgba(0, 0, 0, 0.6);
     }
-    .cine-card-team    { left: 8vw;  top: 22vh; }
-    .cine-card-matches { right: 8vw; top: 32vh; }
-    .cine-card-ai      { left: 50%; top: 56vh; transform: translateX(-50%); }
+    .cine-card-t1 { left: 14vw; top: 18vh; }
+    .cine-card-t2 { right: 14vw; top: 22vh; text-align: right; }
+    .cine-card-t3 { left: 14vw; top: 22vh; }
+
+    /* Right-side card mirrors its content so the text hugs the right edge */
+    .cine-card-t2 .cine-card-row,
+    .cine-card-t2 .cine-card-meta {
+      align-items: flex-end;
+    }
+    .cine-card-t2 .card-eyebrow,
+    .cine-card-t2 .cine-card-role,
+    .cine-card-t2 .cine-card-note,
+    .cine-card-t2 h3 {
+      text-align: right;
+    }
+
+    /* Vertical stack inside each card: logo on top, then meta below */
+    .cine-card-row {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2.4rem;
+    }
+    .cine-card-logo {
+      width: 240px;
+      height: 240px;
+      flex-shrink: 0;
+      object-fit: contain;
+      background: none;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      filter:
+        drop-shadow(0 14px 38px rgba(0, 0, 0, 0.7))
+        drop-shadow(0 0 28px rgba(0, 0, 0, 0.55));
+    }
+    .cine-card-meta { display: flex; flex-direction: column; min-width: 0; }
+    .cine-card-meta h3 { margin: 0 0 1rem; }
+
+    /* Role progression — vertical timeline with dots and a connecting
+       line. Each entry shows the year/marker on the left and the role
+       on the right. The single connecting line lives on the <ul> so it
+       always spans cleanly from the first to the last bullet, no matter
+       how many entries the card has. */
+    .cine-card-timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      position: relative;
+    }
+    .cine-card-timeline li {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.1rem;
+      padding-left: 1.6rem;
+    }
+    /* Bullet sits at the role's text-line center, not the li's center —
+       so it stays aligned with the role line even when there's a
+       subtext below it that makes the li taller. */
+    .cine-card-timeline li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.45rem;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 14px rgba(0, 0, 0, 0.6);
+    }
+    /* Per-li connector segment: from below this bullet down through the
+       gap, ending at the next bullet's top. This adapts automatically to
+       multi-line entries; no need to recompute the ul-level line. */
+    .cine-card-timeline li:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: calc(0.45rem + 9px);
+      bottom: -1.3rem;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.42);
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.45);
+    }
+    .cine-tl-year {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.72);
+      min-width: 44px;
+      flex-shrink: 0;
+      padding-top: 0.18rem;          /* nudge year down to baseline with role */
+      text-shadow:
+        0 0 22px rgba(0, 0, 0, 0.65),
+        0 2px 12px rgba(0, 0, 0, 0.55);
+    }
+    /* Wrapper for role + optional subtext — keeps them stacked tight. */
+    .cine-tl-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      min-width: 0;
+    }
+    .cine-tl-role {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 1.1rem;
+      font-weight: 400;              /* timeline is non-bold */
+      color: rgba(255, 255, 255, 0.96);
+      text-shadow:
+        0 0 26px rgba(0, 0, 0, 0.7),
+        0 2px 14px rgba(0, 0, 0, 0.6);
+    }
+    .cine-tl-sub {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.62);
+      letter-spacing: 0.01em;
+      text-shadow:
+        0 0 18px rgba(0, 0, 0, 0.6),
+        0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    /* Mirrored timeline for the right-aligned card (team 2) */
+    .cine-card-t2 .cine-card-timeline li {
+      padding-left: 0;
+      padding-right: 1.6rem;
+      flex-direction: row-reverse;
+    }
+    .cine-card-t2 .cine-card-timeline li::before {
+      left: auto;
+      right: 0;
+    }
+    .cine-card-t2 .cine-card-timeline li:not(:last-child)::after {
+      left: auto;
+      right: 4px;
+    }
+    .cine-card-t2 .cine-tl-body {
+      align-items: flex-end;
+      text-align: right;
+    }
+    /* Mobile: shrink so the card still fits a narrow viewport */
+    @media (max-width: 820px) {
+      .cine-card { width: 86vw; max-width: none; }
+      .cine-card-t1 { left: 7vw; top: 10vh; }
+      .cine-card-t2 { left: 7vw; right: auto; top: 10vh; }
+      .cine-card-t3 { left: 7vw; top: auto; bottom: 8vh; transform: none; }
+      .cine-card h3 { font-size: 2.4rem; }
+      .cine-card-logo { width: 140px; height: 140px; }
+      .cine-card-role { font-size: 1.15rem; }
+      .cine-card-note { font-size: 0.95rem; }
+      .cine-card-row { gap: 1.4rem; }
+    }
 
     /* Layer — Goal arrival at the very end */
     .cine-goal {
@@ -351,7 +554,11 @@
     .soccer-about {
       background: #000;
       color: #fff;
-      padding: 7rem 4% 5rem;
+      /* Tight at the top (label sits close to where the video just left),
+         generous at the bottom (push the next section down a bit so the
+         reader has clean breathing room between "Why this section" and
+         "02 — Match Scores"). */
+      padding: 0.8rem 4% 9rem;
     }
     .section-label {
       font-family: "SF Mono", Menlo, monospace;
@@ -1064,22 +1271,92 @@
         <div class="cine-field-perspective"></div>
       </div>
 
-      <!-- Layer: floating teaser cards during the field sweep -->
+      <!-- Layer: backdrop blur that fades in with the timeline cards -->
+      <div class="cine-layer cine-blur" aria-hidden="true"></div>
+
+      <!-- Layer: timeline of teams during the field sweep -->
       <div class="cine-layer cine-cards" aria-hidden="true">
-        <div class="cine-card cine-card-team">
-          <div class="card-eyebrow">01 &mdash; The team</div>
-          <h3>Berkeley IM &mdash; my squad.</h3>
-          <p>A rotating roster of friends, classmates, and a few ringers. We play hard, lose harder, and keep showing up.</p>
+        <div class="cine-card cine-card-t1">
+          <div class="card-eyebrow">2022 &mdash; present</div>
+          <div class="cine-card-row">
+            <img class="cine-card-logo" src="images/Soccer/teams/team1.png" alt="Cal Galacticos logo">
+            <div class="cine-card-meta">
+              <h3>Cal Galacticos</h3>
+              <ul class="cine-card-timeline">
+                <li>
+                  <span class="cine-tl-year">'26</span>
+                  <div class="cine-tl-body">
+                    <span class="cine-tl-role">Captain / Media Manager</span>
+                    <span class="cine-tl-sub">leading on and off the pitch</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="cine-tl-year">'25</span>
+                  <div class="cine-tl-body">
+                    <span class="cine-tl-role">Co-Captain</span>
+                    <span class="cine-tl-sub">first leadership stripe</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="cine-tl-year">'22</span>
+                  <div class="cine-tl-body">
+                    <span class="cine-tl-role">Goalkeeper</span>
+                    <span class="cine-tl-sub">joined as a freshman &middot; GK</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="cine-card cine-card-matches">
-          <div class="card-eyebrow">02 &mdash; Matches</div>
-          <h3>Live ledger of every game.</h3>
-          <p>Editable scoreboard with auto-classified W/L/D badges. Every fixture, every result, kept honest.</p>
+        <div class="cine-card cine-card-t2">
+          <div class="card-eyebrow">2025 &mdash; present</div>
+          <div class="cine-card-row">
+            <img class="cine-card-logo" src="images/Soccer/teams/team2.png" alt="El Classico logo">
+            <div class="cine-card-meta">
+              <h3>El Classico</h3>
+              <ul class="cine-card-timeline">
+                <li>
+                  <span class="cine-tl-year">'26</span>
+                  <div class="cine-tl-body">
+                    <span class="cine-tl-role">Midfielder</span>
+                    <span class="cine-tl-sub">6v6 &middot; MF</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="cine-tl-year">'25</span>
+                  <div class="cine-tl-body">
+                    <span class="cine-tl-role">Right Back / Goalkeeper</span>
+                    <span class="cine-tl-sub">11 v 11 &middot; RB / GK</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="cine-card cine-card-ai">
-          <div class="card-eyebrow">03 &mdash; AI Coach</div>
-          <h3>Tactical sparring partner.</h3>
-          <p>Local LLM that drafts formations, picks starters, and stress-tests game plans before kickoff.</p>
+        <div class="cine-card cine-card-t3">
+          <div class="card-eyebrow">2026 &mdash; present</div>
+          <div class="cine-card-row">
+            <img class="cine-card-logo" src="images/Soccer/teams/team3.png" alt="ICBallers logo">
+            <div class="cine-card-meta">
+              <h3>ICBallers</h3>
+              <ul class="cine-card-timeline">
+                <li>
+                  <span class="cine-tl-year">now</span>
+                  <div class="cine-tl-body">
+                    <span class="cine-tl-role">Captain / Utility Player</span>
+                    <span class="cine-tl-sub">filling every gap the team needs</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="cine-tl-year">'26</span>
+                  <div class="cine-tl-body">
+                    <span class="cine-tl-role">Founder</span>
+                    <span class="cine-tl-sub">started the team from scratch</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1164,7 +1441,7 @@
           </div>
           <span class="match-score" contenteditable="true">3 &ndash; 1</span>
           <span class="match-result result-w" contenteditable="true">W</span>
-          <button class="delete-btn" onclick="this.closest('.match-card').remove()" title="Remove">&times;</button>
+          <button class="delete-btn" onclick="this.closest('.match-card').remove(); saveMatches();" title="Remove">&times;</button>
         </div>
 
         <div class="match-card">
@@ -1176,7 +1453,7 @@
           </div>
           <span class="match-score" contenteditable="true">2 &ndash; 2</span>
           <span class="match-result result-d" contenteditable="true">D</span>
-          <button class="delete-btn" onclick="this.closest('.match-card').remove()" title="Remove">&times;</button>
+          <button class="delete-btn" onclick="this.closest('.match-card').remove(); saveMatches();" title="Remove">&times;</button>
         </div>
 
         <div class="match-card">
@@ -1188,7 +1465,7 @@
           </div>
           <span class="match-score" contenteditable="true">1 &ndash; 3</span>
           <span class="match-result result-l" contenteditable="true">L</span>
-          <button class="delete-btn" onclick="this.closest('.match-card').remove()" title="Remove">&times;</button>
+          <button class="delete-btn" onclick="this.closest('.match-card').remove(); saveMatches();" title="Remove">&times;</button>
         </div>
 
         <div class="match-card">
@@ -1200,7 +1477,7 @@
           </div>
           <span class="match-score" contenteditable="true">4 &ndash; 0</span>
           <span class="match-result result-w" contenteditable="true">W</span>
-          <button class="delete-btn" onclick="this.closest('.match-card').remove()" title="Remove">&times;</button>
+          <button class="delete-btn" onclick="this.closest('.match-card').remove(); saveMatches();" title="Remove">&times;</button>
         </div>
 
       </div>
@@ -1238,19 +1515,6 @@
     </div>
   </section>
 
-  <!-- ═══ CTA ════════════════════════════════════════════════════════════ -->
-  <section class="soccer-cta">
-    <h2 class="soccer-cta-title anim">Keep exploring.</h2>
-    <p class="soccer-cta-sub anim anim-d1">More categories, more work &mdash; pick a thread.</p>
-    <div class="soccer-cta-pills anim anim-d2">
-      <a href="design.html" class="soccer-pill">Design</a>
-      <a href="photo.html"  class="soccer-pill">Photography</a>
-      <a href="cafes.html"  class="soccer-pill">Cafe Tours</a>
-      <a href="codes.html"  class="soccer-pill">Codes</a>
-      <a href="index.html"  class="soccer-pill">About me</a>
-    </div>
-  </section>
-
   <footer class="soccer-footer">
     <span>&copy; 2026 Junho Choi</span>
     <div>
@@ -1268,9 +1532,10 @@
       var video    = document.getElementById('cineVideo');
       var title    = document.querySelector('.cine-title');
       var hint     = document.querySelector('.cine-scroll-hint');
-      var cardTeam = document.querySelector('.cine-card-team');
-      var cardMatches = document.querySelector('.cine-card-matches');
-      var cardAi   = document.querySelector('.cine-card-ai');
+      var cardT1 = document.querySelector('.cine-card-t1');
+      var cardT2 = document.querySelector('.cine-card-t2');
+      var cardT3 = document.querySelector('.cine-card-t3');
+      var blurLayer = document.querySelector('.cine-blur');
 
       // ── Stage schedule ────────────────────────────────────────────────
       // Each entry = one screen-height worth of scroll.
@@ -1288,7 +1553,7 @@
         { type: 'PLAY', start: 6,  end: 8  },
         { type: 'PLAY', start: 8,  end: 10 }
       ];
-      var OVERLAYS = [title, cardTeam, cardMatches, cardAi];
+      var OVERLAYS = [title, cardT1, cardT2, cardT3];
       var VIDEO_END = 9.99;               // sit just under the duration to avoid black frame
 
       // ── Exit-transition tuning ────────────────────────────────────────
@@ -1297,10 +1562,11 @@
       // video as the stage's sticky stops pinning. The JS adds a gentle
       // fade + slight upward drift so the seam is butter-smooth instead
       // of a hard edge where the next section's content meets the video.
-      var TRANS_START      = 0.75;        // % of stage at which the exit begins (early so it lines up with the next section rising)
+      var TRANS_START      = 0.78;        // % of stage at which the exit begins — slightly earlier so the blur has more scroll to ramp through
+      var TRANS_MAX_BLUR   = 28;          // px of blur on the video at the end of the exit transition
       var TRANS_CLAMP_TIME = 9.0;         // seconds — last frame we ever show
-      var TRANS_PUSH_VH    = 40;          // gentle drift upward; CSS overlap does the heavy lifting
-      var TRANS_FADE_TO    = 0;           // ending opacity
+      var TRANS_PUSH_VH    = 110;         // push the video fully off-screen at the end (was 40 — the small push left cream visible above the rising next section)
+      var TRANS_FADE_TO    = 1;           // NO FADE — the fade-to-transparent was what created the cream "gap" while the video became invisible; with fade off, the video stays solid until it's slid off-screen, so there's never any cream-behind-transparent-video
 
       function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
       function smoothstep(a, b, t) {
@@ -1355,9 +1621,10 @@
         if (video) {
           var pushY = -exitT * TRANS_PUSH_VH;             // vh, negative = up
           var op    = 1 - exitT * (1 - TRANS_FADE_TO);    // 1 → TRANS_FADE_TO
+          var blur  = exitT * TRANS_MAX_BLUR;             // 0 → TRANS_MAX_BLUR
           video.style.transform = 'translateY(' + pushY + 'vh)';
           video.style.opacity   = String(op);
-          video.style.filter    = '';
+          video.style.filter    = blur > 0 ? 'blur(' + blur + 'px)' : '';
         }
 
         // Apply the video scrub. Guard against the metadata not being loaded
@@ -1371,6 +1638,11 @@
         // Drive the overlay fades. The FIRST overlay (idx 0 = title) is the
         // landing state: it starts fully visible and only fades out as the
         // user scrolls past it. All other overlays ramp in, hold, ramp out.
+        // Also track the max overlay opacity AND which overlay is dominant
+        // so we can drive the backdrop-blur layer to match — heavier blur
+        // for the title, lighter blur for the timeline cards.
+        var maxOverlayOp = 0;
+        var dominantIdx  = -1;
         OVERLAYS.forEach(function (el, i) {
           if (!el) return;
           var op = 0;
@@ -1385,7 +1657,15 @@
           }
           el.style.opacity = String(op);
           el.style.pointerEvents = op > 0.5 ? 'auto' : 'none';
+          if (op > maxOverlayOp) { maxOverlayOp = op; dominantIdx = i; }
         });
+        if (blurLayer) {
+          // Title (idx 0) gets the heavier blur; the timeline cards get a
+          // gentler one so they don't drown the video out.
+          var blurAmt = (dominantIdx === 0) ? '20px' : '8px';
+          blurLayer.style.setProperty('--blur-amount', blurAmt);
+          blurLayer.style.opacity = String(maxOverlayOp);
+        }
 
         // Scroll hint shows on landing, fades out as soon as you start scrolling.
         if (hint) hint.style.opacity = String(1 - smoothstep(0.0, 0.04, p));
@@ -1451,10 +1731,11 @@
         </div>
         <span class="match-score" contenteditable="true">0 &ndash; 0</span>
         <span class="match-result result-d" contenteditable="true">D</span>
-        <button class="delete-btn" onclick="this.closest('.match-card').remove()" title="Remove">&times;</button>
+        <button class="delete-btn" onclick="this.closest('.match-card').remove(); saveMatches();" title="Remove">&times;</button>
       `;
       list.prepend(card);
       card.querySelector('.match-date').focus();
+      saveMatches();
     }
 
     // Auto-update result badge color when edited
@@ -1467,6 +1748,81 @@
         else e.target.classList.add('result-d');
       }
     });
+
+    // ── Persist match scores across refreshes (localStorage) ────────────
+    // Every edit, addition, and deletion writes the current match list to
+    // localStorage. On page load, if there's a saved list, it replaces the
+    // default cards baked into the HTML — so the user sees their own data.
+    const MATCHES_KEY = 'soccer-matches-v1';
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+
+    function saveMatches() {
+      const list = document.getElementById('matchList');
+      if (!list) return;
+      const matches = Array.from(list.querySelectorAll('.match-card')).map(function (card) {
+        const teamSpans = card.querySelectorAll('.match-teams > span[contenteditable]');
+        const result = (card.querySelector('.match-result')?.textContent || 'D')
+          .trim().toUpperCase().slice(0, 1);
+        return {
+          date:   (card.querySelector('.match-date')?.textContent || '').trim(),
+          teamA:  (teamSpans[0]?.textContent || '').trim(),
+          teamB:  (teamSpans[1]?.textContent || '').trim(),
+          score:  (card.querySelector('.match-score')?.textContent || '').trim(),
+          result: result
+        };
+      });
+      try { localStorage.setItem(MATCHES_KEY, JSON.stringify(matches)); } catch (e) {}
+    }
+
+    function buildMatchCard(m) {
+      const result = (m.result || 'D').toUpperCase().slice(0, 1);
+      const resultClass = result === 'W' ? 'result-w' : result === 'L' ? 'result-l' : 'result-d';
+      const card = document.createElement('div');
+      card.className = 'match-card';
+      card.innerHTML = `
+        <span class="match-date" contenteditable="true">${escapeHtml(m.date || '')}</span>
+        <div class="match-teams">
+          <span contenteditable="true">${escapeHtml(m.teamA || '')}</span>
+          <span class="match-vs">vs</span>
+          <span contenteditable="true">${escapeHtml(m.teamB || '')}</span>
+        </div>
+        <span class="match-score" contenteditable="true">${escapeHtml(m.score || '')}</span>
+        <span class="match-result ${resultClass}" contenteditable="true">${escapeHtml(result)}</span>
+        <button class="delete-btn" onclick="this.closest('.match-card').remove(); saveMatches();" title="Remove">&times;</button>
+      `;
+      return card;
+    }
+
+    function loadMatches() {
+      const list = document.getElementById('matchList');
+      if (!list) return;
+      let raw;
+      try { raw = localStorage.getItem(MATCHES_KEY); } catch (e) { return; }
+      if (!raw) return;
+      let matches;
+      try { matches = JSON.parse(raw); } catch (e) { return; }
+      if (!Array.isArray(matches)) return;
+      // Wipe the default cards and replace with saved ones.
+      list.innerHTML = '';
+      matches.forEach(function (m) { list.appendChild(buildMatchCard(m)); });
+    }
+
+    // Auto-save: debounced on input (catches typing), immediate on blur.
+    let _matchesSaveTimer;
+    document.getElementById('matchList').addEventListener('input', function () {
+      clearTimeout(_matchesSaveTimer);
+      _matchesSaveTimer = setTimeout(saveMatches, 350);
+    });
+    document.getElementById('matchList').addEventListener('focusout', saveMatches);
+
+    // Restore on initial paint — runs once at script-eval time. If there's
+    // nothing in storage, the default cards baked into HTML remain.
+    loadMatches();
 
     // ── Soccer AI coach chat wiring ─────────────────────────────────────
     const endpointMeta = document.querySelector('meta[name="soccer-ai-endpoint"]');
