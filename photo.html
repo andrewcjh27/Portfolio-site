@@ -347,10 +347,17 @@
       cursor: zoom-out;
     }
     .lightbox.open { opacity: 1; pointer-events: auto; }
+    /* When a photo is clicked, the lightbox shows the image alongside a
+       small meta panel (title / location / description) on the right.
+       On narrow screens the panel stacks below the image instead. */
     .lightbox-inner {
       position: relative;
-      max-width: 88vw;
-      max-height: 86vh;
+      max-width: 94vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 2.4rem;
       transform: scale(0.94);
       opacity: 0;
       transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
@@ -359,12 +366,55 @@
     .lightbox.open .lightbox-inner { transform: scale(1); opacity: 1; }
     .lightbox img {
       display: block;
-      max-width: 88vw;
+      max-width: min(64vw, 1100px);
       max-height: 86vh;
       object-fit: contain;
       border-radius: 6px;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6),
                   0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+    /* Right-side meta panel that appears with the enlarged photo. Empty
+       sub-elements are hidden by the JS so the panel only takes up space
+       when there's actually content to show. */
+    .lightbox-meta {
+      flex: 0 0 280px;
+      max-width: 320px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .lightbox-meta-title {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+      color: #fff;
+    }
+    .lightbox-meta-location {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .lightbox-meta-location::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.55);
+      flex-shrink: 0;
+    }
+    .lightbox-meta-description {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.85);
     }
     .lightbox-close {
       position: absolute;
@@ -380,8 +430,23 @@
       cursor: pointer;
       padding: 0;
       transition: color 0.2s ease, transform 0.2s ease;
+      z-index: 1;
     }
     .lightbox-close:hover { color: #fff; transform: scale(1.15); }
+    /* Narrow viewports: stack the meta panel below the image. */
+    @media (max-width: 880px) {
+      .lightbox-inner {
+        flex-direction: column;
+        gap: 1.4rem;
+      }
+      .lightbox img { max-width: 90vw; max-height: 60vh; }
+      .lightbox-meta {
+        flex: 0 0 auto;
+        max-width: 90vw;
+        width: 90vw;
+      }
+      .lightbox-meta-title { font-size: 1.25rem; }
+    }
 
     /* Dark footer */
     .contact-footer {
@@ -506,15 +571,45 @@
                "City" label sits next to the urban photos; "Water" anchors the water
                row; "Nature" closes the panel on the right edge. -->
           <div class="themed-gallery gallery-1">
-            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_0440.JPG"  alt="City — skyline" /></div>
-            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_1416.JPG"  alt="City — street" /></div>
-            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_2470.JPG"  alt="City — alley" /></div>
-            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_3170.JPG"  alt="City — building" /></div>
+            <div class="photo-tile tile-city-1"
+                 data-title="Concrete and sky"
+                 data-location="Downtown"
+                 data-description="Looking straight up between midtown towers — wires, glass, and the slice of sky that's left.">
+              <img src="images/Photos/IMG_0440.JPG"  alt="City — skyline" />
+            </div>
+            <div class="photo-tile tile-city-2"
+                 data-title="Memorial Glade from above"
+                 data-location="Berkeley, CA"
+                 data-description="View from the Campanile, late afternoon — everyone scattered across the lawn like punctuation.">
+              <img src="images/Photos/IMG_1416.JPG"  alt="City — street" />
+            </div>
+            <div class="photo-tile tile-city-3"
+                 data-title="Cumulus, from altitude"
+                 data-location="Pacific airspace"
+                 data-description="Cloud anvils stacked into a wall — taken at cruising altitude.">
+              <img src="images/Photos/IMG_2470.JPG"  alt="City — alley" />
+            </div>
+            <div class="photo-tile tile-city-4"
+                 data-title="Last light"
+                 data-location="California coast"
+                 data-description="Sun dropping behind the headland, the waders dark against the orange water.">
+              <img src="images/Photos/IMG_3170.JPG"  alt="City — building" />
+            </div>
             <div class="theme-label label-city">People</div>
 
             <div class="theme-label label-water">City</div>
-            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_6066.jpg" alt="Water — surface" /></div>
-            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_6772.jpg" alt="Water — shoreline" /></div>
+            <div class="photo-tile tile-water-1"
+                 data-title="Folding chairs, frosted window"
+                 data-location="Cafe interior"
+                 data-description="A rubber plant, four chairs, and a window doing the work of the curtains. Mid-afternoon quiet.">
+              <img src="images/Photos/IMG_6066.jpg" alt="Water — surface" />
+            </div>
+            <div class="photo-tile tile-water-2"
+                 data-title="Walking home at dusk"
+                 data-location="California path"
+                 data-description="Tree-lined promenade as the last light goes — a single rider down the middle.">
+              <img src="images/Photos/IMG_6772.jpg" alt="Water — shoreline" />
+            </div>
             <div class="theme-label label-nature">Scenes</div>
           </div>
 
@@ -524,14 +619,44 @@
                the portrait row; "Cafes" closes on the right. -->
           <div class="themed-gallery gallery-2">
             <div class="theme-label label-city">Scenes</div>
-            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_7656.jpg" alt="Nature — forest" /></div>
-            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_7775.JPG" alt="Nature — light" /></div>
-            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_8112.JPG" alt="Nature — coast" /></div>
-            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_9038.JPG" alt="Nature — close-up" /></div>
+            <div class="photo-tile tile-city-1"
+                 data-title="Window seat at golden hour"
+                 data-location="30,000 ft"
+                 data-description="Looking out the porthole as the sun goes blue then orange — the IFE screen catching some of it.">
+              <img src="images/Photos/IMG_7656.jpg" alt="Nature — forest" />
+            </div>
+            <div class="photo-tile tile-city-2"
+                 data-title="Sunlight on dark water"
+                 data-location="Coastal close-up"
+                 data-description="Sun glints punching through the chop — almost abstract from up close.">
+              <img src="images/Photos/IMG_7775.JPG" alt="Nature — light" />
+            </div>
+            <div class="photo-tile tile-city-3"
+                 data-title="City, mirrored"
+                 data-location="Long exposure"
+                 data-description="Skyline doubled in the water — neon signage slicked across the surface.">
+              <img src="images/Photos/IMG_8112.JPG" alt="Nature — coast" />
+            </div>
+            <div class="photo-tile tile-city-4"
+                 data-title="Fog at the tower"
+                 data-location="Tokyo, JP"
+                 data-description="Upper floors dissolving into the mist — a 'ness' sign cutting through it.">
+              <img src="images/Photos/IMG_9038.JPG" alt="Nature — close-up" />
+            </div>
 
             <div class="theme-label label-water">Water</div>
-            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_9771.JPG" alt="People — portrait" /></div>
-            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_9794.JPG" alt="People — candid" /></div>
+            <div class="photo-tile tile-water-1"
+                 data-title="Listening room"
+                 data-location="Tokyo, JP"
+                 data-description="Stained-glass lamp on the table, João Gilberto on the platter, the rest of the room dissolved in the dark.">
+              <img src="images/Photos/IMG_9771.JPG" alt="People — portrait" />
+            </div>
+            <div class="photo-tile tile-water-2"
+                 data-title="Sea grass against the sun"
+                 data-location="California coast"
+                 data-description="Reeds in silhouette, the bay all metal-bright behind them.">
+              <img src="images/Photos/IMG_9794.JPG" alt="People — candid" />
+            </div>
             <div class="theme-label label-nature">Sky</div>
           </div>
 
@@ -539,26 +664,71 @@
                Layout: asymmetric portrait-heavy with a tall vertical "Moments"
                label on the right edge as a closing statement. -->
           <div class="themed-gallery gallery-3">
-            <div class="photo-tile tile-city-1"><img src="images/Photos/IMG_4958.jpg" alt="Cafe — interior" /></div>
-            <div class="photo-tile tile-city-2"><img src="images/Photos/IMG_5297.jpg" alt="Cafe — drink" /></div>
+            <div class="photo-tile tile-city-1"
+                 data-title="Glass pavilion, mirrored pool"
+                 data-location="Museum after hours"
+                 data-description="Empty lounge in a glass box at night, doubled in the reflecting pool below.">
+              <img src="images/Photos/IMG_4958.jpg" alt="Cafe — interior" />
+            </div>
+            <div class="photo-tile tile-city-2"
+                 data-title="Two pines in the whiteout"
+                 data-location="Sierra Nevada"
+                 data-description="Snow ridge with only two trees in frame — everything else lost in the fog.">
+              <img src="images/Photos/IMG_5297.jpg" alt="Cafe — drink" />
+            </div>
             <div class="theme-label label-city">Nature</div>
-            <div class="photo-tile tile-city-3"><img src="images/Photos/IMG_4284.jpg" alt="Cafe — table" /></div>
-            <div class="photo-tile tile-city-4"><img src="images/Photos/IMG_1023 2.JPG" alt="Cafe — window" /></div>
+            <div class="photo-tile tile-city-3"
+                 data-title="Bike path beside the Han"
+                 data-location="Seoul, KR"
+                 data-description="Cumulus piling up over the Yeouido apartments — a cyclist's silhouette in the distance.">
+              <img src="images/Photos/IMG_4284.jpg" alt="Cafe — table" />
+            </div>
+            <div class="photo-tile tile-city-4"
+                 data-title="Moonrise"
+                 data-location="Berkeley Hills"
+                 data-description="Full moon clearing the treetops just before nightfall.">
+              <img src="images/Photos/IMG_1023 2.JPG" alt="Cafe — window" />
+            </div>
 
             <div class="theme-label label-water">Moments</div>
-            <div class="photo-tile tile-water-1"><img src="images/Photos/IMG_2530.JPG" alt="Food — plate" /></div>
-            <div class="photo-tile tile-water-2"><img src="images/Photos/IMG_2766.JPG" alt="Food — dish" /></div>
+            <div class="photo-tile tile-water-1"
+                 data-title="After the table"
+                 data-location="Berkeley, CA"
+                 data-description="Soju bottle, paper plates, the last lamp still on. The end of a long night.">
+              <img src="images/Photos/IMG_2530.JPG" alt="Food — plate" />
+            </div>
+            <div class="photo-tile tile-water-2"
+                 data-title="Cliffs and surf"
+                 data-location="Pacific coast"
+                 data-description="A wave wrapping the headland — foam at the base, fog further out.">
+              <img src="images/Photos/IMG_2766.JPG" alt="Food — dish" />
+            </div>
           </div>
 
         </div>
       </div>
     </section>
 
-    <!-- ═══ Lightbox ════════════════════════════════════════════════════════ -->
+    <!-- ═══ Lightbox ════════════════════════════════════════════════════════
+         Each clicked photo can show title / location / description on the
+         right side. To populate, add data attributes to the .photo-tile:
+           <div class="photo-tile ..."
+                data-title="Berkeley Skyline"
+                data-location="Berkeley, CA"
+                data-description="Looking north from the Campanile, late afternoon.">
+             <img src="..." alt="..." />
+           </div>
+         Any field that's missing or empty is automatically hidden in the
+         lightbox, so partial data is fine. ═══════════════════════════════ -->
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
       <div class="lightbox-inner">
         <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
         <img id="lightboxImg" src="" alt="" />
+        <div class="lightbox-meta" id="lightboxMeta">
+          <div class="lightbox-meta-title" id="lightboxTitle"></div>
+          <div class="lightbox-meta-location" id="lightboxLocation"></div>
+          <div class="lightbox-meta-description" id="lightboxDescription"></div>
+        </div>
       </div>
     </div>
   </main>
@@ -602,13 +772,45 @@
       onScroll();
 
       // ── Lightbox ──────────────────────────────────────────────────────────
-      var lightbox      = document.getElementById('lightbox');
-      var lightboxImg   = document.getElementById('lightboxImg');
-      var lightboxClose = document.getElementById('lightboxClose');
+      var lightbox            = document.getElementById('lightbox');
+      var lightboxImg         = document.getElementById('lightboxImg');
+      var lightboxClose       = document.getElementById('lightboxClose');
+      var lightboxMeta        = document.getElementById('lightboxMeta');
+      var lightboxTitle       = document.getElementById('lightboxTitle');
+      var lightboxLocation    = document.getElementById('lightboxLocation');
+      var lightboxDescription = document.getElementById('lightboxDescription');
 
-      function openLightbox(src, alt) {
-        lightboxImg.src = src;
-        lightboxImg.alt = alt || '';
+      // Show or hide a meta field based on whether the tile provided text.
+      function setMetaField(el, text) {
+        if (text && text.trim()) {
+          el.textContent = text;
+          el.style.display = '';
+        } else {
+          el.textContent = '';
+          el.style.display = 'none';
+        }
+      }
+
+      function openLightbox(tile) {
+        var img = tile.querySelector('img');
+        if (!img || !img.src) return;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || '';
+
+        // Pull the three meta fields off the tile's data attributes.
+        var title       = tile.dataset.title       || '';
+        var location    = tile.dataset.location    || '';
+        var description = tile.dataset.description || '';
+        setMetaField(lightboxTitle, title);
+        setMetaField(lightboxLocation, location);
+        setMetaField(lightboxDescription, description);
+
+        // If the tile had no meta at all, collapse the entire panel so the
+        // image gets to fill the lightbox by itself (preserves original
+        // behavior for photos that haven't been annotated yet).
+        var hasAnyMeta = title || location || description;
+        lightboxMeta.style.display = hasAnyMeta ? '' : 'none';
+
         lightbox.classList.add('open');
         lightbox.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
@@ -625,8 +827,7 @@
       document.querySelectorAll('.photo-tile').forEach(function(tile) {
         tile.addEventListener('click', function(e) {
           e.stopPropagation();
-          var img = tile.querySelector('img');
-          if (img && img.src) openLightbox(img.src, img.alt);
+          openLightbox(tile);
         });
       });
 

@@ -268,6 +268,26 @@
        layered drop-shadows. */
     .cine-cards { z-index: 7; pointer-events: none; }
 
+    /* "Video generated with Gemini Veo (AI)" attribution — small mono
+       label tucked into the bottom-right of the cinematic stage. Sits
+       above everything else so it's always legible, but uses a low-
+       opacity white so it never distracts from the video itself. */
+    .cine-ai-credit {
+      position: absolute;
+      bottom: 1.4rem;
+      right: 1.6rem;
+      z-index: 9;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6),
+                   0 1px 3px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      user-select: none;
+    }
+
     /* Backdrop-blur layer — fades in whenever an overlay card is up.
        Sits BELOW the cards (z 7) and BELOW the title (z 8) but ABOVE
        the tunnel video (z 5), so backdrop-filter blurs only the video
@@ -1398,6 +1418,11 @@
             <path d="M0,-14 L8.5,-4.5 L5.2,7.5 L-5.2,7.5 L-8.5,-4.5 Z" fill="#1b5e20" opacity="0.85"/>
           </g>
         </svg>
+      </div>
+
+      <!-- Attribution — small note in the bottom-right of the cinematic -->
+      <div class="cine-ai-credit" aria-label="Video attribution">
+        Video generated with Gemini Veo (AI)
       </div>
 
     </div>
