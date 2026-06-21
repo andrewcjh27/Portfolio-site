@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Tactical Path Planner</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px;
+    font-family: -apple-system, "SF Pro Text", BlinkMacSystemFont, Helvetica, sans-serif;
+    background: #1a1a1a;
+    color: #f1f1f1;
+    min-height: 100vh;
+  }
+  h1 { font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
+  .sub { color: #aaa; margin: 0 0 1.6rem; font-size: 0.9rem; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 28px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  /* ── Left column: tools / instructions / output ── */
+  .panel {
+    background: #222;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid #333;
+  }
+  .panel + .panel { margin-top: 16px; }
+  .panel-title {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #888;
+    margin: 0 0 12px;
+  }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 9px 0;
+    background: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #3a3a3a;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .tab-btn:hover { background: #333; }
+  .tab-btn.active {
+    background: #b13a2a;
+    color: #fff;
+    border-color: #b13a2a;
+  }
+
+  .tools {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .tool-btn {
+    padding: 10px;
+    background: #2a2a2a;
+    color: #ddd;
+    border: 1px solid #3a3a3a;
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tool-btn:hover { background: #333; border-color: #555; }
+  .tool-btn.active {
+    background: #2a3340;
+    border-color: #6b9eff;
+    color: #6b9eff;
+  }
+  .tool-btn .key {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.66rem;
+    color: #777;
+    margin-left: auto;
+  }
+  .tool-btn.active .key { color: #6b9eff; }
+
+  .instructions {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: #bbb;
+  }
+  .instructions ul { padding-left: 1.1rem; margin: 0.5rem 0 0; }
+  .instructions li { margin-bottom: 0.4rem; }
+  .instructions code {
+    background: #111;
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: #6b9eff;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.75rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .action-btn {
+    flex: 1;
+    padding: 9px;
+    background: #6b9eff;
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .action-btn:hover { background: #5a8aef; }
+  .action-btn.ghost {
+    background: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #3a3a3a;
+  }
+  .action-btn.ghost:hover { background: #333; }
+  .action-btn.danger { background: #b13a2a; }
+  .action-btn.danger:hover { background: #92301f; }
+
+  /* ── Right column: canvas + output ── */
+  .canvas-wrap {
+    background: #f6f4ee;   /* matches the soccer page beige */
+    border-radius: 12px;
+    border: 1px solid #333;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    /* No fixed aspect — the SVG inside scales to whatever its viewBox
+       defines, so each section can be a different aspect (section 1 is
+       roughly 1.6:1, sections 2 & 3 are wider 3:1). */
+    max-height: 80vh;
+  }
+  .canvas-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;          /* maintain viewBox aspect */
+    max-height: 78vh;
+  }
+  .canvas-meta {
+    position: absolute;
+    bottom: 10px;
+    left: 14px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.72rem;
+    color: rgba(0,0,0,0.4);
+    pointer-events: none;
+  }
+
+  /* Grid lines drawn into the canvas */
+  .grid-line { stroke: rgba(0,0,0,0.05); stroke-width: 1; }
+
+  /* Marker visual states (same as final output, but with selection halo) */
+  .marker-group { cursor: grab; }
+  .marker-group.dragging { cursor: grabbing; }
+  .marker-x line,
+  .marker-o circle { stroke: #b13a2a; stroke-linecap: round; fill: none; }
+  .marker-x line { stroke-width: 7.5; }
+  .marker-o circle { stroke-width: 6.5; }
+  .marker-group .hit-bbox {
+    fill: transparent;
+    stroke: transparent;
+  }
+  .marker-group.selected .hit-bbox {
+    stroke: #6b9eff;
+    stroke-width: 1.5;
+    stroke-dasharray: 4 4;
+    fill: rgba(107,158,255,0.06);
+  }
+
+  /* Arrow visual + selected state */
+  .arrow-path { fill: none; stroke: #b13a2a; stroke-width: 5.5;
+                stroke-linecap: round; stroke-linejoin: round; cursor: pointer; }
+  .arrow-path.selected { stroke: #6b9eff; }
+  .arrow-handle {
+    fill: #6b9eff;
+    stroke: #fff;
+    stroke-width: 2;
+    cursor: grab;
+  }
+  .arrow-handle.dragging { cursor: grabbing; }
+  .arrow-handle-line {
+    stroke: rgba(107,158,255,0.45);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+  }
+
+  /* Output area */
+  .output-section {
+    margin-top: 14px;
+  }
+  .output-section pre {
+    margin: 0;
+    background: #111;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    line-height: 1.55;
+    color: #b8d9b8;
+    max-height: 240px;
+    overflow: auto;
+    white-space: pre;
+  }
+
+  .pending-arrow-hint {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    background: rgba(107,158,255,0.18);
+    color: #2a4070;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    pointer-events: none;
+  }
+  .pending-arrow-hint[hidden] { display: none; }
+</style>
+</head>
+<body>
+
+<h1>Tactical Path Planner</h1>
+<p class="sub">Lay out the X/O markers and arrows for each soccer-page section, then paste the generated SVG back into <code style="background:#111;padding:1px 6px;border-radius:4px;color:#6b9eff;font-family:'SF Mono',Menlo,monospace">soccer.html</code>.</p>
+
+<div class="layout">
+  <div>
+    <!-- Section tabs -->
+    <div class="panel">
+      <div class="panel-title">Section</div>
+      <div class="tabs">
+        <button class="tab-btn active" data-section="1">1 — Why</button>
+        <button class="tab-btn" data-section="2">2 — Scores</button>
+        <button class="tab-btn" data-section="3">3 — Coach</button>
+      </div>
+    </div>
+
+    <!-- Tools -->
+    <div class="panel">
+      <div class="panel-title">Tool</div>
+      <div class="tools">
+        <button class="tool-btn active" data-tool="select">Select <span class="key">V</span></button>
+        <button class="tool-btn" data-tool="add-x">Add X <span class="key">X</span></button>
+        <button class="tool-btn" data-tool="add-o">Add O <span class="key">O</span></button>
+        <button class="tool-btn" data-tool="add-arrow">Add Arrow <span class="key">A</span></button>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="panel">
+      <div class="panel-title">How to use</div>
+      <div class="instructions">
+        <ul>
+          <li>Switch tools with the buttons or keys <code>V</code>/<code>X</code>/<code>O</code>/<code>A</code>.</li>
+          <li><b>Add X / Add O:</b> click anywhere on the canvas to drop a marker.</li>
+          <li><b>Add Arrow:</b> click the source marker, then click the target — the curve auto-fits.</li>
+          <li><b>Select:</b> click a marker or arrow. Drag markers to reposition. For a selected arrow, drag its blue handle to bend the curve.</li>
+          <li><b>Delete</b> selected item with <code>Delete</code> or <code>Backspace</code>.</li>
+          <li>Switch sections at the top — each one has its own state, kept independently.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="panel">
+      <div class="panel-title">Output</div>
+      <div class="actions">
+        <button class="action-btn ghost" id="reset-btn">Reset section</button>
+        <button class="action-btn" id="copy-btn">Copy SVG</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="canvas-wrap">
+      <svg id="canvas" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="canvas-meta" id="canvas-meta"></div>
+      <div class="pending-arrow-hint" id="arrow-hint" hidden>Click a second marker to finish the arrow…</div>
+    </div>
+
+    <div class="output-section">
+      <pre id="output-svg"></pre>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ─── INITIAL DEFAULTS — wider viewBoxes so markers can sit at the
+  //     section's left/right edges. Section 1 is taller (more like the
+  //     "Why" section which has min-height: 95vh); sections 2 & 3 are
+  //     wider (Match Scores / AI Coach are shorter). Each viewBox is
+  //     sized to roughly match its section's real aspect ratio so the
+  //     SVG renders edge-to-edge on the page. ─────────────────────────
+  function makeDefaults() {
+    return {
+      1: {
+        viewBox: [1600, 1000],     // section 1 (Why) ~1.6:1 aspect
+        markers: [
+          { id: 'm1', type: 'x', x: 180,  y: 180, rotation: -10 },
+          { id: 'm2', type: 'o', x: 1420, y: 380, rotation: 0 },
+          { id: 'm3', type: 'x', x: 180,  y: 670, rotation: 14 },
+          { id: 'm4', type: 'o', x: 1420, y: 870, rotation: 0 },
+        ],
+        arrows: [
+          { id: 'a1', from: 'm1', to: 'm2', cx: 800, cy: 200 },
+          { id: 'a2', from: 'm2', to: 'm3', cx: 800, cy: 525 },
+          { id: 'a3', from: 'm3', to: 'm4', cx: 800, cy: 800 },
+        ],
+      },
+      2: {
+        viewBox: [1600, 1000],     // same canvas dimensions as section 1
+        markers: [
+          { id: 'm1', type: 'o', x: 1420, y: 180, rotation: 0 },
+          { id: 'm2', type: 'x', x: 1067, y: 420, rotation: 12 },
+          { id: 'm3', type: 'o', x: 587,  y: 620, rotation: 0 },
+          { id: 'm4', type: 'x', x: 180,  y: 850, rotation: -8 },
+        ],
+        arrows: [
+          { id: 'a1', from: 'm1', to: 'm2', cx: 1280, cy: 270 },
+          { id: 'a2', from: 'm2', to: 'm3', cx: 800,  cy: 480 },
+          { id: 'a3', from: 'm3', to: 'm4', cx: 373,  cy: 720 },
+        ],
+      },
+      3: {
+        viewBox: [1600, 1000],     // same canvas dimensions as section 1
+        markers: [
+          { id: 'm1', type: 'o', x: 800,  y: 130, rotation: 0 },
+          { id: 'm2', type: 'x', x: 240,  y: 550, rotation: -10 },
+          { id: 'm3', type: 'x', x: 1360, y: 550, rotation: 8 },
+          { id: 'm4', type: 'o', x: 800,  y: 880, rotation: 0 },
+        ],
+        arrows: [
+          { id: 'a1', from: 'm1', to: 'm2', cx: 480,  cy: 260 },
+          { id: 'a2', from: 'm1', to: 'm3', cx: 1120, cy: 260 },
+          { id: 'a3', from: 'm2', to: 'm4', cx: 373,  cy: 800 },
+          { id: 'a4', from: 'm3', to: 'm4', cx: 1227, cy: 800 },
+        ],
+      },
+    };
+  }
+
+  const state = {
+    section: 1,
+    tool: 'select',
+    data: makeDefaults(),
+    selected: null,         // { kind: 'marker'|'arrow', id: 'm2' }
+    pendingArrow: null,     // first marker clicked when adding arrow
+    dragging: null,         // { kind: 'marker'|'handle', id, downSvgX, downSvgY, startX, startY }
+    idCounter: 100,
+  };
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const canvas = document.getElementById('canvas');
+  const meta = document.getElementById('canvas-meta');
+  const arrowHint = document.getElementById('arrow-hint');
+  const outputPre = document.getElementById('output-svg');
+
+  function nextId(prefix) { return prefix + (++state.idCounter); }
+  function currentSection() { return state.data[state.section]; }
+  function findMarker(id) { return currentSection().markers.find(m => m.id === id); }
+  function findArrow(id) { return currentSection().arrows.find(a => a.id === id); }
+
+  /* ── Mouse coords → SVG viewBox coords ───────────────────────────── */
+  function clientToSvg(clientX, clientY) {
+    const pt = canvas.createSVGPoint();
+    pt.x = clientX; pt.y = clientY;
+    const m = canvas.getScreenCTM();
+    if (!m) return { x: 0, y: 0 };
+    const inv = m.inverse();
+    const r = pt.matrixTransform(inv);
+    return { x: r.x, y: r.y };
+  }
+
+  /* ── Path geometry: offset path endpoints away from markers ──────── */
+  // Marker visual radius — for clearance from arrowhead. Larger value
+  // creates a more visible gap between arrow tip and the X/O icon.
+  const MARKER_RADIUS = 60;
+  function offsetPath(arrow) {
+    const from = findMarker(arrow.from);
+    const to   = findMarker(arrow.to);
+    if (!from || !to) return null;
+    // direction at start: from `from` toward control point
+    const sdx = arrow.cx - from.x, sdy = arrow.cy - from.y;
+    const sLen = Math.hypot(sdx, sdy) || 1;
+    const sx = from.x + (sdx / sLen) * MARKER_RADIUS;
+    const sy = from.y + (sdy / sLen) * MARKER_RADIUS;
+    // direction at end: from control point toward `to`
+    const edx = to.x - arrow.cx, edy = to.y - arrow.cy;
+    const eLen = Math.hypot(edx, edy) || 1;
+    const ex = to.x - (edx / eLen) * MARKER_RADIUS;
+    const ey = to.y - (edy / eLen) * MARKER_RADIUS;
+    return { sx, sy, ex, ey };
+  }
+
+  /* ── Render ──────────────────────────────────────────────────────── */
+  function render() {
+    const sec = currentSection();
+    canvas.setAttribute('viewBox', `0 0 ${sec.viewBox[0]} ${sec.viewBox[1]}`);
+    meta.textContent = `viewBox: 0 0 ${sec.viewBox[0]} ${sec.viewBox[1]}`;
+
+    // Clear & rebuild
+    while (canvas.firstChild) canvas.removeChild(canvas.firstChild);
+
+    // Grid
+    const gridG = document.createElementNS(SVG_NS, 'g');
+    const step = 100;
+    for (let x = step; x < sec.viewBox[0]; x += step) {
+      const l = document.createElementNS(SVG_NS, 'line');
+      l.setAttribute('x1', x); l.setAttribute('y1', 0);
+      l.setAttribute('x2', x); l.setAttribute('y2', sec.viewBox[1]);
+      l.setAttribute('class', 'grid-line');
+      gridG.appendChild(l);
+    }
+    for (let y = step; y < sec.viewBox[1]; y += step) {
+      const l = document.createElementNS(SVG_NS, 'line');
+      l.setAttribute('x1', 0); l.setAttribute('y1', y);
+      l.setAttribute('x2', sec.viewBox[0]); l.setAttribute('y2', y);
+      l.setAttribute('class', 'grid-line');
+      gridG.appendChild(l);
+    }
+    canvas.appendChild(gridG);
+
+    // Arrow marker def (for the arrowhead)
+    const defs = document.createElementNS(SVG_NS, 'defs');
+    defs.innerHTML = `
+      <marker id="planArrow" viewBox="0 0 16 16" refX="13" refY="8"
+              markerWidth="13" markerHeight="13" orient="auto-start-reverse">
+        <path d="M 2 2 L 13 8 L 2 14" fill="none" stroke="#b13a2a"
+              stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>`;
+    canvas.appendChild(defs);
+
+    // Arrows (rendered first so markers sit on top)
+    sec.arrows.forEach(a => {
+      const pts = offsetPath(a);
+      if (!pts) return;
+      const path = document.createElementNS(SVG_NS, 'path');
+      path.setAttribute('d', `M ${pts.sx.toFixed(1)} ${pts.sy.toFixed(1)} Q ${a.cx.toFixed(1)} ${a.cy.toFixed(1)} ${pts.ex.toFixed(1)} ${pts.ey.toFixed(1)}`);
+      path.setAttribute('class', 'arrow-path' + (state.selected && state.selected.kind === 'arrow' && state.selected.id === a.id ? ' selected' : ''));
+      path.setAttribute('marker-end', 'url(#planArrow)');
+      path.setAttribute('data-arrow-id', a.id);
+      canvas.appendChild(path);
+
+      // Selected → show control handle and a dashed line to endpoints
+      if (state.selected && state.selected.kind === 'arrow' && state.selected.id === a.id) {
+        const from = findMarker(a.from);
+        const to = findMarker(a.to);
+        const lineA = document.createElementNS(SVG_NS, 'line');
+        lineA.setAttribute('x1', from.x); lineA.setAttribute('y1', from.y);
+        lineA.setAttribute('x2', a.cx);   lineA.setAttribute('y2', a.cy);
+        lineA.setAttribute('class', 'arrow-handle-line');
+        canvas.appendChild(lineA);
+        const lineB = document.createElementNS(SVG_NS, 'line');
+        lineB.setAttribute('x1', a.cx);   lineB.setAttribute('y1', a.cy);
+        lineB.setAttribute('x2', to.x);   lineB.setAttribute('y2', to.y);
+        lineB.setAttribute('class', 'arrow-handle-line');
+        canvas.appendChild(lineB);
+
+        const handle = document.createElementNS(SVG_NS, 'circle');
+        handle.setAttribute('cx', a.cx); handle.setAttribute('cy', a.cy);
+        handle.setAttribute('r', 10);
+        handle.setAttribute('class', 'arrow-handle');
+        handle.setAttribute('data-arrow-handle', a.id);
+        canvas.appendChild(handle);
+      }
+    });
+
+    // Markers on top
+    sec.markers.forEach(m => {
+      const g = document.createElementNS(SVG_NS, 'g');
+      g.setAttribute('transform', `translate(${m.x} ${m.y}) rotate(${m.rotation || 0})`);
+      g.setAttribute('class', 'marker-group ' + (m.type === 'x' ? 'marker-x' : 'marker-o') +
+                              (state.selected && state.selected.kind === 'marker' && state.selected.id === m.id ? ' selected' : ''));
+      g.setAttribute('data-marker-id', m.id);
+
+      if (m.type === 'x') {
+        const l1 = document.createElementNS(SVG_NS, 'line');
+        l1.setAttribute('x1', -26); l1.setAttribute('y1', -26);
+        l1.setAttribute('x2', 26);  l1.setAttribute('y2', 26);
+        const l2 = document.createElementNS(SVG_NS, 'line');
+        l2.setAttribute('x1', -26); l2.setAttribute('y1', 26);
+        l2.setAttribute('x2', 26);  l2.setAttribute('y2', -26);
+        g.appendChild(l1);
+        g.appendChild(l2);
+      } else {
+        const c = document.createElementNS(SVG_NS, 'circle');
+        c.setAttribute('r', 28);
+        c.setAttribute('cx', 0); c.setAttribute('cy', 0);
+        g.appendChild(c);
+      }
+
+      // Selection halo (slight bounding rectangle)
+      const hit = document.createElementNS(SVG_NS, 'rect');
+      hit.setAttribute('class', 'hit-bbox');
+      hit.setAttribute('x', -40); hit.setAttribute('y', -40);
+      hit.setAttribute('width', 80); hit.setAttribute('height', 80);
+      g.appendChild(hit);
+
+      canvas.appendChild(g);
+    });
+
+    // Show "click second marker" hint while waiting for arrow target
+    arrowHint.hidden = !state.pendingArrow;
+
+    // Update output
+    updateOutput();
+  }
+
+  /* ── Output SVG string ──────────────────────────────────────────── */
+  function svgForSection(secNum) {
+    const sec = state.data[secNum];
+    let parts = [];
+    parts.push(`<svg class="tactical-path" viewBox="0 0 ${sec.viewBox[0]} ${sec.viewBox[1]}"`);
+    parts.push(`     preserveAspectRatio="xMidYMid meet" aria-hidden="true">`);
+    parts.push(`  <defs>`);
+    parts.push(`    <marker id="tacArrow${secNum}" viewBox="0 0 16 16" refX="13" refY="8"`);
+    parts.push(`            markerWidth="13" markerHeight="13" orient="auto-start-reverse">`);
+    parts.push(`      <path d="M 2 2 L 13 8 L 2 14"`);
+    parts.push(`            fill="none" stroke="#b13a2a" stroke-width="3"`);
+    parts.push(`            stroke-linecap="round" stroke-linejoin="round"/>`);
+    parts.push(`    </marker>`);
+    parts.push(`  </defs>`);
+    parts.push(`  <g class="tac-paths">`);
+    sec.arrows.forEach(a => {
+      const pts = offsetPath(a);
+      if (!pts) return;
+      parts.push(`    <path d="M ${pts.sx.toFixed(0)} ${pts.sy.toFixed(0)} Q ${Math.round(a.cx)} ${Math.round(a.cy)} ${pts.ex.toFixed(0)} ${pts.ey.toFixed(0)}" marker-end="url(#tacArrow${secNum})"/>`);
+    });
+    parts.push(`  </g>`);
+    parts.push(`  <g class="tac-marks">`);
+    sec.markers.forEach(m => {
+      if (m.type === 'x') {
+        parts.push(`    <g class="tac-x" transform="translate(${Math.round(m.x)} ${Math.round(m.y)}) rotate(${m.rotation || 0})">`);
+        parts.push(`      <line x1="-26" y1="-26" x2="26" y2="26"/>`);
+        parts.push(`      <line x1="-26" y1="26"  x2="26" y2="-26"/>`);
+        parts.push(`    </g>`);
+      } else {
+        parts.push(`    <g class="tac-o" transform="translate(${Math.round(m.x)} ${Math.round(m.y)})"><circle r="28"/></g>`);
+      }
+    });
+    parts.push(`  </g>`);
+    parts.push(`</svg>`);
+    return parts.join('\n');
+  }
+
+  function updateOutput() {
+    outputPre.textContent = svgForSection(state.section);
+  }
+
+  /* ── Selection / tools ──────────────────────────────────────────── */
+  function setSection(n) {
+    state.section = n;
+    state.selected = null;
+    state.pendingArrow = null;
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.toggle('active', String(b.dataset.section) === String(n));
+    });
+    render();
+  }
+  function setTool(t) {
+    state.tool = t;
+    state.pendingArrow = null;
+    document.querySelectorAll('.tool-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.tool === t);
+    });
+    canvas.style.cursor = (t === 'select') ? 'default'
+                       : (t === 'add-arrow') ? 'crosshair' : 'crosshair';
+    render();
+  }
+
+  function addMarker(type, x, y) {
+    const m = { id: nextId('m'), type, x: Math.round(x), y: Math.round(y), rotation: (type === 'x' ? (Math.random() * 24 - 12) : 0) };
+    currentSection().markers.push(m);
+    return m;
+  }
+  function addArrow(fromId, toId) {
+    const from = findMarker(fromId), to = findMarker(toId);
+    if (!from || !to) return null;
+    // Default control point is midway, offset perpendicular for a bit of curve
+    const mx = (from.x + to.x) / 2;
+    const my = (from.y + to.y) / 2;
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const perpX = -dy, perpY = dx;
+    const pLen = Math.hypot(perpX, perpY) || 1;
+    const offset = 80; // gentle initial curve
+    const cx = mx + (perpX / pLen) * offset;
+    const cy = my + (perpY / pLen) * offset;
+    const a = { id: nextId('a'), from: fromId, to: toId, cx: Math.round(cx), cy: Math.round(cy) };
+    currentSection().arrows.push(a);
+    return a;
+  }
+  function deleteSelected() {
+    if (!state.selected) return;
+    const sec = currentSection();
+    if (state.selected.kind === 'marker') {
+      // Remove marker and all arrows touching it
+      sec.markers = sec.markers.filter(m => m.id !== state.selected.id);
+      sec.arrows = sec.arrows.filter(a => a.from !== state.selected.id && a.to !== state.selected.id);
+    } else {
+      sec.arrows = sec.arrows.filter(a => a.id !== state.selected.id);
+    }
+    state.selected = null;
+    render();
+  }
+
+  /* ── Event handlers ─────────────────────────────────────────────── */
+  // Tab clicks
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.addEventListener('click', () => setSection(Number(b.dataset.section)));
+  });
+
+  // Tool clicks
+  document.querySelectorAll('.tool-btn').forEach(b => {
+    b.addEventListener('click', () => setTool(b.dataset.tool));
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target.matches('input, textarea')) return;
+    const k = e.key.toLowerCase();
+    if (k === 'v') setTool('select');
+    else if (k === 'x') setTool('add-x');
+    else if (k === 'o') setTool('add-o');
+    else if (k === 'a') setTool('add-arrow');
+    else if (k === 'delete' || k === 'backspace') { e.preventDefault(); deleteSelected(); }
+    else if (k === 'escape') { state.pendingArrow = null; state.selected = null; render(); }
+  });
+
+  // Canvas click — context depends on tool
+  canvas.addEventListener('mousedown', (e) => {
+    const target = e.target;
+    const sec = currentSection();
+    const svgPt = clientToSvg(e.clientX, e.clientY);
+
+    // Did we click a handle?
+    const handleArrowId = target.getAttribute && target.getAttribute('data-arrow-handle');
+    if (handleArrowId) {
+      const a = findArrow(handleArrowId);
+      state.dragging = { kind: 'handle', id: a.id, downSvgX: svgPt.x, downSvgY: svgPt.y, startCX: a.cx, startCY: a.cy };
+      target.classList.add('dragging');
+      return;
+    }
+
+    // Did we click a marker?
+    const mgroup = (target.closest && target.closest('[data-marker-id]')) || null;
+    const mid = mgroup && mgroup.getAttribute('data-marker-id');
+    if (mid) {
+      const m = findMarker(mid);
+      if (state.tool === 'add-arrow') {
+        if (!state.pendingArrow) {
+          state.pendingArrow = mid;
+          state.selected = { kind: 'marker', id: mid };
+          render();
+        } else if (state.pendingArrow !== mid) {
+          addArrow(state.pendingArrow, mid);
+          state.pendingArrow = null;
+          state.selected = null;
+          render();
+        }
+        return;
+      }
+      if (state.tool === 'select') {
+        state.selected = { kind: 'marker', id: mid };
+        state.dragging = { kind: 'marker', id: mid, downSvgX: svgPt.x, downSvgY: svgPt.y, startX: m.x, startY: m.y };
+        mgroup.classList.add('dragging');
+        render();
+        return;
+      }
+    }
+
+    // Did we click an arrow path?
+    const aid = target.getAttribute && target.getAttribute('data-arrow-id');
+    if (aid && state.tool === 'select') {
+      state.selected = { kind: 'arrow', id: aid };
+      render();
+      return;
+    }
+
+    // Empty space
+    if (state.tool === 'add-x') {
+      addMarker('x', svgPt.x, svgPt.y);
+      render();
+    } else if (state.tool === 'add-o') {
+      addMarker('o', svgPt.x, svgPt.y);
+      render();
+    } else if (state.tool === 'select') {
+      // Click on empty space → deselect
+      state.selected = null;
+      render();
+    }
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!state.dragging) return;
+    const svgPt = clientToSvg(e.clientX, e.clientY);
+    const dx = svgPt.x - state.dragging.downSvgX;
+    const dy = svgPt.y - state.dragging.downSvgY;
+    if (state.dragging.kind === 'marker') {
+      const m = findMarker(state.dragging.id);
+      m.x = Math.round(state.dragging.startX + dx);
+      m.y = Math.round(state.dragging.startY + dy);
+    } else if (state.dragging.kind === 'handle') {
+      const a = findArrow(state.dragging.id);
+      a.cx = Math.round(state.dragging.startCX + dx);
+      a.cy = Math.round(state.dragging.startCY + dy);
+    }
+    render();
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    if (state.dragging) {
+      // Clear dragging class
+      document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+      state.dragging = null;
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    if (state.dragging) {
+      document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+      state.dragging = null;
+    }
+  });
+
+  // Buttons
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    if (!confirm('Reset section ' + state.section + ' to its default layout?')) return;
+    const defaults = makeDefaults();
+    state.data[state.section] = defaults[state.section];
+    state.selected = null;
+    state.pendingArrow = null;
+    render();
+  });
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const txt = svgForSection(state.section);
+    navigator.clipboard.writeText(txt).then(() => {
+      const btn = document.getElementById('copy-btn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1400);
+    });
+  });
+
+  // Initial paint
+  render();
+})();
+</script>
+
+</body>
+</html>

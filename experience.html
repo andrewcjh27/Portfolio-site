@@ -250,6 +250,129 @@
     .exp-panel-tags { margin-top: 2.2rem; display: flex; flex-wrap: wrap; gap: 0.45rem; }
     .exp-panel-tags span { font-family: -apple-system, "SF Mono", Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.06em; color: #444; border: 1px solid rgba(0,0,0,0.18); border-radius: 999px; padding: 0.32rem 0.85rem; background: #fff; }
 
+    /* ── Project workflow timeline (used inside each project's panel) ─
+       A vertical timeline of numbered steps. Each step has a marker
+       (number circle), an eyebrow (date / phase), title, description,
+       and an image slot for a screenshot. Image slot shows a dashed
+       placeholder until an actual <img> is added. */
+    .exp-workflow { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(0,0,0,0.08); }
+    .exp-workflow-heading {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888;
+      margin: 0 0 1.6rem;
+    }
+    .exp-workflow-timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      counter-reset: workflow;
+    }
+    .exp-workflow-timeline::before {
+      /* Vertical connecting line */
+      content: '';
+      position: absolute;
+      left: 18px;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.05));
+    }
+    .exp-workflow-step {
+      position: relative;
+      padding-left: 60px;
+      padding-bottom: 2.4rem;
+    }
+    .exp-workflow-step:last-child { padding-bottom: 0; }
+    .exp-workflow-step::before {
+      /* Marker dot with number */
+      counter-increment: workflow;
+      content: counter(workflow, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #111;
+      color: #fff;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.04em;
+    }
+    .exp-workflow-step-eyebrow {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #888;
+      margin: 0.35rem 0 0.4rem;
+    }
+    .exp-workflow-step-title {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: #111;
+      margin: 0 0 0.55rem;
+      line-height: 1.25;
+    }
+    .exp-workflow-step-body {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.94rem;
+      line-height: 1.6;
+      color: #333;
+      margin: 0 0 1rem;
+    }
+    .exp-workflow-step-body strong { color: #111; font-weight: 600; }
+    .exp-workflow-step-body ul {
+      margin: 0.5rem 0 0;
+      padding-left: 1.1rem;
+    }
+    .exp-workflow-step-body ul li {
+      margin-bottom: 0.3rem;
+      color: #444;
+    }
+    .exp-workflow-image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #f4f3ee;
+      border: 1.5px dashed rgba(0,0,0,0.18);
+      border-radius: 6px;
+      margin-top: 0.8rem;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .exp-workflow-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .exp-workflow-image.has-image {
+      border-style: solid;
+      border-color: rgba(0,0,0,0.1);
+      background: transparent;
+    }
+    .exp-workflow-image-placeholder {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      color: rgba(0,0,0,0.4);
+      text-align: center;
+      padding: 0 1rem;
+    }
+
     .exp-floating-info { position: fixed; bottom: 0.9rem; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 1.6rem; pointer-events: none; z-index: 90; font-family: -apple-system, "SF Pro Text", sans-serif; font-size: 0.78rem; color: rgba(0,0,0,0.55); }
     .exp-floating-info > span, .exp-floating-info > nav { pointer-events: auto; }
     .exp-floating-info a { color: rgba(0,0,0,0.72); text-decoration: none; margin-left: 1.1rem; transition: color 0.2s; }
@@ -558,6 +681,97 @@
         <p>Developed spatial data concepts and 3D configurations using <strong>Rhino</strong> to align physical installation layouts with inferred data flows, optimizing the system's capacity for <strong>systematic measurement</strong> of community engagement.</p>
       </div>
       <div class="exp-panel-tags"><span>Data Analytics</span><span>Rhino 3D</span><span>UX Research</span><span>Spatial Design</span></div>
+
+      <section class="exp-workflow">
+        <h3 class="exp-workflow-heading">Project Workflow</h3>
+        <ol class="exp-workflow-timeline">
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 01 &middot; Jan &ndash; Feb 2026</div>
+            <h4 class="exp-workflow-step-title">Public-space behavioral survey</h4>
+            <p class="exp-workflow-step-body">
+              Built and distributed a survey across the team&rsquo;s networks asking people how they actually use civic squares, parks, and commercial spaces &mdash; group size, time of day, length of stay, deal-breakers, and what they&rsquo;d feel comfortable doing in public. The goal: capture real behavior, not assumptions, before any installation design started.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/urban-conga-steps/01-survey-v2.png" alt="Urban Conga — survey task">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 02 &middot; Feb 2026</div>
+            <h4 class="exp-workflow-step-title">Insight extraction</h4>
+            <p class="exp-workflow-step-body">
+              Each of the 9 consultants was asked to surface 2&ndash;3 patterns from the survey responses. The themes that emerged immediately:
+              <ul>
+                <li>Almost everyone visits public spaces in <strong>groups of 3&ndash;5 people</strong></li>
+                <li><strong>Overcrowding, cleanliness, and noise</strong> are the top deal-breakers</li>
+                <li>People are uncomfortable with anything they&rsquo;re unaware of &mdash; but much more relaxed once they understand what an installation is doing</li>
+                <li>Behavior splits into two distinct modes: <strong>quick passers-by (15&ndash;30 min)</strong> and <strong>extended visitors (1+ hour)</strong></li>
+              </ul>
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/urban-conga-steps/02-insights-v2.png" alt="Urban Conga — insight sticky notes per consultant">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 03 &middot; Feb &ndash; Mar 2026</div>
+            <h4 class="exp-workflow-step-title">Space-type segmentation</h4>
+            <p class="exp-workflow-step-body">
+              The team recognized that one installation concept can&rsquo;t cover every context. We grouped responses into <strong>three space archetypes</strong> &mdash; each with its own usage signature, mood, and core values:
+              <ul>
+                <li><strong>Civic spaces</strong> &mdash; 2 hours, 2&ndash;5 people, productive at noon/night, valuing education, focus, and sightseeing</li>
+                <li><strong>Park spaces</strong> &mdash; 30 min&ndash;1 hour, relaxation-focused, valuing exercise, stress relief, quiet, and friends</li>
+                <li><strong>Commercial spaces</strong> &mdash; 1&ndash;2 hours, productive at noon/night, social and purchase-driven</li>
+              </ul>
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/urban-conga-steps/03-space-types-v2.png" alt="Urban Conga — space type breakdown cards (Civic / Park / Commercial)">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 04 &middot; Mar 2026</div>
+            <h4 class="exp-workflow-step-title">Concept ideation</h4>
+            <p class="exp-workflow-step-body">
+              Each space archetype got its own installation direction. The brainstorm produced a long-list of physical and digital interaction concepts matched to the space&rsquo;s mood:
+              <ul>
+                <li><strong>Litter walls, locks, etching/scratching</strong> &mdash; permanence and trace-leaving in civic spaces</li>
+                <li><strong>Infrared sensing &amp; AI cluster detection</strong> &mdash; measuring how long and how many, depending on context</li>
+                <li><strong>Touch / pressure / button voting</strong> &mdash; e.g. a Starbucks &ldquo;Strawberry Ac&aacute;i vs. Caramel Macchiato first to 100&rdquo; in a mall</li>
+                <li><strong>Material wear-and-tear over time</strong> &mdash; the installation visibly changes from use</li>
+                <li><strong>Sticker walls / community blurbs</strong>, <strong>kinetic park installations</strong>, <strong>racing/climbing micro-games</strong></li>
+              </ul>
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/urban-conga-steps/04-concepts-v2.png" alt="Urban Conga — installation concept ideation">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 05 &middot; Apr 2026</div>
+            <h4 class="exp-workflow-step-title">Sensing &amp; data-schema constraints</h4>
+            <p class="exp-workflow-step-body">
+              Translated the qualitative behavioral goals (&ldquo;measure dwell time,&rdquo; &ldquo;count cluster size,&rdquo; &ldquo;detect voluntary engagement&rdquo;) into structured, quantifiable data schemas with low-cost, low-overhead sensing approaches &mdash; capacitive touch, IR proximity, simple pressure switches.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/urban-conga-steps/05-data-schema-v2.png" alt="Urban Conga — sensing schema area">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 06 &middot; May &ndash; Jun 2026</div>
+            <h4 class="exp-workflow-step-title">Spatial &amp; 3D layout in Rhino</h4>
+            <p class="exp-workflow-step-body">
+              Modeled candidate installation footprints in <strong>Rhino 3D</strong>, validating that each layout could host the inferred data flows from phase 5 while staying within the budget and footprint of a real public space. Closed the loop between behavior &rarr; sensing &rarr; physical form.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/urban-conga-steps/06-rhino-v2.png" alt="Urban Conga — installation reference + Rhino layout area">
+            </div>
+          </li>
+
+        </ol>
+      </section>
     </div>
   </aside>
 
@@ -576,6 +790,86 @@
         <p>Led user research through surveys to assess Adaptive Performance perceptions, analyzing feedback to translate user needs into feature requirements and UI designs in <strong>Figma</strong>, collaborating with 12 team members across frontend and backend tracks.</p>
       </div>
       <div class="exp-panel-tags"><span>React</span><span>Vite</span><span>Figma</span><span>User Research</span></div>
+
+      <section class="exp-workflow">
+        <h3 class="exp-workflow-heading">Project Workflow</h3>
+        <ol class="exp-workflow-timeline">
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 01 &middot; Aug 2025</div>
+            <h4 class="exp-workflow-step-title">Project framing &mdash; Adaptive Performance</h4>
+            <p class="exp-workflow-step-body">
+              Started from a hypothesis: most browsers waste battery on idle tabs, and Firefox could differentiate with an <strong>Adaptive Performance</strong> mode that intelligently throttles based on usage. Defined the open questions we&rsquo;d need to answer with users: do they care about eco features, what data would convince them, and how much performance loss is acceptable in exchange for battery gain?
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/mozilla-steps/01-framing-v2.png" alt="Mozilla — Week 1 Figjam framing">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 02 &middot; Sep 2025 (Week 1)</div>
+            <h4 class="exp-workflow-step-title">Survey question brainstorm</h4>
+            <p class="exp-workflow-step-body">
+              The 12-person team filled a FigJam board with raw interview/survey question candidates &mdash; each consultant contributing from their angle. Questions ranged from blunt (&ldquo;why do you prefer your browser over Firefox?&rdquo;) to specific (&ldquo;if you could save 10% battery at the cost of significantly laggier performance, would you?&rdquo;).
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/mozilla-steps/02-brainstorm-v2.png" alt="Mozilla — survey question brainstorm sticky-note board">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 03 &middot; Sep 2025</div>
+            <h4 class="exp-workflow-step-title">Categorize into themes</h4>
+            <p class="exp-workflow-step-body">
+              Grouped the brainstorm into five working buckets that became the spine of the eventual questionnaire:
+              <ul>
+                <li><strong>Background / Demographics</strong> &mdash; age, browser of choice, hardware, power-user level</li>
+                <li><strong>Eco Qs</strong> &mdash; environmental motivation, willingness to trade speed for sustainability</li>
+                <li><strong>Power Qs</strong> &mdash; current habits around tab sleeping, low-power modes, memory awareness</li>
+                <li><strong>Convenience Qs</strong> &mdash; 1-click vs. customizable, visibility preferences for feature output</li>
+                <li><strong>Extensions</strong> &mdash; how integrated browser extensions are into the user&rsquo;s daily flow</li>
+              </ul>
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/mozilla-steps/03-categorize-v2.png" alt="Mozilla — categorized question clusters (Eco / Power / Convenience / Background)">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 04 &middot; Oct 2025</div>
+            <h4 class="exp-workflow-step-title">Survey structuring</h4>
+            <p class="exp-workflow-step-body">
+              Pressure-tested the brainstorm against eight guiding criteria &mdash; purpose, target audience, question types, clarity, flow/logic, scalability, time-to-complete, and ethics. The result: a coherent survey that flows from general to specific, mixes qualitative and quantitative items, and stays under a respondent-friendly length.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/mozilla-steps/04-structure-v2.png" alt="Mozilla — Guiding Questions framework (8 criteria)">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 05 &middot; Oct &ndash; Nov 2025</div>
+            <h4 class="exp-workflow-step-title">Final survey assembly &amp; distribution</h4>
+            <p class="exp-workflow-step-body">
+              Consolidated the brainstorm into a clean, multi-section instrument: <strong>Background Screening</strong>, <strong>Eco-Conscious Preferences</strong>, <strong>Power-user Questions</strong>, <strong>Extensions</strong>, <strong>Browser Usage &amp; Experience</strong>, and <strong>Final Questions</strong>. Distributed across the team&rsquo;s networks; collected enough responses to read both broad signals and edge cases.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/mozilla-steps/05-final-survey-v2.png" alt="Mozilla — final structured survey (Background / Eco / Power / Extensions)">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 06 &middot; Dec 2025 &ndash; Feb 2026</div>
+            <h4 class="exp-workflow-step-title">Build &mdash; tab-performance extension</h4>
+            <p class="exp-workflow-step-body">
+              Took the survey insights into engineering. Built a Firefox extension in <strong>React + Vite</strong> that tracks <strong>50+ concurrent tabs</strong> in real time and lets users filter and sort by memory and CPU usage &mdash; the &ldquo;visibility&rdquo; signal the survey identified as the missing piece in current eco-mode UIs. Designed the UI in <strong>Figma</strong> with the 12-person team split across frontend and backend tracks.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/mozilla-steps/06-extension-v2.png" alt="Mozilla — final survey + Adaptive Performance question set">
+            </div>
+          </li>
+
+        </ol>
+      </section>
     </div>
   </aside>
 
@@ -613,6 +907,95 @@
         <p>Systematized mobile app design iterations by validating user needs through rigorous <strong>qualitative and quantitative analysis</strong>, producing a measurable increase in engagement and interface usability.</p>
       </div>
       <div class="exp-panel-tags"><span>UX Research</span><span>Affinity Mapping</span><span>Benchmarking</span><span>Mobile UI</span><span>Figma</span></div>
+
+      <section class="exp-workflow">
+        <h3 class="exp-workflow-heading">Project Workflow</h3>
+        <ol class="exp-workflow-timeline">
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 01 &middot; Jan 2025</div>
+            <h4 class="exp-workflow-step-title">User outreach &amp; survey distribution</h4>
+            <p class="exp-workflow-step-body">
+              Designed and distributed a multi-question user survey to undergraduates at public four-year universities, sampling across class years, demographics, and device usage. The instrument captured how students discover career events, why they choose virtual over in-person, what they retain, and the friction points before, during, and after attending.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/braven-steps/01-outreach-v2.png" alt="Braven user research — outreach instructions">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 02 &middot; Feb 2025</div>
+            <h4 class="exp-workflow-step-title">Aggregate &amp; visualize the data</h4>
+            <p class="exp-workflow-step-body">
+              Cleaned the raw responses and translated them into bar charts, pie charts, histograms, and heatmaps so the team could read the dataset at a glance. Surfaced majority opinions, outliers, and inconsistencies across the eight-person research team.
+              <ul>
+                <li><strong>Visualized</strong> attendance, device, time-of-day, and content-preference distributions</li>
+                <li><strong>Flagged</strong> patterns worth investigating (e.g., low ease-of-use ratings, time-constraint cluster)</li>
+              </ul>
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/braven-steps/02-charts-v2.png" alt="Braven user research — survey response chart wall">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 03 &middot; Feb 2025</div>
+            <h4 class="exp-workflow-step-title">Affinity mapping</h4>
+            <p class="exp-workflow-step-body">
+              Each consultant generated sticky-note insights from their assigned section of the survey. We then clustered them on a shared FigJam board into three themes: <strong>Demographics</strong>, <strong>Motivations</strong>, and <strong>Pain Points &amp; Needs</strong> — exposing the conflicting points where Braven&rsquo;s assumptions diverged from what students actually wanted.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/braven-steps/03-affinity-v2.png" alt="Braven user research — affinity map">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 04 &middot; Feb &ndash; Mar 2025</div>
+            <h4 class="exp-workflow-step-title">Synthesize general audience insights</h4>
+            <p class="exp-workflow-step-body">
+              Turned the clusters into a single working audience profile. Two themes dominated:
+              <ul>
+                <li><strong>Time constraints &amp; convenience</strong> were overwhelmingly the reason students chose virtual events at all</li>
+                <li><strong>Students don&rsquo;t know what they want</strong> — they want the end result without the effort, and lack the steps to get there</li>
+              </ul>
+              The base persona: a second-year, public-institution, underserved, Zoom-comfortable, social-media-savvy student.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/braven-steps/04-insights-v2.png" alt="Braven user research — general audience insights">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 05 &middot; Mar 2025</div>
+            <h4 class="exp-workflow-step-title">Year-by-year deep dive (Part 2)</h4>
+            <p class="exp-workflow-step-body">
+              The general profile was too coarse to drive design, so we split the dataset four ways &mdash; <strong>first-year, second-year, third-year, fourth-year</strong> &mdash; and reran the affinity exercise within each cohort. Each consultant was assigned a year and tagged every survey question with where that cohort&rsquo;s proportions diverged from the average.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/braven-steps/05-year-split-v2.png" alt="Braven user research — year-split charts">
+            </div>
+          </li>
+
+          <li class="exp-workflow-step">
+            <div class="exp-workflow-step-eyebrow">Phase 06 &middot; Mar &ndash; Apr 2025</div>
+            <h4 class="exp-workflow-step-title">Per-year personas</h4>
+            <p class="exp-workflow-step-body">
+              The deep dive produced four sharply different audience profiles &mdash; each with its own demographics, motivations, pain points, and needs:
+              <ul>
+                <li><strong>First-years</strong> &mdash; part-time employed, interested in networking and exploring industries. Lack of time is the sole barrier; want 1:1 mentor meetings.</li>
+                <li><strong>Second-years</strong> &mdash; more passive, less proactive about finding events. Want personal meetings and chat/email follow-ups; uncomfortable speaking to employers.</li>
+                <li><strong>Third-years</strong> &mdash; busiest cohort, focused on internships. Highest engagement during events; want resume help and intimate 1:1 meetings with employers.</li>
+                <li><strong>Fourth-years</strong> &mdash; largely unemployed, hunting full-time roles. Want direct employer contact, not more information &mdash; fewer webinars, more 1:1s.</li>
+              </ul>
+              These four personas became the spine of the mobile app iterations that followed.
+            </p>
+            <div class="exp-workflow-image has-image">
+              <img src="images/projects/braven-steps/06-personas-v2.png" alt="Braven user research — per-year personas">
+            </div>
+          </li>
+
+        </ol>
+      </section>
     </div>
   </aside>
 
