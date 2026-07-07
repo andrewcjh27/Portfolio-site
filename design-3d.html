@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="cat.3d.pageTitle">
 <head>
   <meta charset="UTF-8" />
   <title>3D / Motion | Design | Junho Choi</title>
@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
+  <script src="i18n.js"></script>
   <style>
     html { scroll-behavior: smooth; overflow-x: hidden; }
     body { background: #fff; }
@@ -257,34 +258,34 @@
     <div class="logo">JUNHO CHOI</div>
     <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <nav class="nav">
-      <a href="index.html"      class="nav-link">About</a>
-      <a href="resume.html"     class="nav-link">Resume</a>
-      <a href="experience.html" class="nav-link">Experience</a>
+      <a href="index.html"      class="nav-link" data-i18n="nav.about">About</a>
+      <a href="resume.html"     class="nav-link" data-i18n="nav.resume">Resume</a>
+      <a href="experience.html" class="nav-link" data-i18n="nav.experience">Experience</a>
       <div class="nav-more">
         <button class="nav-more-toggle nav-link active" type="button" aria-haspopup="true" aria-expanded="false">
-          More
+          <span data-i18n="nav.more">More</span>
           <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
             <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
           </svg>
         </button>
         <div class="nav-more-panel" role="menu">
           <div>
-            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-label" data-i18n="nav.categories">Categories</div>
             <div class="nav-more-list">
-              <a href="design.html">Design</a>
-              <a href="photo.html">Photography</a>
-              <a href="cafes.html">Cafes</a>
-              <a href="codes.html">Codes</a>
-              <a href="soccer.html">Soccer</a>
+              <a href="design.html" data-i18n="nav.design">Design</a>
+              <a href="photo.html" data-i18n="nav.photography">Photography</a>
+              <a href="cafes.html" data-i18n="nav.cafes">Cafes</a>
+              <a href="codes.html" data-i18n="nav.codes">Codes</a>
+              <a href="soccer.html" data-i18n="nav.soccer">Soccer</a>
             </div>
           </div>
           <a href="photo.html" class="nav-more-feature">
-            <h3>Photography &rarr;</h3>
-            <p>A growing visual diary of cities, water, and quiet moments.</p>
+            <h3 data-i18n-html="nav.feature.title">Photography &rarr;</h3>
+            <p data-i18n="nav.feature.desc">A growing visual diary of cities, water, and quiet moments.</p>
           </a>
           <div class="nav-more-footer">
-            <a href="resume.html">Resume</a>
-            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+            <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu" data-i18n="nav.footer.contact">Contact</a>
           </div>
         </div>
       </div>
@@ -293,9 +294,9 @@
 
   <!-- ═══ Hero ════════════════════════════════════════════════════════ -->
   <section class="cat-hero" id="heroSection">
-    <div class="cat-eyebrow anim">Design — Category 01</div>
+    <div class="cat-eyebrow anim" data-i18n="cat.3d.eyebrow">Design — Category 01</div>
     <h1 class="cat-title anim anim-d1">3D /<br>Motion</h1>
-    <p class="cat-lead anim anim-d2">
+    <p class="cat-lead anim anim-d2" data-i18n="cat.3d.lead">
       Renders, models, and spatial experiments — exploring how form, light, and movement
       come together in a digital space.
     </p>
@@ -303,14 +304,14 @@
 
   <!-- ═══ About this category ═══════════════════════════════════════════ -->
   <section class="cat-about">
-    <h2 class="cat-about-title anim">A space for<br>form &amp; movement.</h2>
+    <h2 class="cat-about-title anim" data-i18n-html="cat.about.title.3d">A space for<br>form &amp; movement.</h2>
     <div class="cat-about-paragraphs">
-      <p class="cat-about-paragraph anim anim-d1">
+      <p class="cat-about-paragraph anim anim-d1" data-i18n="cat.3d.p1">
         This category is where I'm starting to push past flat layouts into work that lives
         in three dimensions — modeling small objects, animating type, and learning how
         material and lighting carry an idea before any words do.
       </p>
-      <p class="cat-about-paragraph anim anim-d3">
+      <p class="cat-about-paragraph anim anim-d3" data-i18n="cat.3d.p2">
         I treat 3D and motion as the same conversation: timing, weight, and the way a
         camera moves around a thing. Most of what's here is in active development;
         finished pieces will land soon.
@@ -322,8 +323,8 @@
   <section class="cat-empty">
     <div class="cat-empty-card anim">
       <div class="cat-empty-eyebrow">In development</div>
-      <h2 class="cat-empty-title">Pieces are on the way.</h2>
-      <p class="cat-empty-sub">
+      <h2 class="cat-empty-title" data-i18n="cat.3d.empty.title">Pieces are on the way.</h2>
+      <p class="cat-empty-sub" data-i18n="cat.3d.empty.sub">
         I'm currently building out the 3D &amp; motion section.
         Check back soon, or browse my UI/UX and Art work in the meantime.
       </p>
@@ -338,13 +339,13 @@
 
   <!-- ═══ CTA ════════════════════════════════════════════════════════════ -->
   <section class="cat-cta">
-    <h2 class="cat-cta-title anim">Keep exploring.</h2>
-    <p class="cat-cta-sub anim anim-d1">More categories, more work — pick a thread.</p>
+    <h2 class="cat-cta-title anim" data-i18n="cat.cta.title.keep">Keep exploring.</h2>
+    <p class="cat-cta-sub anim anim-d1" data-i18n="cat.cta.sub.categories">More categories, more work — pick a thread.</p>
     <div class="cat-cta-pills anim anim-d2">
-      <a href="design.html"      class="cat-pill">&larr; Back to Design</a>
-      <a href="design-uiux.html" class="cat-pill">UI / UX</a>
-      <a href="design-art.html"  class="cat-pill">Art</a>
-      <a href="index.html"       class="cat-pill">About me</a>
+      <a href="design.html"      class="cat-pill" data-i18n-html="cat.pill.backToDesign">&larr; Back to Design</a>
+      <a href="design-uiux.html" class="cat-pill" data-i18n="cat.pill.uiux">UI / UX</a>
+      <a href="design-art.html"  class="cat-pill" data-i18n="cat.pill.art">Art</a>
+      <a href="index.html"       class="cat-pill" data-i18n="cat.pill.about">About me</a>
     </div>
   </section>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="index.title">
 <head>
   <meta charset="UTF-8" />
   <title>Junho Choi</title>
@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
+  <script src="i18n.js"></script>
   <style>
     /* ── Base ─────────────────────────────────────────────────────────────── */
     html {
@@ -520,34 +521,34 @@
       <svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <nav class="nav">
-      <a href="index.html"      class="nav-link active">About</a>
-      <a href="resume.html"     class="nav-link">Resume</a>
-      <a href="experience.html" class="nav-link">Experience</a>
+      <a href="index.html"      class="nav-link active" data-i18n="nav.about">About</a>
+      <a href="resume.html"     class="nav-link" data-i18n="nav.resume">Resume</a>
+      <a href="experience.html" class="nav-link" data-i18n="nav.experience">Experience</a>
       <div class="nav-more">
         <button class="nav-more-toggle nav-link" type="button" aria-haspopup="true" aria-expanded="false">
-          More
+          <span data-i18n="nav.more">More</span>
           <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
             <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
           </svg>
         </button>
         <div class="nav-more-panel" role="menu">
           <div>
-            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-label" data-i18n="nav.categories">Categories</div>
             <div class="nav-more-list">
-              <a href="design.html">Design</a>
-              <a href="photo.html">Photography</a>
-              <a href="cafes.html">Cafes</a>
-              <a href="codes.html">Codes</a>
-              <a href="soccer.html">Soccer</a>
+              <a href="design.html" data-i18n="nav.design">Design</a>
+              <a href="photo.html" data-i18n="nav.photography">Photography</a>
+              <a href="cafes.html" data-i18n="nav.cafes">Cafes</a>
+              <a href="codes.html" data-i18n="nav.codes">Codes</a>
+              <a href="soccer.html" data-i18n="nav.soccer">Soccer</a>
             </div>
           </div>
           <a href="photo.html" class="nav-more-feature">
-            <h3>Photography &rarr;</h3>
-            <p>A growing visual diary of cities, water, and quiet moments.</p>
+            <h3 data-i18n-html="nav.feature.title">Photography &rarr;</h3>
+            <p data-i18n="nav.feature.desc">A growing visual diary of cities, water, and quiet moments.</p>
           </a>
           <div class="nav-more-footer">
-            <a href="resume.html">Resume</a>
-            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+            <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu" data-i18n="nav.footer.contact">Contact</a>
           </div>
         </div>
       </div>
@@ -557,7 +558,7 @@
   <!-- ═══ Section 1: Hero (white) ═══════════════════════════════════════ -->
   <section class="hero-section" id="heroSection">
     <div class="hero-text">
-      <h1 class="hero-name anim">Junho<br><span class="hero-name-row">Choi <p class="hero-sub anim anim-d2">This site is where I collect my work, hobbies, and everyday photos</p></span></h1>
+      <h1 class="hero-name anim"><span data-i18n="index.hero.first">Junho</span><br><span class="hero-name-row"><span data-i18n="index.hero.last">Choi</span> <p class="hero-sub anim anim-d2" data-i18n="index.hero.sub">This site is where I collect my work, hobbies, and everyday photos</p></span></h1>
     </div>
     <!-- REPLACE: Save your portrait photo as images/home/hero.jpg -->
     <img src="images/home/hero.jpg" alt="Junho Choi" class="hero-image anim-scale" />
@@ -565,32 +566,32 @@
 
   <!-- ═══ Section 2: About Me (black) ═══════════════════════════════════ -->
   <section class="about-section" id="aboutSection">
-    <h2 class="about-title anim">about<br>me</h2>
+    <h2 class="about-title anim" data-i18n-html="index.about.title">about<br>me</h2>
     <div class="about-paragraphs">
-      <p class="about-paragraph anim anim-d1">I'm Junho, a student at UC Berkeley studying data science, integrative biology, and design. I'm drawn to the spaces where these fields overlap — using data to inform creative decisions and design to make the technical feel human. That curiosity shows up in my projects too, whether it's building a route optimizer that plans the shortest cafe tour across Seoul or training an AI to coach my recreational soccer team's formations in real time.</p>
-      <p class="about-paragraph anim anim-d3">Outside of academics, I spend my time photographing the places I visit, rating every cafe I can find, and rethinking how my room should look. This site is a collection of all of it — the things I study, the tools I build, and the stuff I care about. If anything here catches your eye, feel free to reach out.</p>
+      <p class="about-paragraph anim anim-d1" data-i18n="index.about.p1">I'm Junho, a student at UC Berkeley studying data science, integrative biology, and design. I'm drawn to the spaces where these fields overlap — using data to inform creative decisions and design to make the technical feel human. That curiosity shows up in my projects too, whether it's building a route optimizer that plans the shortest cafe tour across Seoul or training an AI to coach my recreational soccer team's formations in real time.</p>
+      <p class="about-paragraph anim anim-d3" data-i18n="index.about.p2">Outside of academics, I spend my time photographing the places I visit, rating every cafe I can find, and rethinking how my room should look. This site is a collection of all of it — the things I study, the tools I build, and the stuff I care about. If anything here catches your eye, feel free to reach out.</p>
     </div>
   </section>
 
   <!-- ═══ Section 3: Values + Explore (black) ═══════════════════════════ -->
   <section class="values-section" id="valuesSection">
-    <h2 class="values-heading anim">My values are ...</h2>
+    <h2 class="values-heading anim" data-i18n="index.values.heading">My values are ...</h2>
 
     <div class="values-grid">
       <div class="value-card anim anim-d1">
         <div class="value-number">01</div>
-        <h3 class="value-name">Creativity</h3>
-        <p class="value-desc">I enjoy connecting ideas across fields and finding design in unexpected places.</p>
+        <h3 class="value-name" data-i18n="index.value1.name">Creativity</h3>
+        <p class="value-desc" data-i18n="index.value1.desc">I enjoy connecting ideas across fields and finding design in unexpected places.</p>
       </div>
       <div class="value-card anim anim-d2">
         <div class="value-number">02</div>
-        <h3 class="value-name">Development</h3>
-        <p class="value-desc">I'm always learning, building, and refining — across code, data, and design.</p>
+        <h3 class="value-name" data-i18n="index.value2.name">Development</h3>
+        <p class="value-desc" data-i18n="index.value2.desc">I'm always learning, building, and refining — across code, data, and design.</p>
       </div>
       <div class="value-card anim anim-d3">
         <div class="value-number">03</div>
-        <h3 class="value-name">Altruism</h3>
-        <p class="value-desc">I want the things I make to be genuinely useful to others, not just technically interesting.</p>
+        <h3 class="value-name" data-i18n="index.value3.name">Altruism</h3>
+        <p class="value-desc" data-i18n="index.value3.desc">I want the things I make to be genuinely useful to others, not just technically interesting.</p>
       </div>
     </div>
 
@@ -602,17 +603,17 @@
     <!-- Section 3b: Explore (black) -->
     <section class="explore-section" id="exploreSection">
       <div class="explore-block">
-        <h2 class="explore-title anim">Explore my world.</h2>
-        <p class="explore-sub anim anim-d1">Design, photography, code, cafe tours, and more — all in one place.</p>
+        <h2 class="explore-title anim" data-i18n="index.explore.title">Explore my world.</h2>
+        <p class="explore-sub anim anim-d1" data-i18n="index.explore.sub">Design, photography, code, cafe tours, and more — all in one place.</p>
         <div class="explore-pills anim anim-d2">
           <div class="pill-row">
-            <a href="codes.html"  class="explore-pill">Codes</a>
-            <a href="design.html" class="explore-pill">Designs</a>
-            <a href="photo.html"  class="explore-pill">Photos</a>
+            <a href="codes.html"  class="explore-pill" data-i18n="index.pill.codes">Codes</a>
+            <a href="design.html" class="explore-pill" data-i18n="index.pill.designs">Designs</a>
+            <a href="photo.html"  class="explore-pill" data-i18n="index.pill.photos">Photos</a>
           </div>
           <div class="pill-row pill-row-offset">
-            <a href="cafes.html"  class="explore-pill">Cafes</a>
-            <a href="soccer.html"   class="explore-pill">Soccer</a>
+            <a href="cafes.html"  class="explore-pill" data-i18n="index.pill.cafes">Cafes</a>
+            <a href="soccer.html"   class="explore-pill" data-i18n="index.pill.soccer">Soccer</a>
           </div>
         </div>
       </div>
@@ -627,7 +628,7 @@
 
   <!-- ═══ Section 5: I can help you with … + Contact ════════════════════ -->
   <section class="help-section" id="helpSection">
-    <h2 class="help-heading anim">I can help you with ...</h2>
+    <h2 class="help-heading anim" data-i18n="index.help.heading">I can help you with ...</h2>
 
     <div class="help-gallery">
       <div class="gallery-left anim anim-d1">
@@ -655,8 +656,8 @@
   <!-- ═══ Section 6: Contact ════════════════════════════════════════════ -->
   <section class="contact-section" id="contactSection">
     <div class="contact-block anim">
-      <h2 class="contact-title">Get in Touch</h2>
-      <p class="contact-sub">Whether it's about a project, a question, or just to say hi — feel free to reach out.</p>
+      <h2 class="contact-title" data-i18n="index.contact.title">Get in Touch</h2>
+      <p class="contact-sub" data-i18n="index.contact.sub">Whether it's about a project, a question, or just to say hi — feel free to reach out.</p>
       <div class="contact-links">
         <a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener" class="contact-pill">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>

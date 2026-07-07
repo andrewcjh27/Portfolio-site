@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="room.title">
 <head>
   <meta charset="UTF-8" />
   <title>My Room | Junho Choi</title>
@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
+  <script src="i18n.js"></script>
   <style>
     /* ── Full-page room override ──────────────────────────────────────────── */
     html, body { height: 100%; overflow: hidden; }
@@ -215,34 +216,34 @@
     <div class="logo">Junho Choi</div>
     <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <nav class="nav">
-      <a href="index.html"      class="nav-link">About</a>
-      <a href="resume.html"     class="nav-link">Resume</a>
-      <a href="experience.html" class="nav-link">Experience</a>
+      <a href="index.html"      class="nav-link" data-i18n="nav.about">About</a>
+      <a href="resume.html"     class="nav-link" data-i18n="nav.resume">Resume</a>
+      <a href="experience.html" class="nav-link" data-i18n="nav.experience">Experience</a>
       <div class="nav-more">
         <button class="nav-more-toggle nav-link active" type="button" aria-haspopup="true" aria-expanded="false">
-          More
+          <span data-i18n="nav.more">More</span>
           <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
             <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
           </svg>
         </button>
         <div class="nav-more-panel" role="menu">
           <div>
-            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-label" data-i18n="nav.categories">Categories</div>
             <div class="nav-more-list">
-              <a href="design.html">Design</a>
-              <a href="photo.html">Photography</a>
-              <a href="cafes.html">Cafes</a>
-              <a href="codes.html">Codes</a>
-              <a href="soccer.html">Soccer</a>
+              <a href="design.html" data-i18n="nav.design">Design</a>
+              <a href="photo.html" data-i18n="nav.photography">Photography</a>
+              <a href="cafes.html" data-i18n="nav.cafes">Cafes</a>
+              <a href="codes.html" data-i18n="nav.codes">Codes</a>
+              <a href="soccer.html" data-i18n="nav.soccer">Soccer</a>
             </div>
           </div>
           <a href="photo.html" class="nav-more-feature">
-            <h3>Photography &rarr;</h3>
-            <p>A growing visual diary of cities, water, and quiet moments.</p>
+            <h3 data-i18n-html="nav.feature.title">Photography &rarr;</h3>
+            <p data-i18n="nav.feature.desc">A growing visual diary of cities, water, and quiet moments.</p>
           </a>
           <div class="nav-more-footer">
-            <a href="resume.html">Resume</a>
-            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+            <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu" data-i18n="nav.footer.contact">Contact</a>
           </div>
         </div>
       </div>
@@ -271,14 +272,14 @@
         <img id="lb-img" src="" alt="" />
       </div>
       <div class="lb-text">
-        <p class="lb-eyebrow">My Room</p>
+        <p class="lb-eyebrow" data-i18n="room.lb.eyebrow">My Room</p>
         <h2 class="lb-title" id="lb-title"></h2>
         <p class="lb-desc"  id="lb-desc"></p>
-        <button class="lb-close" id="lb-close-btn">← Back to room</button>
+        <button class="lb-close" id="lb-close-btn" data-i18n="room.back">← Back to room</button>
       </div>
     </div>
 
-    <div class="room-hint">Drag to rotate &nbsp;·&nbsp; Scroll or pinch to zoom &nbsp;·&nbsp; Tap · to explore</div>
+    <div class="room-hint" data-i18n-html="room.hint">Drag to rotate &nbsp;·&nbsp; Scroll or pinch to zoom &nbsp;·&nbsp; Tap · to explore</div>
   </div>
 
   <script src="script.js"></script>
@@ -332,49 +333,63 @@
         pos:   new THREE.Vector3(1.0, 1.0, 2.6),
         src:   'images/Room/IMG_5183.JPG',
         title: 'Desk — Left',
-        desc:  'The left side of my workspace. Kept clean and minimal for focused work sessions.'
+        desc:  'The left side of my workspace. Kept clean and minimal for focused work sessions.',
+        titleKo: '책상 — 왼쪽',
+        descKo:  '작업 공간의 왼쪽. 집중하는 작업 세션을 위해 깔끔하고 미니멀하게 유지합니다.'
       },
       {
         id:    'hs-desk2',
         pos:   new THREE.Vector3(0, 1.0, 2.6),
         src:   'images/Room/IMG_5182.JPG',
         title: 'Desk — Centre',
-        desc:  'Main work area. The centre of the setup where everything comes together.'
+        desc:  'Main work area. The centre of the setup where everything comes together.',
+        titleKo: '책상 — 가운데',
+        descKo:  '메인 작업 공간. 모든 것이 모이는 셋업의 중심입니다.'
       },
       {
         id:    'hs-desk3',
         pos:   new THREE.Vector3(-1.0, 1.0, 2.6),
         src:   'images/Room/IMG_5184.JPG',
         title: 'Desk — Right',
-        desc:  'Right side of the desk. Extra space for notes, books, or whatever the day calls for.'
+        desc:  'Right side of the desk. Extra space for notes, books, or whatever the day calls for.',
+        titleKo: '책상 — 오른쪽',
+        descKo:  '책상의 오른쪽. 메모, 책, 그날 필요한 무엇이든 놓을 여유 공간.'
       },
       {
         id:    'hs-bedside',
         pos:   new THREE.Vector3(-1.5, 1.0, -0.1),
         src:   'images/Room/IMG_5213.JPG',
         title: 'Bed & Nightstand',
-        desc:  'Cozy corner for winding down. A good lamp and a few things within reach is all you need.'
+        desc:  'Cozy corner for winding down. A good lamp and a few things within reach is all you need.',
+        titleKo: '침대 & 협탁',
+        descKo:  '하루를 마무리하기 좋은 아늑한 구석. 좋은 조명과 손 닿는 곳의 몇 가지면 충분합니다.'
       },
       {
         id:    'hs-corner1',
         pos:   new THREE.Vector3(3.2, 0.5, -1.2),
         src:   'images/Room/IMG_5214.JPG',
         title: 'Corner Shelf',
-        desc:  'A shelf filled with small things that matter — books, objects, and a bit of personality.'
+        desc:  'A shelf filled with small things that matter — books, objects, and a bit of personality.',
+        titleKo: '코너 선반',
+        descKo:  '작지만 소중한 것들 — 책, 소품, 그리고 약간의 개성으로 채운 선반.'
       },
       {
         id:    'hs-corner2',
         pos:   new THREE.Vector3(3.9, 1.7, -2.3),
         src:   'images/Room/IMG_5181.JPG',
         title: 'Corner Lamp',
-        desc:  'Warm ambient lighting to balance the room at night. Details in the corners make the space.'
+        desc:  'Warm ambient lighting to balance the room at night. Details in the corners make the space.',
+        titleKo: '코너 램프',
+        descKo:  '밤에 방의 균형을 잡아주는 따뜻한 앰비언트 조명. 구석의 디테일이 공간을 완성합니다.'
       },
       {
         id:    'hs-projector',
         pos:   new THREE.Vector3(1.0, 1.0, -1.5),
         src:   'images/Room/IMG_5180.JPG',
         title: 'Projector',
-        desc:  'For films, shows, and the occasional late-night playlist visualiser. Big screen, small room.'
+        desc:  'For films, shows, and the occasional late-night playlist visualiser. Big screen, small room.',
+        titleKo: '프로젝터',
+        descKo:  '영화, 방송, 가끔은 늦은 밤 플레이리스트 시각화까지. 작은 방, 큰 화면.'
       },
     ];
 
@@ -405,9 +420,10 @@
     const lbCloseBtn = document.getElementById('lb-close-btn');
 
     function openLightbox(hs) {
+      var ko = window.i18n && window.i18n.lang === 'ko';
       lbImg.src          = hs.src;
-      lbTitle.textContent = hs.title;
-      lbDesc.textContent  = hs.desc;
+      lbTitle.textContent = (ko && hs.titleKo) ? hs.titleKo : hs.title;
+      lbDesc.textContent  = (ko && hs.descKo)  ? hs.descKo  : hs.desc;
       lightbox.classList.add('visible');
     }
 

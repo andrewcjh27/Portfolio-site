@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="exp.pageTitle">
 <head>
   <meta charset="UTF-8" />
   <title>Experience | Junho Choi</title>
@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
+  <script src="i18n.js"></script>
   <style>
     /* ── Core Reset for Virtual Scrolling ── */
     html, body { 
@@ -472,35 +473,35 @@
       <svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <nav class="nav">
-      <a href="index.html"      class="nav-link">About</a>
-      <a href="resume.html"     class="nav-link">Resume</a>
-      <a href="experience.html" class="nav-link active">Experience</a>
+      <a href="index.html"      class="nav-link" data-i18n="nav.about">About</a>
+      <a href="resume.html"     class="nav-link" data-i18n="nav.resume">Resume</a>
+      <a href="experience.html" class="nav-link active" data-i18n="nav.experience">Experience</a>
       
       <div class="nav-more">
         <button class="nav-more-toggle nav-link" type="button" aria-haspopup="true" aria-expanded="false">
-          More
+          <span data-i18n="nav.more">More</span>
           <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
             <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
           </svg>
         </button>
         <div class="nav-more-panel" role="menu">
           <div>
-            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-label" data-i18n="nav.categories">Categories</div>
             <div class="nav-more-list">
-              <a href="design.html">Design</a>
-              <a href="photo.html">Photography</a>
-              <a href="cafes.html">Cafes</a>
-              <a href="codes.html">Codes</a>
-              <a href="soccer.html">Soccer</a>
+              <a href="design.html" data-i18n="nav.design">Design</a>
+              <a href="photo.html" data-i18n="nav.photography">Photography</a>
+              <a href="cafes.html" data-i18n="nav.cafes">Cafes</a>
+              <a href="codes.html" data-i18n="nav.codes">Codes</a>
+              <a href="soccer.html" data-i18n="nav.soccer">Soccer</a>
             </div>
           </div>
           <a href="photo.html" class="nav-more-feature">
-            <h3>Photography &rarr;</h3>
-            <p>A growing visual diary of cities, water, and quiet moments.</p>
+            <h3 data-i18n-html="nav.feature.title">Photography &rarr;</h3>
+            <p data-i18n="nav.feature.desc">A growing visual diary of cities, water, and quiet moments.</p>
           </a>
           <div class="nav-more-footer">
-            <a href="resume.html">Resume</a>
-            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+            <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu" data-i18n="nav.footer.contact">Contact</a>
           </div>
         </div>
       </div>
@@ -511,17 +512,17 @@
     
     <article class="exp-slide" data-i="0">
       <div class="text-mask left">
-        <h2 class="exp-word text-mask-inner">Urban<br>Conga</h2>
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.0.company">Urban<br>Conga</h2>
       </div>
       <div aria-hidden="true"></div>
       <div class="exp-right-col">
         <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner">UX Design<br>Consultant</h2>
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.0.role">UX Design<br>Consultant</h2>
         </div>
         <div class="text-mask meta">
           <div class="exp-meta text-mask-inner">
             <span class="exp-meta-tag">Jan 2026 / Jun 2026</span>
-            <p class="exp-meta-summary">Ideated an interactive public installation system to capture and interpret usage patterns, improving behavioral visibility constraints.</p>
+            <p class="exp-meta-summary" data-i18n="exp.0.summary">Ideated an interactive public installation system to capture and interpret usage patterns, improving behavioral visibility constraints.</p>
           </div>
         </div>
       </div>
@@ -529,17 +530,17 @@
 
     <article class="exp-slide" data-i="1">
       <div class="text-mask left">
-        <h2 class="exp-word text-mask-inner">Mozilla<br>Firefox</h2>
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.1.company">Mozilla<br>Firefox</h2>
       </div>
       <div aria-hidden="true"></div>
       <div class="exp-right-col">
         <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner">IT<br>Consultant</h2>
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.1.role">IT<br>Consultant</h2>
         </div>
         <div class="text-mask meta">
           <div class="exp-meta text-mask-inner">
             <span class="exp-meta-tag">Aug 2025 / Feb 2026</span>
-            <p class="exp-meta-summary">Built a React + Vite performance extension tracking 50+ tabs in real time. Ran user research, translated findings into Figma UI, shipped with a 12-person team.</p>
+            <p class="exp-meta-summary" data-i18n="exp.1.summary">Built a React + Vite performance extension tracking 50+ tabs in real time. Ran user research, translated findings into Figma UI, shipped with a 12-person team.</p>
           </div>
         </div>
       </div>
@@ -547,17 +548,17 @@
 
     <article class="exp-slide" data-i="2">
       <div class="text-mask left">
-        <h2 class="exp-word text-mask-inner">Asan<br>Medical</h2>
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.2.company">Asan<br>Medical</h2>
       </div>
       <div aria-hidden="true"></div>
       <div class="exp-right-col">
         <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner">AI Research<br>Intern</h2>
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.2.role">AI Research<br>Intern</h2>
         </div>
         <div class="text-mask meta">
           <div class="exp-meta text-mask-inner">
             <span class="exp-meta-tag">May 2025 / Aug 2025</span>
-            <p class="exp-meta-summary">Built 3D imaging pipelines for HCC classification. Applied SHAP and Grad-CAM to make model decisions legible to clinicians. Placed 7th in a multi-institutional challenge.</p>
+            <p class="exp-meta-summary" data-i18n="exp.2.summary">Built 3D imaging pipelines for HCC classification. Applied SHAP and Grad-CAM to make model decisions legible to clinicians. Placed 7th in a multi-institutional challenge.</p>
           </div>
         </div>
       </div>
@@ -565,17 +566,17 @@
 
     <article class="exp-slide" data-i="3">
       <div class="text-mask left">
-        <h2 class="exp-word text-mask-inner">Braven</h2>
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.3.company">Braven</h2>
       </div>
       <div aria-hidden="true"></div>
       <div class="exp-right-col">
         <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner">UI/UX<br>Consultant</h2>
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.3.role">UI/UX<br>Consultant</h2>
         </div>
         <div class="text-mask meta">
           <div class="exp-meta text-mask-inner">
             <span class="exp-meta-tag">Jan 2025 / May 2025</span>
-            <p class="exp-meta-summary">Synthesized survey, benchmarking, and affinity data for Braven with a team of 8 — driving the mobile app iterations that lifted engagement and usability.</p>
+            <p class="exp-meta-summary" data-i18n="exp.3.summary">Synthesized survey, benchmarking, and affinity data for Braven with a team of 8 — driving the mobile app iterations that lifted engagement and usability.</p>
           </div>
         </div>
       </div>
@@ -583,17 +584,17 @@
 
     <article class="exp-slide" data-i="4">
       <div class="text-mask left">
-        <h2 class="exp-word text-mask-inner">Biosolution</h2>
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.4.company">Biosolution</h2>
       </div>
       <div aria-hidden="true"></div>
       <div class="exp-right-col">
         <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner">Research<br>Intern</h2>
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.4.role">Research<br>Intern</h2>
         </div>
         <div class="text-mask meta">
           <div class="exp-meta text-mask-inner">
             <span class="exp-meta-tag">May 2024 / Aug 2024</span>
-            <p class="exp-meta-summary">Designed microRNA assays — PCR, FACS, HPLC — to characterize osteoarthritis targets. Ran cell culture and in-vivo testing; supported the CAR T-cell program.</p>
+            <p class="exp-meta-summary" data-i18n="exp.4.summary">Designed microRNA assays — PCR, FACS, HPLC — to characterize osteoarthritis targets. Ran cell culture and in-vivo testing; supported the CAR T-cell program.</p>
           </div>
         </div>
       </div>
@@ -601,17 +602,17 @@
 
     <article class="exp-slide" data-i="5">
       <div class="text-mask left">
-        <h2 class="exp-word text-mask-inner">US 8th<br>Army</h2>
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.5.company">US 8th<br>Army</h2>
       </div>
       <div aria-hidden="true"></div>
       <div class="exp-right-col">
         <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner">Non-Commissioned<br>Officer</h2>
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.5.role">Non-Commissioned<br>Officer</h2>
         </div>
         <div class="text-mask meta">
           <div class="exp-meta text-mask-inner">
             <span class="exp-meta-tag">Sep 2022 / Mar 2024</span>
-            <p class="exp-meta-summary">Led a bilingual 40-soldier platoon. Translated and delivered ACFT training to a 96% pass rate. Awarded the US Army Certificate of Achievement.</p>
+            <p class="exp-meta-summary" data-i18n="exp.5.summary">Led a bilingual 40-soldier platoon. Translated and delivered ACFT training to a 96% pass rate. Awarded the US Army Certificate of Achievement.</p>
           </div>
         </div>
       </div>
@@ -619,17 +620,17 @@
 
     <article class="exp-slide" data-i="6">
       <div class="text-mask left">
-        <h2 class="exp-word text-mask-inner">UCSF</h2>
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.6.company">UCSF</h2>
       </div>
       <div aria-hidden="true"></div>
       <div class="exp-right-col">
         <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner">Telehealth<br>Coordinator</h2>
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.6.role">Telehealth<br>Coordinator</h2>
         </div>
         <div class="text-mask meta">
           <div class="exp-meta text-mask-inner">
             <span class="exp-meta-tag">Aug 2021 / May 2022</span>
-            <p class="exp-meta-summary">Built longitudinal analyses of telehealth utilization, surfacing the workflow bottlenecks that reshaped clinical delivery and resource allocation.</p>
+            <p class="exp-meta-summary" data-i18n="exp.6.summary">Built longitudinal analyses of telehealth utilization, surfacing the workflow bottlenecks that reshaped clinical delivery and resource allocation.</p>
           </div>
         </div>
       </div>
@@ -662,7 +663,7 @@
     </div>
 
     <div class="exp-ui">
-      <span class="exp-drag-hint">Scroll or click to explore</span>
+      <span class="exp-drag-hint" data-i18n="exp.hint">Scroll or click to explore</span>
     </div>
 
   </div>
@@ -675,19 +676,19 @@
       <div class="exp-panel-hero shape-1">
         <img src="images/projects/urban-conga-logo.jpg" alt="Urban Conga Logo" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
       </div>
-      <span class="exp-panel-tag">Jan 2026 / Jun 2026</span>
-      <h2 class="exp-panel-title">Urban Conga</h2>
-      <p class="exp-panel-role">UX Design Consultant</p>
-      <p class="exp-panel-org">Invention Corps of Berkeley &middot; Berkeley, CA</p>
+      <span class="exp-panel-tag" data-i18n="exp.p0.tag">Jan 2026 / Jun 2026</span>
+      <h2 class="exp-panel-title" data-i18n="exp.p0.title">Urban Conga</h2>
+      <p class="exp-panel-role" data-i18n="exp.p0.role">UX Design Consultant</p>
+      <p class="exp-panel-org" data-i18n="exp.p0.org">Invention Corps of Berkeley &middot; Berkeley, CA</p>
       <div class="exp-panel-body">
-        <p>Collaborated with a group of 9 consultants to ideate a data-informed interactive public installation system capable of capturing and interpreting usage patterns of existing installations, with a focus on improving engagement analytics and behavioral visibility.</p>
-        <p>Defined data-driven design constraints for low-cost, low-overhead sensing approaches, successfully translating qualitative behavioral visibility goals into structured, quantifiable data schemas.</p>
-        <p>Developed spatial data concepts and 3D configurations using <strong>Rhino</strong> to align physical installation layouts with inferred data flows, optimizing the system's capacity for <strong>systematic measurement</strong> of community engagement.</p>
+        <p data-i18n-html="exp.pb0.1">Collaborated with a group of 9 consultants to ideate a data-informed interactive public installation system capable of capturing and interpreting usage patterns of existing installations, with a focus on improving engagement analytics and behavioral visibility.</p>
+        <p data-i18n-html="exp.pb0.2">Defined data-driven design constraints for low-cost, low-overhead sensing approaches, successfully translating qualitative behavioral visibility goals into structured, quantifiable data schemas.</p>
+        <p data-i18n-html="exp.pb0.3">Developed spatial data concepts and 3D configurations using <strong>Rhino</strong> to align physical installation layouts with inferred data flows, optimizing the system's capacity for <strong>systematic measurement</strong> of community engagement.</p>
       </div>
       <div class="exp-panel-tags"><span>Data Analytics</span><span>Rhino 3D</span><span>UX Research</span><span>Spatial Design</span></div>
 
       <section class="exp-workflow">
-        <h3 class="exp-workflow-heading">Project Workflow</h3>
+        <h3 class="exp-workflow-heading" data-i18n="exp.workflow.heading">Project Workflow</h3>
         <ol class="exp-workflow-timeline">
 
           <li class="exp-workflow-step">
@@ -785,18 +786,18 @@
       <div class="exp-panel-hero shape-2">
         <img src="images/projects/mozilla.jpg" alt="Mozilla Firefox" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
       </div>
-      <span class="exp-panel-tag">Aug 2025 / Feb 2026</span>
-      <h2 class="exp-panel-title">Mozilla Firefox</h2>
-      <p class="exp-panel-role">IT Consultant</p>
-      <p class="exp-panel-org">Invention Corps of Berkeley &middot; Berkeley, CA</p>
+      <span class="exp-panel-tag" data-i18n="exp.p1.tag">Aug 2025 / Feb 2026</span>
+      <h2 class="exp-panel-title" data-i18n="exp.p1.title">Mozilla Firefox</h2>
+      <p class="exp-panel-role" data-i18n="exp.p1.role">IT Consultant</p>
+      <p class="exp-panel-org" data-i18n="exp.p1.org">Invention Corps of Berkeley &middot; Berkeley, CA</p>
       <div class="exp-panel-body">
-        <p>Engineered a Firefox performance monitoring extension using <strong>React and Vite</strong> that tracked, filtered, and sorted <strong>50+ concurrent tabs</strong> by memory and CPU usage in real time, helping users identify and manage high-resource processes.</p>
-        <p>Led user research through surveys to assess Adaptive Performance perceptions, analyzing feedback to translate user needs into feature requirements and UI designs in <strong>Figma</strong>, collaborating with 12 team members across frontend and backend tracks.</p>
+        <p data-i18n-html="exp.pb1.1">Engineered a Firefox performance monitoring extension using <strong>React and Vite</strong> that tracked, filtered, and sorted <strong>50+ concurrent tabs</strong> by memory and CPU usage in real time, helping users identify and manage high-resource processes.</p>
+        <p data-i18n-html="exp.pb1.2">Led user research through surveys to assess Adaptive Performance perceptions, analyzing feedback to translate user needs into feature requirements and UI designs in <strong>Figma</strong>, collaborating with 12 team members across frontend and backend tracks.</p>
       </div>
       <div class="exp-panel-tags"><span>React</span><span>Vite</span><span>Figma</span><span>User Research</span></div>
 
       <section class="exp-workflow">
-        <h3 class="exp-workflow-heading">Project Workflow</h3>
+        <h3 class="exp-workflow-heading" data-i18n="exp.workflow.heading">Project Workflow</h3>
         <ol class="exp-workflow-timeline">
 
           <li class="exp-workflow-step">
@@ -883,14 +884,14 @@
       <div class="exp-panel-hero shape-3">
         <img src="images/projects/asan.jpg" alt="Asan Medical Center" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
       </div>
-      <span class="exp-panel-tag">May 2025 / Aug 2025</span>
-      <h2 class="exp-panel-title">Asan Medical Center</h2>
-      <p class="exp-panel-role">AI Research Intern</p>
-      <p class="exp-panel-org">AMC · Seoul</p>
+      <span class="exp-panel-tag" data-i18n="exp.p2.tag">May 2025 / Aug 2025</span>
+      <h2 class="exp-panel-title" data-i18n="exp.p2.title">Asan Medical Center</h2>
+      <p class="exp-panel-role" data-i18n="exp.p2.role">AI Research Intern</p>
+      <p class="exp-panel-org" data-i18n="exp.p2.org">AMC · Seoul</p>
       <div class="exp-panel-body">
-        <p>Processed and analyzed high-dimensional clinical datasets in Python and Jupyter to identify key data patterns, informing feature selection and team strategy in a multi-institutional classification challenge to <strong>place 7th</strong>.</p>
-        <p>Built automated data preprocessing pipelines for <strong>3D medical imaging and clinical records</strong> to streamline data preparation across multiple modalities, reducing manual processing time for the research team.</p>
-        <p>Implemented interpretability techniques (<strong>SHAP, Grad-CAM</strong>) to validate model outputs and communicate feature importance to non-technical stakeholders, increasing trust in data-driven clinical predictions.</p>
+        <p data-i18n-html="exp.pb2.1">Processed and analyzed high-dimensional clinical datasets in Python and Jupyter to identify key data patterns, informing feature selection and team strategy in a multi-institutional classification challenge to <strong>place 7th</strong>.</p>
+        <p data-i18n-html="exp.pb2.2">Built automated data preprocessing pipelines for <strong>3D medical imaging and clinical records</strong> to streamline data preparation across multiple modalities, reducing manual processing time for the research team.</p>
+        <p data-i18n-html="exp.pb2.3">Implemented interpretability techniques (<strong>SHAP, Grad-CAM</strong>) to validate model outputs and communicate feature importance to non-technical stakeholders, increasing trust in data-driven clinical predictions.</p>
       </div>
       <div class="exp-panel-tags"><span>Python</span><span>PyTorch</span><span>3D U-Net</span><span>ResNet3D</span><span>Machine Learning</span><span>AI</span><span>LLM</span></div>
     </div>
@@ -902,18 +903,18 @@
       <div class="exp-panel-hero shape-4">
         <img src="images/projects/braven.jpg" alt="Braven" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
       </div>
-      <span class="exp-panel-tag">Jan 2025 / May 2025</span>
-      <h2 class="exp-panel-title">Braven</h2>
-      <p class="exp-panel-role">UI/UX Consultant</p>
-      <p class="exp-panel-org">Invention Corps of Berkeley &middot; Berkeley, CA</p>
+      <span class="exp-panel-tag" data-i18n="exp.p3.tag">Jan 2025 / May 2025</span>
+      <h2 class="exp-panel-title" data-i18n="exp.p3.title">Braven</h2>
+      <p class="exp-panel-role" data-i18n="exp.p3.role">UI/UX Consultant</p>
+      <p class="exp-panel-org" data-i18n="exp.p3.org">Invention Corps of Berkeley &middot; Berkeley, CA</p>
       <div class="exp-panel-body">
-        <p>Collaborated with a team of <strong>8 consultants</strong> to synthesize multi-channel UX research for Braven — including <strong>survey data, competitive benchmarking, and affinity mapping</strong> — quantifying user pain points to inform a data-driven design strategy.</p>
-        <p>Systematized mobile app design iterations by validating user needs through rigorous <strong>qualitative and quantitative analysis</strong>, producing a measurable increase in engagement and interface usability.</p>
+        <p data-i18n-html="exp.pb3.1">Collaborated with a team of <strong>8 consultants</strong> to synthesize multi-channel UX research for Braven — including <strong>survey data, competitive benchmarking, and affinity mapping</strong> — quantifying user pain points to inform a data-driven design strategy.</p>
+        <p data-i18n-html="exp.pb3.2">Systematized mobile app design iterations by validating user needs through rigorous <strong>qualitative and quantitative analysis</strong>, producing a measurable increase in engagement and interface usability.</p>
       </div>
       <div class="exp-panel-tags"><span>UX Research</span><span>Affinity Mapping</span><span>Benchmarking</span><span>Mobile UI</span><span>Figma</span></div>
 
       <section class="exp-workflow">
-        <h3 class="exp-workflow-heading">Project Workflow</h3>
+        <h3 class="exp-workflow-heading" data-i18n="exp.workflow.heading">Project Workflow</h3>
         <ol class="exp-workflow-timeline">
 
           <li class="exp-workflow-step">
@@ -1009,14 +1010,14 @@
       <div class="exp-panel-hero shape-5">
         <img src="images/projects/biosolution.jpg" alt="Biosolution" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
       </div>
-      <span class="exp-panel-tag">May 2024 / Aug 2024</span>
-      <h2 class="exp-panel-title">Biosolution</h2>
-      <p class="exp-panel-role">Research Intern</p>
-      <p class="exp-panel-org">Biosolution Co., Ltd.</p>
+      <span class="exp-panel-tag" data-i18n="exp.p4.tag">May 2024 / Aug 2024</span>
+      <h2 class="exp-panel-title" data-i18n="exp.p4.title">Biosolution</h2>
+      <p class="exp-panel-role" data-i18n="exp.p4.role">Research Intern</p>
+      <p class="exp-panel-org" data-i18n="exp.p4.org">Biosolution Co., Ltd.</p>
       <div class="exp-panel-body">
-        <p>Investigated <strong>microRNA (mirBase)</strong> regulators of <strong>osteoarthritis</strong> by designing and running molecular biology assays — <strong>PCR, FACS analysis, and HPLC</strong> — to characterize candidate targets at the cellular level.</p>
-        <p>Performed <strong>cell culturing</strong> and <strong>in-vivo rat testing</strong> across the full preclinical workflow, supporting validation of therapeutic hypotheses with reproducible experimental data.</p>
-        <p>Supported the company's <strong>CAR T-cell therapy</strong> program by assisting in immunological assays and process documentation, contributing to early-stage translational research.</p>
+        <p data-i18n-html="exp.pb4.1">Investigated <strong>microRNA (mirBase)</strong> regulators of <strong>osteoarthritis</strong> by designing and running molecular biology assays — <strong>PCR, FACS analysis, and HPLC</strong> — to characterize candidate targets at the cellular level.</p>
+        <p data-i18n-html="exp.pb4.2">Performed <strong>cell culturing</strong> and <strong>in-vivo rat testing</strong> across the full preclinical workflow, supporting validation of therapeutic hypotheses with reproducible experimental data.</p>
+        <p data-i18n-html="exp.pb4.3">Supported the company's <strong>CAR T-cell therapy</strong> program by assisting in immunological assays and process documentation, contributing to early-stage translational research.</p>
       </div>
       <div class="exp-panel-tags"><span>PCR</span><span>FACS</span><span>HPLC</span><span>Cell Culturing</span><span>In-vivo Testing</span><span>CAR T-cell</span></div>
     </div>
@@ -1028,13 +1029,13 @@
       <div class="exp-panel-hero shape-6">
         <img src="images/projects/army.jpg" alt="US 8th Army" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
       </div>
-      <span class="exp-panel-tag">Sep 2022 / Mar 2024</span>
-      <h2 class="exp-panel-title">US 8th Army</h2>
-      <p class="exp-panel-role">Non-Commissioned Officer · Platoon Leader</p>
-      <p class="exp-panel-org">US 8th Army, 2ID HHBN</p>
+      <span class="exp-panel-tag" data-i18n="exp.p5.tag">Sep 2022 / Mar 2024</span>
+      <h2 class="exp-panel-title" data-i18n="exp.p5.title">US 8th Army</h2>
+      <p class="exp-panel-role" data-i18n="exp.p5.role">Non-Commissioned Officer · Platoon Leader</p>
+      <p class="exp-panel-org" data-i18n="exp.p5.org">US 8th Army, 2ID HHBN</p>
       <div class="exp-panel-body">
-        <p>Led a platoon of <strong>40+ soldiers</strong> as a bilingual Korean-English Platoon Leader, translating and delivering ACFT training and basic military coursework, resulting in a <strong>96% pass rate</strong> across the entire platoon.</p>
-        <p>Awarded the <strong>US Army Certificate of Achievement</strong> (March 2024) for outstanding leadership and bilingual communication.</p>
+        <p data-i18n-html="exp.pb5.1">Led a platoon of <strong>40+ soldiers</strong> as a bilingual Korean-English Platoon Leader, translating and delivering ACFT training and basic military coursework, resulting in a <strong>96% pass rate</strong> across the entire platoon.</p>
+        <p data-i18n-html="exp.pb5.2">Awarded the <strong>US Army Certificate of Achievement</strong> (March 2024) for outstanding leadership and bilingual communication.</p>
       </div>
       <div class="exp-panel-tags"><span>Leadership</span><span>Bilingual (KR/EN)</span><span>Training</span></div>
     </div>
@@ -1046,13 +1047,13 @@
       <div class="exp-panel-hero shape-7">
         <img src="images/projects/ucsf.jpg" alt="UCSF" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
       </div>
-      <span class="exp-panel-tag">Aug 2021 / May 2022</span>
-      <h2 class="exp-panel-title">UCSF</h2>
-      <p class="exp-panel-role">Telehealth Coordinator</p>
-      <p class="exp-panel-org">University of California, San Francisco</p>
+      <span class="exp-panel-tag" data-i18n="exp.p6.tag">Aug 2021 / May 2022</span>
+      <h2 class="exp-panel-title" data-i18n="exp.p6.title">UCSF</h2>
+      <p class="exp-panel-role" data-i18n="exp.p6.role">Telehealth Coordinator</p>
+      <p class="exp-panel-org" data-i18n="exp.p6.org">University of California, San Francisco</p>
       <div class="exp-panel-body">
-        <p>Quantified <strong>telehealth service utilization trends</strong> by systematizing the collection and organization of patient data, identifying critical workflow bottlenecks through <strong>longitudinal analysis</strong>.</p>
-        <p>Optimized clinical delivery frameworks at UCSF by applying data-driven insights to service metrics, enhancing <strong>operational efficiency and resource allocation</strong> for telehealth systems.</p>
+        <p data-i18n-html="exp.pb6.1">Quantified <strong>telehealth service utilization trends</strong> by systematizing the collection and organization of patient data, identifying critical workflow bottlenecks through <strong>longitudinal analysis</strong>.</p>
+        <p data-i18n-html="exp.pb6.2">Optimized clinical delivery frameworks at UCSF by applying data-driven insights to service metrics, enhancing <strong>operational efficiency and resource allocation</strong> for telehealth systems.</p>
       </div>
       <div class="exp-panel-tags"><span>Healthcare Data</span><span>Longitudinal Analysis</span><span>Operations</span><span>Telehealth</span></div>
     </div>
@@ -1061,8 +1062,8 @@
   <div class="exp-floating-info" aria-label="Site footer">
     <span>&copy; 2026 Junho Choi</span>
     <nav aria-label="External links">
-      <a href="mailto:andrewc27@berkeley.edu">Email</a>
-      <a href="resume.html">Resume</a>
+      <a href="mailto:andrewc27@berkeley.edu" data-i18n="footer.email">Email</a>
+      <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
     </nav>
   </div>
 
