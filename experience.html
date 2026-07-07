@@ -39,6 +39,7 @@
       inset: 0;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
       background: #fff;
       display: flex;
@@ -157,7 +158,7 @@
     .exp-overlay.is-open { opacity: 1; pointer-events: auto; }
     
     .exp-panel {
-      position: fixed; top: 0; right: 0; width: 50vw; min-width: 380px; max-width: 760px; height: 100vh;
+      position: fixed; top: 0; right: 0; width: 50vw; min-width: 380px; max-width: 760px; height: 100vh; height: 100dvh;
       background: #fafaf7; color: #111; border-left: 1px solid rgba(0,0,0,0.08);
       box-shadow: -30px 0 80px rgba(0,0,0,0.18);
       transform: translateX(110%); visibility: hidden;
@@ -381,13 +382,16 @@
     body.exp-panel-open .exp-floating-info { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
 
     @media (max-width: 900px) {
-      .exp-slide { grid-template-columns: 1fr; grid-template-rows: auto auto; row-gap: 1.4rem; padding: 5rem 6vw 6rem; align-content: center; }
+      .exp-slide { grid-template-columns: 1fr; grid-template-rows: auto auto; row-gap: 1.4rem; padding: 5.5rem 6vw 6rem; align-content: start; }
       .text-mask.left, .text-mask.right { justify-self: start !important; text-align: left !important; }
       .exp-word { font-size: clamp(2rem, 8vw, 3.5rem); }
-      .exp-figure { width: 80vw; max-width: 460px; }
+      /* Sit the artwork wheel in the lower half so it doesn't run under the
+         top-anchored text */
+      .exp-figure { width: 80vw; max-width: 460px; top: 68%; }
       .exp-right-col { align-items: flex-start; text-align: left; max-width: 100%; }
-      .exp-panel { width: 100vw; max-width: 100vw; }
+      .exp-panel { width: 100vw; max-width: 100vw; min-width: 0; }
       .exp-panel-inner { padding: 5rem 1.5rem 3rem; }
+      .exp-ui { bottom: 3.4rem; }
     }
   </style>
 </head>

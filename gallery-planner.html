@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gallery Panel Planner</title>
 <style>
   * { box-sizing: border-box; }
@@ -23,6 +24,9 @@
     max-width: 1500px;
     margin: 0 auto;
   }
+  /* Let the columns shrink below their content width — the wide preview
+     grid scrolls inside .preview-container instead of stretching the page */
+  .layout > * { min-width: 0; }
 
   /* ── Left column: editor + legend ── */
   .editor {
@@ -187,6 +191,13 @@
     white-space: pre-wrap;
   }
   .output-css .key { color: #888; }
+
+  @media (max-width: 900px) {
+    body { padding: 20px 14px; }
+    .layout { grid-template-columns: 1fr; gap: 20px; }
+    textarea { font-size: 16px; } /* ≥16px stops iOS focus zoom */
+    .preview-container { padding: 1rem; }
+  }
 </style>
 </head>
 <body>

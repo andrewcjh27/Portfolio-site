@@ -683,8 +683,58 @@
       .display { width: clamp(320px, 86vw, 520px); }
       .mac-studio-cube { display: none; }
     }
-    @media (max-width: 540px) {
-      .folder-app { padding: 8% 6% 8%; }
+
+    /* Phones: the Mac-mockup + scroll-zoom metaphor doesn't fit a narrow
+       screen (the "display" ends up ~200px wide with unreadable text).
+       Drop the hardware frame and let the folder app fill the viewport
+       below the header as a single full-screen panel. */
+    @media (max-width: 700px) {
+      .codes-stage { height: auto; }
+      .codes-pinned {
+        position: relative;
+        height: 100vh;
+        height: 100svh;
+      }
+      .mockup-wrap {
+        position: absolute;
+        inset: 0;
+        top: 0; left: 0;
+        width: 100%;
+        transform: none;
+      }
+      .mac-mockup {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: auto;
+        transform: none !important;
+      }
+      .mockup-image { display: none; }
+      .folder-app {
+        top: 58px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 58px);
+        padding: 0.9rem 0.7rem 0;
+        border-radius: 0;
+      }
+      .folder-hero-text { top: 5%; }
+      .folder-hero-text h2 { font-size: 1.45em; }
+      .folder-hero-text p { font-size: 0.8em; }
+      .folder-app-bar { top: 17%; }
+      .search-wrapper { width: 86%; max-width: 340px; }
+      .folder-app-search { font-size: 16px; padding: 0.3em 0.5em 0.3em 1em; } /* ≥16px stops iOS focus zoom */
+      .search-btn { font-size: 0.8em; }
+      .folder-tab {
+        font-size: 1em;
+        top: 64%;
+        width: min(76%, 19em);
+        height: 40%;
+      }
+      .folder-tab.is-zoomed {
+        width: 94% !important;
+        height: 72% !important;
+        top: 54% !important;
+      }
     }
   </style>
 </head>
@@ -968,6 +1018,10 @@
       let cachedVh = 0;
       let cachedStageTop = 0;
 
+      // Matches the phone breakpoint in the CSS above — there the folder
+      // app fills the viewport and the scroll-zoom must not run.
+      const MOBILE_MQ = window.matchMedia('(max-width: 700px)');
+
       const SCREEN_TOP_PCT    = 19.3;
       const SCREEN_LEFT_PCT   = 15.13;
       const SCREEN_WIDTH_PCT  = 66.43;
@@ -1005,6 +1059,12 @@
       }
 
       function update() {
+        if (MOBILE_MQ.matches) {
+          mockup.style.transform = '';
+          header.classList.remove('zoomed');
+          ticking = false;
+          return;
+        }
         // Use cheap window.scrollY instead of expensive getBoundingClientRect()
         const scrolledIntoStage = window.scrollY - cachedStageTop;
         const rawProgress = scrolledIntoStage / cachedTotalScroll;

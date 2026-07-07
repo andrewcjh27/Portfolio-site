@@ -475,6 +475,8 @@
         bottom: auto;
         max-width: 100%;
         margin-top: 1.2rem;
+        margin-left: 0;
+        padding-bottom: 0;
       }
 
       .about-section { padding: 4rem 6%; min-height: auto; }
@@ -487,10 +489,11 @@
       .values-grid { grid-template-columns: 1fr; }
       .value-card { padding: 1.5rem 0 1.5rem 1.5rem; }
 
-      .explore-pills { gap: 0.6rem; }
-      .explore-pill { padding: 0.7rem 1.8rem; font-size: 0.95rem; }
+      .explore-pills { gap: 0.8rem; }
+      .pill-row { flex-wrap: wrap; gap: 0.8rem; }
+      .explore-pill { padding: 0.7rem 1.8rem; font-size: 0.95rem; min-width: 0; flex: 1 1 40%; }
 
-      .help-section { padding: 3rem 6%; }
+      .help-section { padding: 3rem 6%; height: auto; }
       .help-gallery { grid-template-columns: 1fr; }
       .gallery-left { grid-row: auto; }
       .gallery-left img { height: 300px; }

@@ -70,8 +70,6 @@
       color: #fff !important;
     }
     .site-header .hamburger svg { stroke: #fff; }
-      transition: background 0.5s, border-color 0.5s;
-    }
     .site-header.dark-header {
       background: rgba(0,0,0,0.88) !important;
       border-bottom: 1px solid rgba(255,255,255,0.08) !important;
@@ -1281,6 +1279,8 @@
       .coach-send-btn, .coach-end-btn { width: 100%; }
       .soccer-cta { padding: 4rem 6% 6rem; }
       .soccer-footer { flex-direction: column; gap: 0.6rem; padding: 1.4rem 6%; }
+      /* ≥16px stops iOS from auto-zooming the page when the field gains focus */
+      .coach-input { font-size: 16px; }
     }
   </style>
 </head>
