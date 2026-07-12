@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="design.title">
 <head>
   <meta charset="UTF-8" />
   <title>Design | Junho Choi</title>
@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
+  <script src="i18n.js"></script>
   <style>
     * { box-sizing: border-box; }
     html, body {
@@ -233,34 +234,34 @@
     <div class="logo">JUNHO CHOI</div>
     <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <nav class="nav">
-      <a href="index.html"      class="nav-link">About</a>
-      <a href="resume.html"     class="nav-link">Resume</a>
-      <a href="experience.html" class="nav-link">Experience</a>
+      <a href="index.html"      class="nav-link" data-i18n="nav.about">About</a>
+      <a href="resume.html"     class="nav-link" data-i18n="nav.resume">Resume</a>
+      <a href="experience.html" class="nav-link" data-i18n="nav.experience">Experience</a>
       <div class="nav-more">
         <button class="nav-more-toggle nav-link active" type="button" aria-haspopup="true" aria-expanded="false">
-          More
+          <span data-i18n="nav.more">More</span>
           <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
             <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
           </svg>
         </button>
         <div class="nav-more-panel" role="menu">
           <div>
-            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-label" data-i18n="nav.categories">Categories</div>
             <div class="nav-more-list">
-              <a href="design.html">Design</a>
-              <a href="photo.html">Photography</a>
-              <a href="cafes.html">Cafes</a>
-              <a href="codes.html">Codes</a>
-              <a href="soccer.html">Soccer</a>
+              <a href="design.html" data-i18n="nav.design">Design</a>
+              <a href="photo.html" data-i18n="nav.photography">Photography</a>
+              <a href="cafes.html" data-i18n="nav.cafes">Cafes</a>
+              <a href="codes.html" data-i18n="nav.codes">Codes</a>
+              <a href="soccer.html" data-i18n="nav.soccer">Soccer</a>
             </div>
           </div>
           <a href="photo.html" class="nav-more-feature">
-            <h3>Photography &rarr;</h3>
-            <p>A growing visual diary of cities, water, and quiet moments.</p>
+            <h3 data-i18n-html="nav.feature.title">Photography &rarr;</h3>
+            <p data-i18n="nav.feature.desc">A growing visual diary of cities, water, and quiet moments.</p>
           </a>
           <div class="nav-more-footer">
-            <a href="resume.html">Resume</a>
-            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+            <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu" data-i18n="nav.footer.contact">Contact</a>
           </div>
         </div>
       </div>
@@ -283,6 +284,7 @@
         <article class="carousel-card"
                  data-page="design-uiux.html"
                  data-label="UI / UX"
+                 data-label-ko="UI / UX"
                  data-scale="1.1"
                  style="--card-img: url('images/Design/category-uiux.png');">
           <div class="card-paper">
@@ -297,6 +299,7 @@
         <article class="carousel-card"
                  data-page="design-art.html"
                  data-label="Art"
+                 data-label-ko="아트"
                  data-scale="0.6"
                  style="--card-img: url('images/Design/category-art.png');">
           <div class="card-paper">
@@ -311,6 +314,7 @@
         <article class="carousel-card"
                  data-page="design-3d.html"
                  data-label="3D / Motion"
+                 data-label-ko="3D / 모션"
                  data-scale="0.7"
                  style="--card-img: url('images/Design/category-3d.png');">
           <div class="card-paper">
@@ -325,6 +329,7 @@
         <article class="carousel-card"
                  data-page="room.html"
                  data-label="Interior"
+                 data-label-ko="인테리어"
                  data-scale="0.85"
                  style="--card-img: url('images/Design/category-interior.png');">
           <div class="card-paper">
@@ -371,6 +376,16 @@
 
     let active = 0;
     const N = cards.length;
+
+    /* Pick the active language's label (falls back to English). */
+    function labelFor(card) {
+      var ko = window.i18n && window.i18n.lang === 'ko';
+      return (ko && card.dataset.labelKo) ? card.dataset.labelKo : card.dataset.label;
+    }
+    /* Re-render the centered label when the language toggles. */
+    document.addEventListener('langchange', function () {
+      labelEl.textContent = labelFor(cards[active]);
+    });
 
     /* Build dots */
     cards.forEach((c, i) => {
@@ -428,7 +443,7 @@
       /* Update label with quick fade */
       labelEl.classList.add('is-fading');
       setTimeout(() => {
-        labelEl.textContent = cards[active].dataset.label;
+        labelEl.textContent = labelFor(cards[active]);
         labelEl.classList.remove('is-fading');
       }, 180);
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="resume.title">
 <head>
   <meta charset="UTF-8" />
   <title>Resume | Junho Choi</title>
@@ -7,9 +7,173 @@
   <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
+  <script src="i18n.js"></script>
   <style>
     html { scroll-behavior: smooth; overflow-x: hidden; }
     body { background: #fff; }
+
+    /* ── Language swap: English résumé vs. Korean 이력서 ─────────────────
+       Only text/visibility changes — the English résumé is never edited,
+       just hidden, so toggling back restores it exactly. */
+    html:not(.lang-ko) .resume-ko { display: none; }
+    html.lang-ko .resume-en { display: none; }
+
+    /* ══════════════════════════════════════════════════════════════════
+       Korean 이력서 — traditional document style
+       ──────────────────────────────────────────────────────────────────
+       A paper 이력서: cream backdrop, white sheets, bordered tables with
+       a 증명사진 box, followed by a 자기소개서 sheet. Shown only in KO
+       mode; the English résumé above is untouched.
+       ══════════════════════════════════════════════════════════════════ */
+    .resume-ko-doc {
+      background: #efece4;
+      padding: 120px 1.2rem 4rem;
+      font-family: "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, "Malgun Gothic", sans-serif;
+      color: #1d1b16;
+    }
+    .ko-toolbar {
+      max-width: 880px;
+      margin: 0 auto 1rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .ko-toolbar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1.2rem;
+      border: 1px solid rgba(0,0,0,0.22);
+      border-radius: 999px;
+      background: #fff;
+      color: #1d1b16;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .ko-toolbar a:hover { background: #1d1b16; color: #fff; transform: translateY(-2px); }
+    .ko-toolbar svg { width: 15px; height: 15px; }
+
+    .ko-sheet {
+      max-width: 880px;
+      margin: 0 auto 2.2rem;
+      background: #fff;
+      border: 1px solid #d9d3c5;
+      box-shadow: 0 18px 44px rgba(45, 38, 22, 0.10);
+      padding: 3.2rem 3.4rem 3rem;
+    }
+    .ko-doc-title {
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: 1.1em;
+      text-indent: 1.1em;      /* balance the trailing letter-spacing */
+      margin: 0 0 2.2rem;
+      padding-bottom: 1.1rem;
+      border-bottom: 3px double #1d1b16;
+    }
+
+    /* 인적사항 — photo box + info table */
+    .ko-id-row {
+      display: flex;
+      gap: 1.6rem;
+      align-items: stretch;
+      margin-bottom: 2.4rem;
+    }
+    .ko-photo {
+      flex: 0 0 128px;
+      border: 1px solid #b9b2a2;
+      background: #f4f2ec;
+      overflow: hidden;
+      align-self: flex-start;
+    }
+    .ko-photo img {
+      display: block;
+      width: 128px;
+      height: 165px;           /* 증명사진 3:4 비율 */
+      object-fit: cover;
+      object-position: center top;
+    }
+    .ko-id-table { flex: 1; }
+
+    /* Shared table style */
+    .ko-table-wrap { overflow-x: auto; }
+    .ko-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+    .ko-table th,
+    .ko-table td {
+      border: 1px solid #cfc8b8;
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .ko-table th {
+      background: #f4f1e8;
+      font-weight: 600;
+      white-space: nowrap;
+      color: #33302a;
+    }
+    .ko-table td a { color: #1d1b16; text-decoration: none; border-bottom: 1px solid rgba(0,0,0,0.25); }
+    .ko-table .ko-period { white-space: nowrap; font-variant-numeric: tabular-nums; color: #56513f; }
+    .ko-table strong { font-weight: 700; }
+
+    /* Section headings inside the sheet */
+    .ko-sec {
+      font-size: 1.06rem;
+      font-weight: 700;
+      margin: 2.4rem 0 0.8rem;
+      padding-left: 0.75rem;
+      border-left: 4px solid #1d1b16;
+      letter-spacing: 0.06em;
+    }
+
+    /* 자기소개서 */
+    .ko-essay h3 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin: 1.8rem 0 0.6rem;
+      letter-spacing: 0.04em;
+    }
+    .ko-essay h3::before { content: '■ '; font-size: 0.7em; vertical-align: 0.15em; }
+    .ko-essay p {
+      font-size: 0.92rem;
+      line-height: 1.95;
+      margin: 0 0 0.9rem;
+      color: #2c2922;
+      text-align: justify;
+    }
+    .ko-essay strong { font-weight: 700; }
+
+    /* Classic closing line + signature */
+    .ko-closing {
+      margin-top: 2.8rem;
+      text-align: center;
+      font-size: 0.92rem;
+      line-height: 2.1;
+      color: #33302a;
+    }
+    .ko-closing .ko-sign {
+      display: block;
+      margin-top: 0.6rem;
+      font-size: 1rem;
+      letter-spacing: 0.35em;
+    }
+    .ko-closing .ko-sign strong { font-size: 1.15rem; font-weight: 700; }
+
+    @media (max-width: 700px) {
+      .resume-ko-doc { padding: 96px 0.6rem 3rem; }
+      .ko-sheet { padding: 1.8rem 1.1rem 2rem; }
+      .ko-doc-title { font-size: 1.45rem; letter-spacing: 0.7em; text-indent: 0.7em; }
+      .ko-id-row { flex-direction: column; align-items: center; gap: 1.1rem; }
+      .ko-id-table { width: 100%; }
+      .ko-table { font-size: 0.82rem; }
+      /* 4-column tables scroll inside their wrap instead of stretching the page */
+      .ko-table-wrap .ko-table { min-width: 560px; }
+      .ko-essay p { text-align: left; }
+    }
 
     /* ── Header (light over hero, dark over body) ───────────────────── */
     .site-header {
@@ -306,42 +470,42 @@
       <svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <nav class="nav">
-      <a href="index.html"      class="nav-link">About</a>
-      <a href="resume.html"     class="nav-link active">Resume</a>
-      <a href="experience.html" class="nav-link">Experience</a>
+      <a href="index.html"      class="nav-link" data-i18n="nav.about">About</a>
+      <a href="resume.html"     class="nav-link active" data-i18n="nav.resume">Resume</a>
+      <a href="experience.html" class="nav-link" data-i18n="nav.experience">Experience</a>
       <div class="nav-more">
         <button class="nav-more-toggle nav-link" type="button" aria-haspopup="true" aria-expanded="false">
-          More
+          <span data-i18n="nav.more">More</span>
           <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
             <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
           </svg>
         </button>
         <div class="nav-more-panel" role="menu">
           <div>
-            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-label" data-i18n="nav.categories">Categories</div>
             <div class="nav-more-list">
-              <a href="design.html">Design</a>
-              <a href="photo.html">Photography</a>
-              <a href="cafes.html">Cafes</a>
-              <a href="codes.html">Codes</a>
-              <a href="soccer.html">Soccer</a>
+              <a href="design.html" data-i18n="nav.design">Design</a>
+              <a href="photo.html" data-i18n="nav.photography">Photography</a>
+              <a href="cafes.html" data-i18n="nav.cafes">Cafes</a>
+              <a href="codes.html" data-i18n="nav.codes">Codes</a>
+              <a href="soccer.html" data-i18n="nav.soccer">Soccer</a>
             </div>
           </div>
           <a href="photo.html" class="nav-more-feature">
-            <h3>Photography &rarr;</h3>
-            <p>A growing visual diary of cities, water, and quiet moments.</p>
+            <h3 data-i18n-html="nav.feature.title">Photography &rarr;</h3>
+            <p data-i18n="nav.feature.desc">A growing visual diary of cities, water, and quiet moments.</p>
           </a>
           <div class="nav-more-footer">
-            <a href="resume.html">Resume</a>
-            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+            <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu" data-i18n="nav.footer.contact">Contact</a>
           </div>
         </div>
       </div>
     </nav>
   </header>
 
-  <!-- ═══ Hero ════════════════════════════════════════════════════════ -->
-  <section class="resume-hero" id="heroSection">
+  <!-- ═══ Hero (English) ══════════════════════════════════════════════ -->
+  <section class="resume-hero resume-en" id="heroSection">
     <div class="resume-eyebrow anim">Resume — Spring 2026</div>
     <h1 class="resume-title anim anim-d1">Junho<br>Andrew Choi</h1>
     <div class="resume-meta anim anim-d2">
@@ -365,8 +529,8 @@
     </a>
   </section>
 
-  <!-- ═══ Body ═══════════════════════════════════════════════════════ -->
-  <main class="resume-body">
+  <!-- ═══ Body (English) ═════════════════════════════════════════════ -->
+  <main class="resume-body resume-en">
 
     <!-- Education -->
     <section class="resume-section">
@@ -537,6 +701,179 @@
 
   </main>
 
+  <!-- ═══ Korean 이력서 (문서형) ══════════════════════════════════════ -->
+  <div class="resume-ko-doc resume-ko">
+
+    <div class="ko-toolbar">
+      <a href="Resume (Spring 2026 - D).pdf" download="Junho_Choi_Resume.pdf">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        PDF 내려받기
+      </a>
+    </div>
+
+    <!-- 이력서 시트 -->
+    <section class="ko-sheet">
+      <h1 class="ko-doc-title">이력서</h1>
+
+      <!-- 인적사항 -->
+      <div class="ko-id-row">
+        <div class="ko-photo">
+          <img src="images/home/hero.jpg" alt="최준호 증명사진" />
+        </div>
+        <div class="ko-id-table ko-table-wrap">
+          <table class="ko-table">
+            <tbody>
+              <tr>
+                <th>성명</th>
+                <td>최준호 (Junho Andrew Choi)</td>
+                <th>이메일</th>
+                <td><a href="mailto:andrewc27@berkeley.edu">andrewc27@berkeley.edu</a></td>
+              </tr>
+              <tr>
+                <th>거주지</th>
+                <td>미국 캘리포니아주 버클리</td>
+                <th>연락처</th>
+                <td><a href="tel:+15107349646">510-734-9646</a></td>
+              </tr>
+              <tr>
+                <th>희망 분야</th>
+                <td>데이터 사이언스 · 머신러닝</td>
+                <th>링크드인</th>
+                <td><a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">junho-choi</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 학력사항 -->
+      <h2 class="ko-sec">학력사항</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <thead>
+            <tr>
+              <th style="width:22%">기간</th>
+              <th style="width:34%">학교 / 전공</th>
+              <th>내용</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ko-period">~ 2027. 05<br>(졸업 예정)</td>
+              <td><strong>캘리포니아대학교 버클리 (UC Berkeley)</strong><br>데이터 사이언스, 통합생물학 (B.A.)</td>
+              <td>버클리 디자인 이노베이션 수료증<br>주요 이수: 자료구조, 데이터 사이언스의 원리와 기법, 데이터 사이언스를 위한 확률, 최적화 모델링, 컴퓨터 프로그램의 구조와 해석, 선형대수 및 미분방정식, 유기화학</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 경력사항 -->
+      <h2 class="ko-sec">경력사항</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <thead>
+            <tr>
+              <th style="width:22%">기간</th>
+              <th style="width:30%">회사 / 직무</th>
+              <th>담당 업무</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ko-period">2025. 05 ~ 08</td>
+              <td><strong>서울아산병원 (AMC)</strong><br>AI 연구 인턴</td>
+              <td>고차원 임상 데이터 분석 및 3D 의료 영상 전처리 파이프라인 구축, SHAP·Grad-CAM 기반 모델 해석. 다기관 분류 챌린지 <strong>7위</strong>.</td>
+            </tr>
+            <tr>
+              <td class="ko-period">2025. 08 ~<br>2026. 02</td>
+              <td><strong>Invention Corps of Berkeley</strong><br>IT 컨설턴트 (Mozilla Firefox)</td>
+              <td>React·Vite로 50개 이상 탭을 실시간 모니터링하는 성능 확장 프로그램 개발, 사용자 조사 및 Figma UI 설계 (12인 팀 협업).</td>
+            </tr>
+            <tr>
+              <td class="ko-period">2024. 05 ~ 08</td>
+              <td><strong>바이오솔루션 (Biosolution)</strong><br>연구 인턴</td>
+              <td>PCR·FACS·HPLC 마이크로RNA 어세이 설계, 세포 배양 및 생체 내 실험, CAR-T 세포 치료 프로그램 지원.</td>
+            </tr>
+            <tr>
+              <td class="ko-period">2022. 09 ~<br>2024. 03</td>
+              <td><strong>미 8군, 2사단 HHBN</strong><br>부사관 · 소대장</td>
+              <td>이중언어(한·영) 소대장으로 40명 이상 소대 통솔, ACFT 교육 <strong>96% 합격률</strong> 달성. 미 육군 표창장 수상.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 보유 기술 -->
+      <h2 class="ko-sec">보유 기술</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <tbody>
+            <tr><th style="width:24%">프로그래밍</th><td>Python, R, Java, SQL</td></tr>
+            <tr><th>ML / 데이터 사이언스</th><td>PyTorch, Scikit-learn, NumPy, Pandas, SHAP, 탐색적 데이터 분석, 특징 공학, 모델 평가, 시각화</td></tr>
+            <tr><th>시스템 & 도구</th><td>Git, React, Vite, Figma, Jupyter, Microsoft Office, Photoshop</td></tr>
+            <tr><th>생물정보학 & 실험</th><td>PCR, FACS 분석, HPLC, 세포 배양, 생체 내 실험</td></tr>
+            <tr><th>언어</th><td>한국어(모국어), 영어(유창), 중국어(중급)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 프로젝트 -->
+      <h2 class="ko-sec">주요 프로젝트</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <thead>
+            <tr>
+              <th style="width:30%">프로젝트</th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>AI 전술 어시스턴트</strong></td>
+              <td>PyTorch 신경망으로 경기 결과를 예측하고, PuLP 선형계획법 기반 제약 최적화로 팀 편성을 자동화해 <strong>6대6 축구 리그 우승</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>지리공간 경로 최적화</strong></td>
+              <td>분기 한정 가지치기 DFS로 200개 이상 실제 좌표 간 최단 순회 경로 계산.</td>
+            </tr>
+            <tr>
+              <td><strong>심장질환 예측 모델</strong></td>
+              <td>UCI Cleveland 데이터셋 기반 엔드투엔드 분류 파이프라인, 재현율 우선으로 <strong>87.3% 정확도</strong> 달성.</td>
+            </tr>
+            <tr>
+              <td><strong>활성화 도메인 예측 파이프라인</strong></td>
+              <td>CNN–BiLSTM으로 단백질 활성화 도메인 10개 클래스 분류, 홀드아웃 <strong>F1 = 0.95</strong>, SHAP·K-평균으로 해석.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 자기소개서 시트 -->
+    <section class="ko-sheet ko-essay">
+      <h1 class="ko-doc-title">자기소개서</h1>
+
+      <h3>지원 동기 및 성장 배경</h3>
+      <p>저는 데이터와 디자인, 그리고 생물학이 만나는 지점에서 문제를 풀 때 가장 몰입합니다. UC 버클리에서 데이터 사이언스와 통합생물학을 함께 공부하며, 서로 다른 분야의 언어를 잇는 일에 자연스럽게 끌렸습니다. 숫자로 드러나는 사실과 사람이 실제로 느끼는 경험 사이의 간극을 좁히는 것 &mdash; 그것이 제가 기술을 배우는 이유입니다.</p>
+
+      <h3>직무 역량 및 경험</h3>
+      <p>서울아산병원 AI 연구 인턴으로서 3D 의료 영상 전처리 파이프라인을 구축하고 <strong>SHAP·Grad-CAM</strong>으로 모델의 판단을 임상의가 이해할 수 있도록 시각화했습니다. 다기관 분류 챌린지에서는 특징 선택과 팀 전략에 기여해 7위를 기록했습니다. Mozilla Firefox 프로젝트에서는 사용자 조사부터 <strong>React·Figma</strong> 구현까지 제품의 전 과정을 경험하며, 기술과 사용자 사이를 잇는 감각을 길렀습니다.</p>
+
+      <h3>강점 및 성장 방향</h3>
+      <p>저의 강점은 <strong>여러 분야를 잇는 연결력</strong>과 <strong>끝까지 다듬는 집요함</strong>입니다. 코드, 데이터, 디자인을 넘나들며 늘 배우고 만들고 개선해 왔고, 제가 만든 결과물이 기술적으로 흥미로운 데 그치지 않고 누군가에게 실제로 도움이 되기를 바랍니다. 앞으로도 데이터로 창의적인 결정을 이끌고, 디자인으로 기술을 인간적으로 만드는 사람으로 성장하겠습니다.</p>
+
+      <div class="ko-closing">
+        위의 모든 기재 사항은 사실과 다름이 없습니다.
+        <span class="ko-sign">지원자 : <strong>최 준 호</strong> (인)</span>
+      </div>
+    </section>
+
+  </div>
+
   <footer class="resume-footer">
     <span>&copy; 2026 Junho Choi</span>
     <span style="margin: 0 0.5rem;">·</span>
@@ -548,15 +885,33 @@
   <script>
     (function () {
       var header = document.getElementById('siteHeader');
-      var hero = document.getElementById('heroSection');
+
+      // Track whichever hero is currently visible (English or Korean), so
+      // the header still flips dark at the right scroll point in both modes.
+      function currentHero() {
+        var heroes = document.querySelectorAll('.resume-hero');
+        for (var i = 0; i < heroes.length; i++) {
+          if (heroes[i].offsetParent !== null) return heroes[i];
+        }
+        return heroes[0];
+      }
 
       function onScroll() {
+        var hero = currentHero();
+        if (!hero) return;
         var heroBottom = hero.offsetTop + hero.offsetHeight;
         if (window.scrollY > heroBottom - 80) header.classList.add('dark-header');
         else header.classList.remove('dark-header');
       }
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
+      // Recompute when the language toggles (a different hero becomes visible),
+      // and reveal the newly-shown block's scroll-in elements right away so
+      // nothing stays stuck at opacity 0 after the swap.
+      document.addEventListener('langchange', function () {
+        onScroll();
+        document.querySelectorAll('.anim').forEach(function (el) { el.classList.add('visible'); });
+      });
 
       if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (entries) {

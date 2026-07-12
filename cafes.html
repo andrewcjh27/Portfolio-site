@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-title="cafes.title">
 <head>
   <meta charset="UTF-8" />
   <title>Cafe Tours | Junho Choi</title>
@@ -8,6 +8,7 @@
   <link rel="icon" type="image/png" href="images/logo.png" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
+  <script src="i18n.js"></script>
   <style>
     html { scroll-behavior: smooth; overflow-x: hidden; }
     body {
@@ -863,6 +864,9 @@
         font-size: 0.76rem;
       }
       .cafe-footer a { margin-left: 0.65rem; }
+      /* ≥16px stops iOS from auto-zooming the page when the field gains focus */
+      .search-input { font-size: 16px; }
+      .cafe-sidebar { max-height: 55vh; }
     }
   </style>
 </head>
@@ -871,34 +875,34 @@
     <div class="logo">JUNHO CHOI</div>
     <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <nav class="nav">
-      <a href="index.html"      class="nav-link">About</a>
-      <a href="resume.html"     class="nav-link">Resume</a>
-      <a href="experience.html" class="nav-link">Experience</a>
+      <a href="index.html"      class="nav-link" data-i18n="nav.about">About</a>
+      <a href="resume.html"     class="nav-link" data-i18n="nav.resume">Resume</a>
+      <a href="experience.html" class="nav-link" data-i18n="nav.experience">Experience</a>
       <div class="nav-more">
         <button class="nav-more-toggle nav-link active" type="button" aria-haspopup="true" aria-expanded="false">
-          More
+          <span data-i18n="nav.more">More</span>
           <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
             <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
           </svg>
         </button>
         <div class="nav-more-panel" role="menu">
           <div>
-            <div class="nav-more-label">Categories</div>
+            <div class="nav-more-label" data-i18n="nav.categories">Categories</div>
             <div class="nav-more-list">
-              <a href="design.html">Design</a>
-              <a href="photo.html">Photography</a>
-              <a href="cafes.html">Cafe Tours</a>
-              <a href="codes.html">Codes</a>
-              <a href="soccer.html">Soccer</a>
+              <a href="design.html" data-i18n="nav.design">Design</a>
+              <a href="photo.html" data-i18n="nav.photography">Photography</a>
+              <a href="cafes.html" data-i18n="nav.cafes">Cafe Tours</a>
+              <a href="codes.html" data-i18n="nav.codes">Codes</a>
+              <a href="soccer.html" data-i18n="nav.soccer">Soccer</a>
             </div>
           </div>
           <a href="photo.html" class="nav-more-feature">
-            <h3>Photography &rarr;</h3>
-            <p>A growing visual diary of cities, water, and quiet moments.</p>
+            <h3 data-i18n-html="nav.feature.title">Photography &rarr;</h3>
+            <p data-i18n="nav.feature.desc">A growing visual diary of cities, water, and quiet moments.</p>
           </a>
           <div class="nav-more-footer">
-            <a href="resume.html">Resume</a>
-            <a href="mailto:andrewc27@berkeley.edu">Contact</a>
+            <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu" data-i18n="nav.footer.contact">Contact</a>
           </div>
         </div>
       </div>
@@ -914,15 +918,15 @@
   <section class="cafe-overview">
     <div class="cafe-overview-inner">
       <section class="cafe-intro">
-        <h1 class="anim">Every cafe I&rsquo;ve<br>added to the list.</h1>
+        <h1 class="anim" data-i18n-html="cafes.intro.h1">Every cafe I&rsquo;ve<br>added to the list.</h1>
         <div class="cafe-intro-paragraphs">
-          <p class="anim anim-d1">
+          <p class="anim anim-d1" data-i18n-html="cafes.intro.p1">
             I keep a running Naver bookmark folder of cafes &mdash; some I&rsquo;ve been to,
             many I want to. This page reads from that folder and turns it into
             something you can actually browse: search, filter, group by district,
             see every spot on a map.
           </p>
-          <p class="anim anim-d2">
+          <p class="anim anim-d2" data-i18n-html="cafes.intro.p2">
             The route planner uses a small TSP solver to take 3&ndash;7 cafes
             you&rsquo;ve picked and order them by shortest straight-line path.
             Useful when I have a free afternoon and want to chain two or three
@@ -934,15 +938,15 @@
       <section class="cafe-stats">
         <div class="cafe-stat anim">
           <strong>200+</strong>
-          <span>Total Cafes</span>
+          <span data-i18n="cafes.stat1.label">Total Cafes</span>
         </div>
         <div class="cafe-stat anim anim-d1">
           <strong>10+</strong>
-          <span>Location Groups</span>
+          <span data-i18n="cafes.stat2.label">Location Groups</span>
         </div>
         <div class="cafe-stat anim anim-d2">
-          <strong>Million+</strong>
-          <span>Combinations of tours</span>
+          <strong data-i18n="cafes.stat3.value">Million+</strong>
+          <span data-i18n="cafes.stat3.label">Combinations of tours</span>
         </div>
       </section>
     </div>
@@ -951,12 +955,12 @@
   <!-- ═══ Plotted on Naver section ═══════════════════════════════════ -->
   <section class="cafe-plotted">
     <div class="cafe-plotted-text anim">
-      <h2>Plotted on <span class="naver-word">Naver</span>.</h2>
-      <p>
+      <h2 data-i18n-html="cafes.plotted.h2">Plotted on <span class="naver-word">Naver</span>.</h2>
+      <p data-i18n="cafes.plotted.p">
         Your shared bookmark folder is plotted with custom markers.
         Click any marker or list card to sync map focus.
       </p>
-      <a class="cafe-plotted-link" href="https://naver.me/Grgzo9sq" target="_blank" rel="noopener">Open shared list &rarr;</a>
+      <a class="cafe-plotted-link" href="https://naver.me/Grgzo9sq" target="_blank" rel="noopener" data-i18n-html="cafes.plotted.link">Open shared list &rarr;</a>
     </div>
     <div class="cafe-plotted-img anim anim-d1">
       <img src="images/Cafes/cafe-interior.jpg" alt="Cafe interior" />
@@ -970,7 +974,7 @@
 
     <aside class="cafe-sidebar anim">
       <div class="cafe-sidebar-head">
-        <h2 id="sidebarTitle">Search the list</h2>
+        <h2 id="sidebarTitle" data-i18n="cafes.sidebar.search">Search the list</h2>
         <span class="cafe-sidebar-search-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="7"/>
@@ -980,30 +984,30 @@
       </div>
 
       <div class="cafe-sidebar-tabs" role="tablist">
-        <button class="sidebar-tab active" type="button" data-tab="search" role="tab">Search the list</button>
-        <button class="sidebar-tab"        type="button" data-tab="route"  role="tab">Plan a tour</button>
+        <button class="sidebar-tab active" type="button" data-tab="search" role="tab" data-i18n="cafes.sidebar.search">Search the list</button>
+        <button class="sidebar-tab"        type="button" data-tab="route"  role="tab" data-i18n="cafes.sidebar.route">Plan a tour</button>
       </div>
 
       <!-- ─ Search pane ─ -->
       <div class="tab-pane active" data-pane="search">
         <div class="controls-grid">
           <label class="field" for="searchInput">
-            <span class="field-label">Search by name</span>
-            <input id="searchInput" class="search-input" type="search" placeholder="Try: 테라로사, 커스텀커피, onion..." autocomplete="off" />
+            <span class="field-label" data-i18n="cafes.searchLabel">Search by name</span>
+            <input id="searchInput" class="search-input" type="search" placeholder="Try: 테라로사, 커스텀커피, onion..." data-i18n-ph="cafes.searchPh" autocomplete="off" />
           </label>
         </div>
         <div class="chips" id="locationChips"></div>
         <div class="groups-wrap" id="cafeGroups"></div>
-        <div class="empty-state" id="emptyState" hidden>No cafes matched your search. Try a shorter name or switch back to all locations.</div>
+        <div class="empty-state" id="emptyState" hidden data-i18n="cafes.empty">No cafes matched your search. Try a shorter name or switch back to all locations.</div>
       </div>
 
       <!-- ─ Route pane ─ -->
       <div class="tab-pane" data-pane="route">
         <div class="route-toolbar">
-          <span class="route-selection-summary" id="routeSelectionSummary">Pick 3 to 7 cafes from the list to plan your tour.</span>
+          <span class="route-selection-summary" id="routeSelectionSummary" data-i18n="cafes.route.summary">Pick 3 to 7 cafes from the list to plan your tour.</span>
           <div class="route-actions">
-            <button id="optimizeRouteBtn"      class="route-plan-btn"  type="button" disabled>Optimize route</button>
-            <button id="clearRouteSelection"   class="reset-btn route-clear-btn" type="button">Clear</button>
+            <button id="optimizeRouteBtn"      class="route-plan-btn"  type="button" disabled data-i18n="cafes.route.optimize">Optimize route</button>
+            <button id="clearRouteSelection"   class="reset-btn route-clear-btn" type="button" data-i18n="cafes.route.clear">Clear</button>
           </div>
         </div>
         <div class="route-selected-list" id="routeSelectedList"></div>
@@ -1013,7 +1017,7 @@
     <footer class="cafe-footer">
       <span>&copy; 2026 Junho Choi</span>
       <div>
-        <a href="mailto:andrewc27@berkeley.edu">Email</a>
+        <a href="mailto:andrewc27@berkeley.edu" data-i18n="footer.email">Email</a>
         <a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">LinkedIn</a>
         <a href="https://instagram.com/andrew7choi" target="_blank" rel="noopener">Instagram</a>
       </div>
@@ -1043,14 +1047,22 @@
       var tabs   = document.querySelectorAll('.sidebar-tab');
       var panes  = document.querySelectorAll('.tab-pane');
       var title  = document.getElementById('sidebarTitle');
-      var titles = { search: 'Search the list', route: 'Plan a tour' };
+      function titleFor(target) {
+        var pick = (window.i18n && window.i18n.pick) ? window.i18n.pick.bind(window.i18n) : function (en) { return en; };
+        return target === 'route' ? pick('Plan a tour', '투어 짜기') : pick('Search the list', '리스트 검색');
+      }
+      var activeTab = 'search';
       tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
-          var target = tab.dataset.tab;
+          activeTab = tab.dataset.tab;
           tabs.forEach(function (t) { t.classList.toggle('active', t === tab); });
-          panes.forEach(function (p) { p.classList.toggle('active', p.dataset.pane === target); });
-          if (title && titles[target]) title.textContent = titles[target];
+          panes.forEach(function (p) { p.classList.toggle('active', p.dataset.pane === activeTab); });
+          if (title) title.textContent = titleFor(activeTab);
         });
+      });
+      // Keep the sidebar heading correct for the active tab after a toggle.
+      document.addEventListener('langchange', function () {
+        if (title) title.textContent = titleFor(activeTab);
       });
     })();
 
@@ -1083,6 +1095,8 @@
       var optimizeRouteBtn = document.getElementById('optimizeRouteBtn');
 
       var collator = new Intl.Collator('ko');
+      // Language helper — returns the Korean string when KO mode is active.
+      function pick(en, ko) { return (window.i18n && window.i18n.lang === 'ko') ? ko : en; }
       var map = null;
       var selectedCafeId = null;
       var markerById = new Map();
@@ -1232,7 +1246,7 @@
           '<span class="group-chevron">›</span>' +
           '<span class="group-name">' + escapeHtml(location) + '</span>' +
           '</span>' +
-          '<span class="group-count">' + formatCount(items.length) + ' cafes</span>';
+          '<span class="group-count">' + formatCount(items.length) + pick(' cafes', '곳') + '</span>';
       }
 
       function isRouteSelected(cafeId) {
@@ -1242,7 +1256,7 @@
       function setRouteButtonState(button, selected) {
         if (!button) return;
         button.classList.toggle('active', selected);
-        button.textContent = selected ? 'Picked' : 'Pick for route';
+        button.textContent = selected ? pick('Picked', '선택됨') : pick('Pick for route', '경로에 추가');
         button.setAttribute('aria-pressed', selected ? 'true' : 'false');
       }
 
@@ -1256,11 +1270,13 @@
       function renderRouteSelectionSummary() {
         var picked = routeSelectionIds.length;
         if (picked === 0) {
-          routeSelectionSummary.textContent = 'Pick 3 to 7 cafes from the list to plan your tour.';
+          routeSelectionSummary.textContent = pick('Pick 3 to 7 cafes from the list to plan your tour.', '투어를 짜려면 리스트에서 카페 3~7곳을 골라주세요.');
         } else if (picked < 3) {
-          routeSelectionSummary.textContent = formatCount(picked) + ' selected. Pick ' + (3 - picked) + ' more to optimize.';
+          routeSelectionSummary.textContent = pick(formatCount(picked) + ' selected. Pick ' + (3 - picked) + ' more to optimize.',
+            formatCount(picked) + '곳 선택됨. ' + (3 - picked) + '곳 더 고르면 최적화할 수 있어요.');
         } else {
-          routeSelectionSummary.textContent = formatCount(picked) + ' selected. Ready to optimize route order.';
+          routeSelectionSummary.textContent = pick(formatCount(picked) + ' selected. Ready to optimize route order.',
+            formatCount(picked) + '곳 선택됨. 경로를 최적화할 준비가 됐어요.');
         }
         optimizeRouteBtn.disabled = picked < 3;
       }
@@ -1269,7 +1285,7 @@
         routeSelectedList.innerHTML = '';
 
         if (routeSelectionIds.length === 0) {
-          routeSelectedList.innerHTML = '<span class="route-selected-empty">No cafes picked yet.</span>';
+          routeSelectedList.innerHTML = '<span class="route-selected-empty">' + pick('No cafes picked yet.', '아직 선택한 카페가 없어요.') + '</span>';
           return;
         }
 
@@ -1292,13 +1308,13 @@
 
       function renderRouteResults(message) {
         if (!routePlan || !Array.isArray(routePlan.orderIds) || routePlan.orderIds.length === 0) {
-          routeResults.innerHTML = '<div class="route-empty">' + escapeHtml(message || 'No route planned yet. Pick cafes and click Optimize Route.') + '</div>';
+          routeResults.innerHTML = '<div class="route-empty">' + escapeHtml(message || pick('No route planned yet. Pick cafes and click Optimize Route.', '아직 계획된 경로가 없어요. 카페를 고르고 경로 최적화를 눌러주세요.')) + '</div>';
           return;
         }
 
         var html =
           '<div class="route-results-head">' +
-            '<strong>Optimized Order</strong>' +
+            '<strong>' + pick('Optimized Order', '최적 순서') + '</strong>' +
             '<span class="route-total-distance">' + formatDistance(routePlan.totalDistanceKm) + '</span>' +
           '</div>' +
           '<ol class="route-stop-list">';
@@ -1306,7 +1322,7 @@
         routePlan.orderIds.forEach(function(cafeId, idx) {
           var cafe = cafeById[cafeId];
           if (!cafe) return;
-          var legLabel = idx === 0 ? 'Start' : formatDistance(routePlan.legDistancesKm[idx - 1]);
+          var legLabel = idx === 0 ? pick('Start', '출발') : formatDistance(routePlan.legDistancesKm[idx - 1]);
 
           html +=
             '<li class="route-stop">' +
@@ -1323,7 +1339,7 @@
 
         html +=
           '</ol>' +
-          '<p class="route-note">Distance is estimated with straight-line segments between cafes; real routes can differ.</p>';
+          '<p class="route-note">' + pick('Distance is estimated with straight-line segments between cafes; real routes can differ.', '거리는 카페 사이 직선 구간으로 추정한 값이며, 실제 경로와 다를 수 있어요.') + '</p>';
 
         routeResults.innerHTML = html;
       }
@@ -1365,7 +1381,7 @@
         mainBtn.className = 'cafe-card-main';
         mainBtn.innerHTML =
           '<span class="cafe-name">' + escapeHtml(cafe.name) + '</span>' +
-          '<span class="cafe-address">' + escapeHtml(cafe.address || 'Address unavailable') + '</span>';
+          '<span class="cafe-address">' + escapeHtml(cafe.address || pick('Address unavailable', '주소 없음')) + '</span>';
         mainBtn.addEventListener('click', function() {
           focusCafe(cafe.id, true);
         });
@@ -1376,7 +1392,7 @@
         var mapBtn = document.createElement('button');
         mapBtn.type = 'button';
         mapBtn.className = 'cafe-action-btn cafe-map-link';
-        mapBtn.textContent = 'View on map';
+        mapBtn.textContent = pick('View on map', '지도에서 보기');
         mapBtn.addEventListener('click', function() {
           focusCafe(cafe.id, true);
         });
@@ -1931,6 +1947,16 @@
       renderRouteSelectionSummary();
       renderRouteSelectedList();
       renderRouteResults();
+
+      // Re-render list/route text when the language toggles so JS-built
+      // strings (counts, buttons, summaries) switch too.
+      document.addEventListener('langchange', function () {
+        renderLocationChips();
+        renderCafeGroups();
+        renderRouteSelectionSummary();
+        renderRouteSelectedList();
+        renderRouteResults();
+      });
 
       if (cafes.length === 0) {
         showMapStatus('No cafes were found in the shared bookmark data.');

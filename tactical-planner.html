@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Tactical Path Planner</title>
 <style>
   * { box-sizing: border-box; }
@@ -23,6 +24,9 @@
     max-width: 1600px;
     margin: 0 auto;
   }
+  /* Let the columns shrink below their content width so the page never
+     scrolls horizontally; wide output scrolls inside its own <pre> */
+  .layout > * { min-width: 0; }
 
   /* ── Left column: tools / instructions / output ── */
   .panel {
@@ -240,6 +244,13 @@
     pointer-events: none;
   }
   .pending-arrow-hint[hidden] { display: none; }
+
+  @media (max-width: 900px) {
+    body { padding: 16px 12px; }
+    .layout { grid-template-columns: 1fr; gap: 18px; }
+    .canvas-wrap { max-height: none; }
+    .canvas-wrap svg { max-height: 60vh; }
+  }
 </style>
 </head>
 <body>

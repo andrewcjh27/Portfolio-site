@@ -192,3 +192,30 @@
   .nav-more-feature { min-height: 170px; }
   .nav-more-footer { justify-content: space-between; gap: 1rem; }
 }
+
+/* Inside the hamburger menu the nav is a full-width column — an
+   absolutely-positioned, right-anchored flyout would hang off the left
+   edge of the screen. Render the panel in-flow instead. */
+@media (max-width: 640px) {
+  .nav-more { display: block; width: 100%; }
+  .nav-more-toggle { width: 100%; justify-content: space-between; }
+  .nav-more-panel {
+    display: none;
+    position: static;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 1.2rem 1.2rem 1rem;
+    border-radius: 14px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+  .nav-more.open .nav-more-panel {
+    display: grid;
+    transform: none;
+  }
+  .nav-more-feature { min-height: 130px; padding: 1.1rem; }
+  .nav-more-list a { font-size: 1.05rem; padding: 0.45rem 0; }
+}
