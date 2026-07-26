@@ -119,6 +119,29 @@
       padding-bottom: 1em;
     }
 
+    /* ── Korean mode: hero.sub is used for the Korean name (최준호),
+       so blow it up to display size and drop the small-caption styling. */
+    html.lang-ko .hero-sub {
+      font-family: "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, "SF Pro Display", sans-serif;
+      font-size: clamp(3rem, 8vw, 7rem) !important;
+      color: #000;
+      max-width: none;
+      line-height: 0.95 !important;
+      letter-spacing: -0.03em !important;
+      font-weight: 600 !important;
+      white-space: nowrap;
+      margin-left: 1.4rem;
+      padding-bottom: 0.05em;
+    }
+    @media (max-width: 900px) {
+      html.lang-ko .hero-sub {
+        font-size: clamp(2.4rem, 12vw, 4.5rem) !important;
+        margin-left: 0;
+        margin-top: 0.6rem;
+        white-space: normal;
+      }
+    }
+
     .hero-image {
       position: absolute;
       right: -9%;
