@@ -1,4 +1,4 @@
-// menu-engine.js — context builder + scoring model for the menu suggester
+// momuk-engine.js — context builder + scoring model for the menu suggester
 //
 // The model is a transparent weighted sum, deliberately not ML:
 //
@@ -263,7 +263,7 @@
   function suggest(input, opts) {
     opts = opts || {};
     var ctx = buildContext(input);
-    var ranked = rank(ctx, global.MENU_DATA || []);
+    var ranked = rank(ctx, global.MOMUK_DATA || []);
     if (!ranked.length) return { ctx: ctx, ranked: [], picked: null, why: [] };
     var s = sample(ranked, opts.tau, opts.poolSize);
     return {
@@ -275,7 +275,7 @@
     };
   }
 
-  global.MenuEngine = {
+  global.Momuk = {
     buildContext: buildContext,
     scoreDish: scoreDish,
     rank: rank,

@@ -1,4 +1,4 @@
-// menu-data.js — dish taxonomy for the menu suggester
+// momuk-data.js — dish taxonomy for the menu suggester
 // Same pattern as cafes-data.js: a hand-curated set, versioned in the repo.
 //
 // FIELDS
@@ -16,7 +16,7 @@
 //   ubiq   1-3   findable near anywhere → worth a trek. Stands in for a places API.
 //   tags   해장 · 야식 · 보양 · 비오는날 · 미세먼지 · 다이어트 · 국물 · 면 · 밥 · 고기 · 술안주 · 혼밥 · 여름 · 겨울 · 분식
 
-window.MENU_DATA = [
+window.MOMUK_DATA = [
 // ── 한식 · 국물/찌개/탕 ──────────────────────────────────────
 { id:'kimchi-jjigae',   ko:'김치찌개',     en:'Kimchi stew',            cuisine:'한식', temp:'hot',  soup:3, spice:2, heavy:2, price:1, speed:'fast', solo:1, share:1, ubiq:3, tags:['해장','국물','밥'] },
 { id:'doenjang-jjigae', ko:'된장찌개',     en:'Soybean paste stew',     cuisine:'한식', temp:'hot',  soup:3, spice:1, heavy:2, price:1, speed:'fast', solo:1, share:1, ubiq:3, tags:['국물','밥'] },

@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>오늘 뭐 먹지 — prototype</title>
+<title>momuk — prototype</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   /* Deliberately plain. This is a logic test rig — the visual design
@@ -51,8 +51,8 @@
 
   <div class="row" style="justify-content:space-between;align-items:flex-start">
     <div>
-      <h1>오늘 뭐 먹지</h1>
-      <p class="sub">Logic prototype — unstyled on purpose</p>
+      <h1>momuk</h1>
+      <p class="sub">오늘 뭐 먹지 · logic prototype, unstyled on purpose</p>
     </div>
     <div class="row" role="group" aria-label="Language">
       <button id="ko" aria-pressed="true">한국어</button>
@@ -118,15 +118,15 @@
 
 </div>
 
-<script src="menu-data.js"></script>
-<script src="menu-engine.js"></script>
+<script src="momuk-data.js"></script>
+<script src="momuk-engine.js"></script>
 <script>
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   var lang = 'ko';
   var last = null;
-  var recent = JSON.parse(localStorage.getItem('menu.recent') || '[]');
+  var recent = JSON.parse(localStorage.getItem('momuk.recent') || '[]');
 
   var T = {
     ko: { go:'추천받기', again:'다른 거', accept:'이걸로', hunger:'배고픔', none:'없음',
@@ -217,7 +217,7 @@
   }
 
   function run() {
-    var out = window.MenuEngine.suggest(buildInput(), { tau: +$('tau').value, lang: lang });
+    var out = window.Momuk.suggest(buildInput(), { tau: +$('tau').value, lang: lang });
     if (!out.picked) { $('status').textContent = t().empty; $('result').style.display = 'none'; return; }
     last = out;
     var d = out.picked.dish;
@@ -250,7 +250,7 @@
 
   function drawRecent() {
     var names = recent.map(function (id) {
-      var d = window.MENU_DATA.filter(function (x) { return x.id === id; })[0];
+      var d = window.MOMUK_DATA.filter(function (x) { return x.id === id; })[0];
       return d ? d.ko : id;
     });
     $('recent').textContent = names.length ? names.join(', ') : t().none;
@@ -262,13 +262,13 @@
     if (!last) return;
     recent.unshift(last.picked.dish.id);
     recent = recent.slice(0, 7);
-    localStorage.setItem('menu.recent', JSON.stringify(recent));
+    localStorage.setItem('momuk.recent', JSON.stringify(recent));
     drawRecent();
     // v2: this is the moment to POST {context, shown, accepted} to a log endpoint.
     $('result').style.display = 'none';
   });
   $('clear').addEventListener('click', function () {
-    recent = []; localStorage.removeItem('menu.recent'); drawRecent();
+    recent = []; localStorage.removeItem('momuk.recent'); drawRecent();
   });
 
   function setLang(l) {
