@@ -97,7 +97,7 @@
     'exp.4.role': '연구<br>인턴',
     'exp.4.summary': 'PCR, FACS, HPLC 등 마이크로RNA 어세이를 설계해 골관절염 타깃을 규명했습니다. 세포 배양과 생체 내 실험을 수행하며 CAR-T 세포 프로그램을 지원했습니다.',
     'exp.5.company': 'US 8th<br>Army',
-    'exp.5.role': '부사관',
+    'exp.5.role': '카투사',
     'exp.5.summary': '40명 규모의 이중언어 소대를 이끌었습니다. ACFT 교육을 번역·전달해 96% 합격률을 달성했고, 미 육군 표창장을 수상했습니다.',
     'exp.6.company': 'UCSF',
     'exp.6.role': '원격의료<br>코디네이터',
