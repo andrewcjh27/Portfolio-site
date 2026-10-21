@@ -147,6 +147,8 @@
     .exp-figure.shape-5 .exp-figure-inner { clip-path: url(#shape-5); }
     .exp-figure.shape-6 .exp-figure-inner { clip-path: url(#shape-6); }
     .exp-figure.shape-7 .exp-figure-inner { clip-path: url(#shape-7); }
+    .exp-figure.shape-8 .exp-figure-inner { clip-path: url(#shape-8); }
+    .exp-figure.shape-9 .exp-figure-inner { clip-path: url(#shape-9); }
 
     .exp-ui { position: absolute; left: 0; right: 0; bottom: 2.2rem; display: flex; justify-content: center; pointer-events: none; z-index: 4; }
     .exp-drag-hint { font-family: -apple-system, "SF Mono", Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: #aaa; }
@@ -209,6 +211,31 @@
     .exp-figure.shape-5 .exp-figure-inner { background: linear-gradient(135deg, #69d2ff 0%, #1f7eaa 55%, #0d2a44 100%); }
     .exp-figure.shape-6 .exp-figure-inner { background: linear-gradient(135deg, #7d8a5b 0%, #4a5436 55%, #1f2615 100%); }
     .exp-figure.shape-7 .exp-figure-inner { background: linear-gradient(135deg, #34c0c5 0%, #0f6f8a 55%, #0a2a3a 100%); }
+    .exp-figure.shape-8 .exp-figure-inner, .exp-panel-hero.shape-8 { background: linear-gradient(135deg, #e3f75a 0%, #9cc31f 55%, #2f4207 100%); }
+    .exp-figure.shape-9 .exp-figure-inner, .exp-panel-hero.shape-9 { background: linear-gradient(135deg, #4f9bff 0%, #1d4fd8 55%, #0a1a52 100%); }
+
+    /* Wordmark artwork — used for roles that don't have a photo yet.
+       Drop an <img> into the figure later and it covers this automatically. */
+    .exp-figure-inner { position: relative; }
+    .exp-mark {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      font-family: -apple-system, "SF Pro Display", BlinkMacSystemFont, sans-serif;
+      font-weight: 600; letter-spacing: -0.04em; line-height: .92; text-align: center;
+      font-size: clamp(1.8rem, 4.4vw, 3.6rem); color: #fff;
+      background-image: radial-gradient(rgba(255,255,255,.22) 1.2px, transparent 1.4px);
+      background-size: 18px 18px;
+    }
+    .exp-mark small {
+      margin-top: .9em; font-family: -apple-system, "SF Mono", Menlo, monospace;
+      font-size: .2em; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; opacity: .85;
+    }
+    .shape-8 .exp-mark { color: #10180a; background-image: radial-gradient(rgba(0,0,0,.16) 1.2px, transparent 1.4px); }
+    .exp-panel-hero.exp-hero-mark { position: relative; border-radius: 18px; overflow: hidden; }
+    .exp-panel-hero.exp-hero-mark .exp-mark { font-size: clamp(2rem, 4.2vw, 3.4rem); }
+    .exp-figure .exp-photo { position: absolute; inset: 0; z-index: 1; }
+    .exp-panel-hero.exp-hero-mark.has-img { background: none; border-radius: 0; overflow: visible; }
+    .exp-panel-hero.has-img .exp-mark { display: none; }
 
     .exp-figure:hover .exp-figure-inner {
       transform: rotate(-3deg) scale(1.03);
@@ -416,6 +443,8 @@
       <clipPath id="shape-5" clipPathUnits="objectBoundingBox"><path d="M0.0500 0.0000L0.9500 0.0000Q1.0000 0.0000 1.0000 0.0500L1.0000 0.5500Q1.0000 0.6000 0.9580 0.6271L0.4220 0.9729Q0.3800 1.0000 0.3622 0.9533L0.0178 0.0467Q0.0000 0.0000 0.0500 0.0000Z"/></clipPath>
       <clipPath id="shape-6" clipPathUnits="objectBoundingBox"><path d="M0.0473 0.2238L0.6527 0.0162Q0.7000 0.0000 0.7212 0.0453L0.9788 0.5947Q1.0000 0.6400 0.9558 0.6634L0.3642 0.9766Q0.3200 1.0000 0.3006 0.9539L0.0194 0.2861Q0.0000 0.2400 0.0473 0.2238Z"/></clipPath>
       <clipPath id="shape-7" clipPathUnits="objectBoundingBox"><path d="M0.0999 0.0474L0.9501 0.0026Q1.0000 0.0000 0.9902 0.0490L0.8098 0.9510Q0.8000 1.0000 0.7504 0.9938L0.0496 0.9062Q0.0000 0.9000 0.0029 0.8501L0.0471 0.0999Q0.0500 0.0500 0.0999 0.0474Z"/></clipPath>
+      <clipPath id="shape-8" clipPathUnits="objectBoundingBox"><path d="M0.9504 0.1140L0.0496 0.0060Q0.0000 0.0000 0.0107 0.0488L0.2093 0.9512Q0.2200 1.0000 0.2696 0.9936L0.9504 0.9064Q1.0000 0.9000 1.0000 0.8500L1.0000 0.1700Q1.0000 0.1200 0.9504 0.1140Z"/></clipPath>
+      <clipPath id="shape-9" clipPathUnits="objectBoundingBox"><path d="M0.9527 0.2238L0.3473 0.0162Q0.3000 0.0000 0.2788 0.0453L0.0212 0.5947Q0.0000 0.6400 0.0442 0.6634L0.6358 0.9766Q0.6800 1.0000 0.6994 0.9539L0.9806 0.2861Q1.0000 0.2400 0.9527 0.2238Z"/></clipPath>
 
       <symbol id="vis-urban" viewBox="0 0 550 250" preserveAspectRatio="xMidYMid slice">
         <rect width="100%" height="100%" fill="url(#g-urban)"/>
@@ -509,8 +538,44 @@
   </header>
 
   <div class="exp-viewport" id="viewport">
-    
+
     <article class="exp-slide" data-i="0">
+      <div class="text-mask left">
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.abbasi.company">UCSF<br>(Abbasi Lab)</h2>
+      </div>
+      <div aria-hidden="true"></div>
+      <div class="exp-right-col">
+        <div class="text-mask right">
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.abbasi.role">Undergraduate<br>Researcher</h2>
+        </div>
+        <div class="text-mask meta">
+          <div class="exp-meta text-mask-inner">
+            <span class="exp-meta-tag" data-i18n="exp.pabbasi.tag">Sep 2026 / Present</span>
+            <p class="exp-meta-summary" data-i18n="exp.abbasi.summary">Building an LLM-based EHR summarization pipeline at UCSF — auditing retrieval over 2M+ synthetic clinical records and designing a claim-level grounding evaluation to reduce hallucination.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="exp-slide" data-i="1">
+      <div class="text-mask left">
+        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.smartmind.company">SmartMind<br>AI</h2>
+      </div>
+      <div aria-hidden="true"></div>
+      <div class="exp-right-col">
+        <div class="text-mask right">
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.smartmind.role">Data<br>Scientist</h2>
+        </div>
+        <div class="text-mask meta">
+          <div class="exp-meta text-mask-inner">
+            <span class="exp-meta-tag" data-i18n="exp.psmartmind.tag">May 2026 / Aug 2026</span>
+            <p class="exp-meta-summary" data-i18n="exp.smartmind.summary">Led a natural-language-to-SQL pipeline on a live enterprise ERP — replacing pass/fail tests with multi-trial measurement and tracing silent failures back to the Neo4j ontology behind it.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="exp-slide" data-i="2">
       <div class="text-mask left">
         <h2 class="exp-word text-mask-inner" data-i18n-html="exp.0.company">Urban<br>Conga</h2>
       </div>
@@ -528,7 +593,7 @@
       </div>
     </article>
 
-    <article class="exp-slide" data-i="1">
+    <article class="exp-slide" data-i="3">
       <div class="text-mask left">
         <h2 class="exp-word text-mask-inner" data-i18n-html="exp.1.company">Mozilla<br>Firefox</h2>
       </div>
@@ -546,25 +611,25 @@
       </div>
     </article>
 
-    <article class="exp-slide" data-i="2">
+    <article class="exp-slide" data-i="4">
       <div class="text-mask left">
         <h2 class="exp-word text-mask-inner" data-i18n-html="exp.2.company">Asan<br>Medical</h2>
       </div>
       <div aria-hidden="true"></div>
       <div class="exp-right-col">
         <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.2.role">AI Research<br>Intern</h2>
+          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.2.role">AI<br>Researcher</h2>
         </div>
         <div class="text-mask meta">
           <div class="exp-meta text-mask-inner">
             <span class="exp-meta-tag">May 2025 / Aug 2025</span>
-            <p class="exp-meta-summary" data-i18n="exp.2.summary">Built 3D imaging pipelines for HCC classification. Applied SHAP and Grad-CAM to make model decisions legible to clinicians. Placed 7th in a multi-institutional challenge.</p>
+            <p class="exp-meta-summary" data-i18n="exp.2.summary">Fine-tuned 3D U-Net and ResNet3D models for medical imaging and a multimodal survival model for liver cancer, validated with SHAP and Grad-CAM. Placed 7th in the VLM3D challenge.</p>
           </div>
         </div>
       </div>
     </article>
 
-    <article class="exp-slide" data-i="3">
+    <article class="exp-slide" data-i="5">
       <div class="text-mask left">
         <h2 class="exp-word text-mask-inner" data-i18n-html="exp.3.company">Braven</h2>
       </div>
@@ -582,7 +647,7 @@
       </div>
     </article>
 
-    <article class="exp-slide" data-i="4">
+    <article class="exp-slide" data-i="6">
       <div class="text-mask left">
         <h2 class="exp-word text-mask-inner" data-i18n-html="exp.4.company">Biosolution</h2>
       </div>
@@ -600,7 +665,7 @@
       </div>
     </article>
 
-    <article class="exp-slide" data-i="5">
+    <article class="exp-slide" data-i="7">
       <div class="text-mask left">
         <h2 class="exp-word text-mask-inner" data-i18n-html="exp.5.company">US 8th<br>Army</h2>
       </div>
@@ -618,47 +683,32 @@
       </div>
     </article>
 
-    <article class="exp-slide" data-i="6">
-      <div class="text-mask left">
-        <h2 class="exp-word text-mask-inner" data-i18n-html="exp.6.company">UCSF</h2>
-      </div>
-      <div aria-hidden="true"></div>
-      <div class="exp-right-col">
-        <div class="text-mask right">
-          <h2 class="exp-word text-mask-inner" data-i18n-html="exp.6.role">Telehealth<br>Coordinator</h2>
-        </div>
-        <div class="text-mask meta">
-          <div class="exp-meta text-mask-inner">
-            <span class="exp-meta-tag">Aug 2021 / May 2022</span>
-            <p class="exp-meta-summary" data-i18n="exp.6.summary">Built longitudinal analyses of telehealth utilization, surfacing the workflow bottlenecks that reshaped clinical delivery and resource allocation.</p>
-          </div>
-        </div>
-      </div>
-    </article>
-
     <div class="exp-strip-frame" id="carouselStage">
-      <button class="exp-figure shape-1" data-i="0" type="button" aria-label="Open Urban Conga">
+      <button class="exp-figure shape-7" data-i="0" type="button" aria-label="Open UCSF (Abbasi Lab)">
+        <div class="exp-figure-inner"><img src="images/projects/ucsf1.jpg" alt="UCSF (Abbasi Lab)" /></div>
+      </button>
+      <button class="exp-figure shape-9" data-i="1" type="button" aria-label="Open SmartMind AI">
+        <div class="exp-figure-inner"><span class="exp-mark" aria-hidden="true">SmartMind<small>AI Engineering</small></span><img class="exp-photo" src="images/projects/smartmind1.jpg" alt="SmartMind AI" onerror="this.remove()" /></div>
+      </button>
+      <button class="exp-figure shape-1" data-i="2" type="button" aria-label="Open Urban Conga">
         <div class="exp-figure-inner">
           <img src="images/projects/urban-conga.jpg" alt="Urban Conga Installation" />
         </div>
       </button>
-      <button class="exp-figure shape-2" data-i="1" type="button" aria-label="Open Mozilla Firefox">
+      <button class="exp-figure shape-2" data-i="3" type="button" aria-label="Open Mozilla Firefox">
         <div class="exp-figure-inner"><img src="images/projects/mozilla1.jpg" alt="Mozilla Firefox" /></div>
       </button>
-      <button class="exp-figure shape-3" data-i="2" type="button" aria-label="Open Asan Medical Center">
+      <button class="exp-figure shape-3" data-i="4" type="button" aria-label="Open Asan Medical Center">
         <div class="exp-figure-inner"><img src="images/projects/asan1.jpg" alt="Asan Medical Center" /></div>
       </button>
-      <button class="exp-figure shape-4" data-i="3" type="button" aria-label="Open Braven">
+      <button class="exp-figure shape-4" data-i="5" type="button" aria-label="Open Braven">
         <div class="exp-figure-inner"><img src="images/projects/braven1.jpg" alt="Braven" /></div>
       </button>
-      <button class="exp-figure shape-5" data-i="4" type="button" aria-label="Open Biosolution">
+      <button class="exp-figure shape-5" data-i="6" type="button" aria-label="Open Biosolution">
         <div class="exp-figure-inner"><img src="images/projects/biosolution1.jpg" alt="Biosolution" /></div>
       </button>
-      <button class="exp-figure shape-6" data-i="5" type="button" aria-label="Open US 8th Army">
+      <button class="exp-figure shape-6" data-i="7" type="button" aria-label="Open US 8th Army">
         <div class="exp-figure-inner"><img src="images/projects/army1.jpg" alt="US 8th Army" /></div>
-      </button>
-      <button class="exp-figure shape-7" data-i="6" type="button" aria-label="Open UCSF Telehealth">
-        <div class="exp-figure-inner"><img src="images/projects/ucsf1.jpg" alt="UCSF" /></div>
       </button>
     </div>
 
@@ -671,6 +721,45 @@
   <div class="exp-overlay" id="expOverlay" aria-hidden="true"></div>
 
   <aside class="exp-panel" data-panel="0" aria-hidden="true">
+    <button class="exp-panel-close" aria-label="Close panel">×</button>
+    <div class="exp-panel-inner">
+      <div class="exp-panel-hero shape-7">
+        <img src="images/projects/ucsf.jpg" alt="UCSF" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
+      </div>
+      <span class="exp-panel-tag" data-i18n="exp.pabbasi.tag">Sep 2026 / Present</span>
+      <h2 class="exp-panel-title" data-i18n="exp.pabbasi.title">UCSF (Abbasi Lab)</h2>
+      <p class="exp-panel-role" data-i18n="exp.pabbasi.role">Undergraduate Researcher</p>
+      <p class="exp-panel-org" data-i18n-html="exp.pabbasi.org">University of California, San Francisco</p>
+      <div class="exp-panel-body">
+        <p data-i18n-html="exp.pbabbasi.1">Developing an <strong>LLM-based EHR summarization pipeline</strong> at UCSF, auditing retrieval over a large-scale synthetic EHR database of <strong>2M+ clinical records</strong>.</p>
+        <p data-i18n-html="exp.pbabbasi.2">Designing a <strong>claim-level grounding evaluation framework</strong> to measure and reduce hallucination in clinician-facing outputs.</p>
+      </div>
+      <div class="exp-panel-tags"><span>LLM</span><span>Retrieval</span><span>EHR</span><span>Evaluation</span><span>Grounding</span><span>Healthcare AI</span></div>
+    </div>
+  </aside>
+
+  <aside class="exp-panel" data-panel="1" aria-hidden="true">
+    <button class="exp-panel-close" aria-label="Close panel">×</button>
+    <div class="exp-panel-inner">
+      <div class="exp-panel-hero shape-9 exp-hero-mark" role="img" aria-label="SmartMind AI">
+        <span class="exp-mark">SmartMind<small>AI Engineering</small></span>
+        <img src="images/projects/smartmind.jpg" alt="SmartMind AI" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
+      </div>
+      <span class="exp-panel-tag" data-i18n="exp.psmartmind.tag">May 2026 / Aug 2026</span>
+      <h2 class="exp-panel-title" data-i18n="exp.psmartmind.title">SmartMind AI</h2>
+      <p class="exp-panel-role" data-i18n="exp.psmartmind.role">Data Scientist · AI Engineering Team</p>
+      <p class="exp-panel-org" data-i18n-html="exp.psmartmind.org">SmartMind AI &middot; Seoul, Republic of Korea</p>
+      <div class="exp-panel-body">
+        <p data-i18n-html="exp.pbsmartmind.1">Initiated and led a <strong>natural-language-to-SQL pipeline</strong> on a live enterprise ERP system, mapping the <strong>6 core tables of 20</strong> required for coverage.</p>
+        <p data-i18n-html="exp.pbsmartmind.2">Replaced single-run pass/fail testing with a <strong>multi-trial measurement design</strong> over a fixed golden set of query scenarios, reporting a measured pass rate with run-to-run variance.</p>
+        <p data-i18n-html="exp.pbsmartmind.3">Traced silently failing queries back to the <strong>Neo4j ontology</strong> (ApeRAG/Qurify) that supplied the model its schema and business knowledge — auditing entity-merge accuracy and similarity thresholds to surface missing and duplicate nodes.</p>
+        <p data-i18n-html="exp.pbsmartmind.4">Corrected errors in the reference answer key by reconciling model output against <strong>source financial statements</strong>.</p>
+      </div>
+      <div class="exp-panel-tags"><span>NL-to-SQL</span><span>LLM</span><span>Neo4j</span><span>Knowledge Graph</span><span>SQL</span><span>Evaluation Design</span></div>
+    </div>
+  </aside>
+
+  <aside class="exp-panel" data-panel="2" aria-hidden="true">
     <button class="exp-panel-close" aria-label="Close panel">×</button>
     <div class="exp-panel-inner">
       <div class="exp-panel-hero shape-1">
@@ -780,7 +869,7 @@
     </div>
   </aside>
 
-  <aside class="exp-panel" data-panel="1" aria-hidden="true">
+  <aside class="exp-panel" data-panel="3" aria-hidden="true">
     <button class="exp-panel-close" aria-label="Close panel">×</button>
     <div class="exp-panel-inner">
       <div class="exp-panel-hero shape-2">
@@ -878,7 +967,7 @@
     </div>
   </aside>
 
-  <aside class="exp-panel" data-panel="2" aria-hidden="true">
+  <aside class="exp-panel" data-panel="4" aria-hidden="true">
     <button class="exp-panel-close" aria-label="Close panel">×</button>
     <div class="exp-panel-inner">
       <div class="exp-panel-hero shape-3">
@@ -886,18 +975,17 @@
       </div>
       <span class="exp-panel-tag" data-i18n="exp.p2.tag">May 2025 / Aug 2025</span>
       <h2 class="exp-panel-title" data-i18n="exp.p2.title">Asan Medical Center</h2>
-      <p class="exp-panel-role" data-i18n="exp.p2.role">AI Research Intern</p>
+      <p class="exp-panel-role" data-i18n="exp.p2.role">AI Researcher</p>
       <p class="exp-panel-org" data-i18n="exp.p2.org">AMC · Seoul</p>
       <div class="exp-panel-body">
-        <p data-i18n-html="exp.pb2.1">Processed and analyzed high-dimensional clinical datasets in Python and Jupyter to identify key data patterns, informing feature selection and team strategy in a multi-institutional classification challenge to <strong>place 7th</strong>.</p>
-        <p data-i18n-html="exp.pb2.2">Built automated data preprocessing pipelines for <strong>3D medical imaging and clinical records</strong> to streamline data preparation across multiple modalities, reducing manual processing time for the research team.</p>
-        <p data-i18n-html="exp.pb2.3">Implemented interpretability techniques (<strong>SHAP, Grad-CAM</strong>) to validate model outputs and communicate feature importance to non-technical stakeholders, increasing trust in data-driven clinical predictions.</p>
+        <p data-i18n-html="exp.pb2.1">Ran large-scale exploratory analysis in Python and Jupyter for the <strong>VLM3D Multi-Abnormality Classification Challenge</strong>, identifying the data patterns that informed feature selection and a strategy placing <strong>7th</strong> among multi-institutional teams.</p>
+        <p data-i18n-html="exp.pb2.2">Developed and fine-tuned <strong>PyTorch</strong> deep learning models (<strong>3D U-Net, ResNet3D</strong>) for medical imaging and a <strong>multimodal deep survival model</strong> for hepatocellular carcinoma, using <strong>SHAP and Grad-CAM</strong> to validate feature importance.</p>
       </div>
-      <div class="exp-panel-tags"><span>Python</span><span>PyTorch</span><span>3D U-Net</span><span>ResNet3D</span><span>Machine Learning</span><span>AI</span><span>LLM</span></div>
+      <div class="exp-panel-tags"><span>Python</span><span>PyTorch</span><span>3D U-Net</span><span>ResNet3D</span><span>Survival Analysis</span><span>SHAP</span><span>Grad-CAM</span></div>
     </div>
   </aside>
 
-  <aside class="exp-panel" data-panel="3" aria-hidden="true">
+  <aside class="exp-panel" data-panel="5" aria-hidden="true">
     <button class="exp-panel-close" aria-label="Close panel">×</button>
     <div class="exp-panel-inner">
       <div class="exp-panel-hero shape-4">
@@ -1026,7 +1114,7 @@
     </div>
   </aside>
 
-  <aside class="exp-panel" data-panel="4" aria-hidden="true">
+  <aside class="exp-panel" data-panel="6" aria-hidden="true">
     <button class="exp-panel-close" aria-label="Close panel">×</button>
     <div class="exp-panel-inner">
       <div class="exp-panel-hero shape-5">
@@ -1045,7 +1133,7 @@
     </div>
   </aside>
 
-  <aside class="exp-panel" data-panel="5" aria-hidden="true">
+  <aside class="exp-panel" data-panel="7" aria-hidden="true">
     <button class="exp-panel-close" aria-label="Close panel">×</button>
     <div class="exp-panel-inner">
       <div class="exp-panel-hero shape-6">
@@ -1063,24 +1151,6 @@
     </div>
   </aside>
 
-  <aside class="exp-panel" data-panel="6" aria-hidden="true">
-    <button class="exp-panel-close" aria-label="Close panel">×</button>
-    <div class="exp-panel-inner">
-      <div class="exp-panel-hero shape-7">
-        <img src="images/projects/ucsf.jpg" alt="UCSF" style="width:100%; height:100%; object-fit:contain; padding: 40px;" />
-      </div>
-      <span class="exp-panel-tag" data-i18n="exp.p6.tag">Aug 2021 / May 2022</span>
-      <h2 class="exp-panel-title" data-i18n="exp.p6.title">UCSF</h2>
-      <p class="exp-panel-role" data-i18n="exp.p6.role">Telehealth Coordinator</p>
-      <p class="exp-panel-org" data-i18n="exp.p6.org">University of California, San Francisco</p>
-      <div class="exp-panel-body">
-        <p data-i18n-html="exp.pb6.1">Quantified <strong>telehealth service utilization trends</strong> by systematizing the collection and organization of patient data, identifying critical workflow bottlenecks through <strong>longitudinal analysis</strong>.</p>
-        <p data-i18n-html="exp.pb6.2">Optimized clinical delivery frameworks at UCSF by applying data-driven insights to service metrics, enhancing <strong>operational efficiency and resource allocation</strong> for telehealth systems.</p>
-      </div>
-      <div class="exp-panel-tags"><span>Healthcare Data</span><span>Longitudinal Analysis</span><span>Operations</span><span>Telehealth</span></div>
-    </div>
-  </aside>
-
   <div class="exp-floating-info" aria-label="Site footer">
     <span>&copy; 2026 Junho Choi</span>
     <nav aria-label="External links">
@@ -1091,7 +1161,7 @@
 
   <script>
     (function () {
-      const TOTAL_SLIDES = 7; 
+      const TOTAL_SLIDES = document.querySelectorAll('.exp-slide').length; 
       
       const slides = document.querySelectorAll('.exp-slide');
       const figures = document.querySelectorAll('.exp-figure');

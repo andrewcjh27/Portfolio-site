@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>이력서 | 최준호</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <!-- Source for "Resume_KR (Fall 2026).pdf". Edit this file, then re-export the PDF. -->
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    /* ══════════════════════════════════════════════════════════════════
+       Korean 이력서 — traditional document style
+       ──────────────────────────────────────────────────────────────────
+       A paper 이력서: cream backdrop, white sheets, bordered tables with
+       a 증명사진 box, followed by a 자기소개서 sheet. Shown only in KO
+       mode; the English résumé above is untouched.
+       ══════════════════════════════════════════════════════════════════ */
+    .resume-ko-doc {
+      background: #efece4;
+      padding: 2.5rem 1.2rem 3rem;
+      font-family: "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, "Malgun Gothic", sans-serif;
+      color: #1d1b16;
+    }
+    .ko-toolbar {
+      max-width: 880px;
+      margin: 0 auto 1rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .ko-toolbar a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1.2rem;
+      border: 1px solid rgba(0,0,0,0.22);
+      border-radius: 999px;
+      background: #fff;
+      color: #1d1b16;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+    .ko-toolbar a:hover { background: #1d1b16; color: #fff; transform: translateY(-2px); }
+    .ko-toolbar svg { width: 15px; height: 15px; }
+
+    .ko-sheet {
+      max-width: 880px;
+      margin: 0 auto 2.2rem;
+      background: #fff;
+      border: 1px solid #d9d3c5;
+      box-shadow: 0 18px 44px rgba(45, 38, 22, 0.10);
+      padding: 3.2rem 3.4rem 3rem;
+    }
+    .ko-doc-title {
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: 1.1em;
+      text-indent: 1.1em;      /* balance the trailing letter-spacing */
+      margin: 0 0 2.2rem;
+      padding-bottom: 1.1rem;
+      border-bottom: 3px double #1d1b16;
+    }
+
+    /* 인적사항 — photo box + info table */
+    .ko-id-row {
+      display: flex;
+      gap: 1.6rem;
+      align-items: stretch;
+      margin-bottom: 2.4rem;
+    }
+    .ko-photo {
+      flex: 0 0 128px;
+      border: 1px solid #b9b2a2;
+      background: #f4f2ec;
+      overflow: hidden;
+      align-self: flex-start;
+    }
+    .ko-photo img {
+      display: block;
+      width: 128px;
+      height: 165px;           /* 증명사진 3:4 비율 */
+      object-fit: cover;
+      object-position: center top;
+    }
+    .ko-id-table { flex: 1; }
+
+    /* Shared table style */
+    .ko-table-wrap { overflow-x: auto; }
+    .ko-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+    .ko-table th,
+    .ko-table td {
+      border: 1px solid #cfc8b8;
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    .ko-table th {
+      background: #f4f1e8;
+      font-weight: 600;
+      white-space: nowrap;
+      color: #33302a;
+    }
+    .ko-table td a { color: #1d1b16; text-decoration: none; border-bottom: 1px solid rgba(0,0,0,0.25); }
+    .ko-table .ko-period { white-space: nowrap; font-variant-numeric: tabular-nums; color: #56513f; }
+    .ko-table strong { font-weight: 700; }
+
+    /* Section headings inside the sheet */
+    .ko-sec {
+      font-size: 1.06rem;
+      font-weight: 700;
+      margin: 2.4rem 0 0.8rem;
+      padding-left: 0.75rem;
+      border-left: 4px solid #1d1b16;
+      letter-spacing: 0.06em;
+    }
+
+    /* 자기소개서 */
+    .ko-essay h3 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin: 1.8rem 0 0.6rem;
+      letter-spacing: 0.04em;
+    }
+    .ko-essay h3::before { content: '■ '; font-size: 0.7em; vertical-align: 0.15em; }
+    .ko-essay p {
+      font-size: 0.92rem;
+      line-height: 1.95;
+      margin: 0 0 0.9rem;
+      color: #2c2922;
+      text-align: justify;
+    }
+    .ko-essay strong { font-weight: 700; }
+
+    /* Classic closing line + signature */
+    .ko-closing {
+      margin-top: 2.8rem;
+      text-align: center;
+      font-size: 0.92rem;
+      line-height: 2.1;
+      color: #33302a;
+    }
+    .ko-closing .ko-sign {
+      display: block;
+      margin-top: 0.6rem;
+      font-size: 1rem;
+      letter-spacing: 0.35em;
+    }
+    .ko-closing .ko-sign strong { font-size: 1.15rem; font-weight: 700; }
+
+    @media (max-width: 700px) {
+      .resume-ko-doc { padding: 96px 0.6rem 3rem; }
+      .ko-sheet { padding: 1.8rem 1.1rem 2rem; }
+      .ko-doc-title { font-size: 1.45rem; letter-spacing: 0.7em; text-indent: 0.7em; }
+      .ko-id-row { flex-direction: column; align-items: center; gap: 1.1rem; }
+      .ko-id-table { width: 100%; }
+      .ko-table { font-size: 0.82rem; }
+      /* 4-column tables scroll inside their wrap instead of stretching the page */
+      .ko-table-wrap .ko-table { min-width: 560px; }
+      .ko-essay p { text-align: left; }
+    }
+
+
+    .resume-ko-doc { min-height: 100vh; font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Noto Sans CJK KR", -apple-system, "Malgun Gothic", sans-serif; word-break: keep-all; }
+
+    /* ── Print / PDF: one A4 page per sheet, no paper shadows ── */
+    @page { size: A4; margin: 14mm 13mm; }
+    @media print {
+      .resume-ko-doc { background: #fff; padding: 0; min-height: 0; }
+      .ko-sheet { max-width: none; margin: 0; border: 0; box-shadow: none; padding: 0; break-after: page; }
+      .ko-sheet:last-child { break-after: auto; }
+      .ko-table-wrap { overflow: visible; }
+      .ko-table tr { break-inside: avoid; }
+      .ko-table { font-size: 9.6pt; }
+      .ko-essay p { font-size: 10.4pt; }
+      .ko-table { font-size: 9pt; }
+      .ko-table th, .ko-table td { padding: 5px 9px; line-height: 1.45; }
+      .ko-doc-title { margin-bottom: 16px; padding-bottom: 10px; font-size: 20pt; }
+      .ko-id-row { margin-bottom: 14px; }
+      .ko-sec { margin: 16px 0 7px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="resume-ko-doc">
+    <!-- 이력서 시트 -->
+    <section class="ko-sheet">
+      <h1 class="ko-doc-title">이력서</h1>
+
+      <!-- 인적사항 -->
+      <div class="ko-id-row">
+        <div class="ko-photo">
+          <img src="images/resume-kr-photo.jpg" alt="최준호 증명사진" />
+        </div>
+        <div class="ko-id-table ko-table-wrap">
+          <table class="ko-table">
+            <tbody>
+              <tr>
+                <th>성명</th>
+                <td>최준호 (Junho Andrew Choi)</td>
+                <th>이메일</th>
+                <td><a href="mailto:andrewc27@berkeley.edu">andrewc27@berkeley.edu</a></td>
+              </tr>
+              <tr>
+                <th>거주지</th>
+                <td>미국 캘리포니아주 버클리</td>
+                <th>연락처</th>
+                <td><a href="tel:+15107349646">510-734-9646</a></td>
+              </tr>
+              <tr>
+                <th>희망 분야</th>
+                <td>데이터 사이언스 · 머신러닝</td>
+                <th>링크드인</th>
+                <td><a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">junho-choi</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 학력사항 -->
+      <h2 class="ko-sec">학력사항</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <thead>
+            <tr>
+              <th style="width:22%">기간</th>
+              <th style="width:34%">학교 / 전공</th>
+              <th>내용</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ko-period">~ 2027. 05<br>(졸업 예정)</td>
+              <td><strong>캘리포니아대학교 버클리 (UC Berkeley)</strong><br>데이터 사이언스, 통합생물학 (B.A.)</td>
+              <td>버클리 디자인 이노베이션 수료증<br>주요 이수: 머신러닝, 데이터 엔지니어링, 자료구조, 데이터 사이언스의 원리와 기법, 데이터 사이언스를 위한 확률, 최적화 모델링, 컴퓨터 프로그램의 구조와 해석, 다변수 미적분, 선형대수 및 미분방정식, 유기화학</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 경력사항 -->
+      <h2 class="ko-sec">경력사항</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <thead>
+            <tr>
+              <th style="width:22%">기간</th>
+              <th style="width:30%">회사 / 직무</th>
+              <th>담당 업무</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ko-period">2026. 09 ~ 현재</td>
+              <td><strong>UCSF Abbasi Lab</strong><br>학부 연구원</td>
+              <td>LLM 기반 EHR 요약 파이프라인 개발, 200만 건 이상 합성 임상 기록에 대한 검색 감사, 환각 측정·감소를 위한 주장 단위 근거 평가 체계 설계.</td>
+            </tr>
+            <tr>
+              <td class="ko-period">2026. 05 ~ 08</td>
+              <td><strong>SmartMind AI</strong><br>데이터 사이언티스트 (AI 엔지니어링팀)</td>
+              <td>기업 ERP 대상 자연어-SQL 파이프라인 주도, 골든셋 기반 다회 측정 평가 설계, Neo4j 온톨로지(ApeRAG/Qurify) 감사로 누락·중복 노드 및 정답 키 오류 수정.</td>
+            </tr>
+            <tr>
+              <td class="ko-period">2025. 05 ~ 08</td>
+              <td><strong>서울아산병원 (AMC)</strong><br>AI 연구원</td>
+              <td>VLM3D 다중 이상 분류 챌린지 탐색적 분석으로 <strong>7위</strong>, PyTorch 3D U-Net·ResNet3D 및 간세포암 다중모달 생존 모델 개발, SHAP·Grad-CAM 검증.</td>
+            </tr>
+            <tr>
+              <td class="ko-period">2025. 01 ~ 현재</td>
+              <td><strong>Invention Corps of Berkeley</strong><br>사용자 리서치 &amp; 디자인 컨설턴트</td>
+              <td>Mozilla Firefox: 12인 팀과 설문 설계·분석으로 50개 이상 탭을 추적하는 React·Vite 확장 프로그램 요구사항 도출. Braven: 설문 데이터로 4개 코호트 페르소나 도출, Figma 모바일 화면 6종 납품. Replate: 대규모 사용자 데이터 분석을 바탕으로 기부자와 회사가 함께 쓰는 웹사이트 대시보드 설계·구축.</td>
+            </tr>
+            <tr>
+              <td class="ko-period">2024. 05 ~ 08</td>
+              <td><strong>바이오솔루션 (Biosolution)</strong><br>연구 인턴</td>
+              <td>PCR·FACS·HPLC 마이크로RNA 어세이 설계, 세포 배양 및 생체 내 실험, CAR-T 세포 치료 프로그램 지원.</td>
+            </tr>
+            <tr>
+              <td class="ko-period">2022. 09 ~<br>2024. 03</td>
+              <td><strong>미 8군, 2사단 HHBN</strong><br>부사관 · 소대장</td>
+              <td>이중언어(한·영) 소대장으로 40명 이상 소대 통솔, ACFT 교육 <strong>96% 합격률</strong> 달성. 미 육군 표창장 수상.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 보유 기술 -->
+      <h2 class="ko-sec">보유 기술</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <tbody>
+            <tr><th style="width:24%">프로그래밍</th><td>Python, R, Java, SQL</td></tr>
+            <tr><th>ML / 데이터 사이언스</th><td>PyTorch, Scikit-learn, NumPy, Pandas, SHAP, 탐색적 데이터 분석, 특징 공학, 모델 평가, 시각화</td></tr>
+            <tr><th>시스템 & 도구</th><td>Git, React, Vite, Figma, Jupyter, Microsoft Office, Photoshop</td></tr>
+            <tr><th>생물정보학 & 실험</th><td>PCR, FACS 분석, HPLC, 세포 배양, 생체 내 실험</td></tr>
+            <tr><th>언어</th><td>한국어(모국어), 영어(유창), 중국어(중급)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 프로젝트 -->
+      <h2 class="ko-sec">주요 프로젝트</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <thead>
+            <tr>
+              <th style="width:30%">프로젝트</th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>멀티 에이전트 광고 생성 시스템</strong></td>
+              <td>오디언스 데이터로 브랜드에 맞는 광고를 생성하는 8개 에이전트 LLM 파이프라인. 에이전트 간 버전 관리 JSON 명세로 통신하고, 브랜드 가디언 에이전트가 색상·레이아웃 규칙으로 거부권 행사.</td>
+            </tr>
+            <tr>
+              <td><strong>AI 전술 어시스턴트</strong></td>
+              <td>PyTorch 신경망으로 경기 결과를 예측하고, PuLP 선형계획법 기반 제약 최적화로 팀 편성을 자동화해 <strong>6대6 축구 리그 우승</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>지리공간 경로 최적화</strong></td>
+              <td>분기 한정 가지치기 DFS로 200개 이상 실제 좌표 간 최단 순회 경로 계산.</td>
+            </tr>
+            <tr>
+              <td><strong>심장질환 예측 모델</strong></td>
+              <td>UCI Cleveland 데이터셋 기반 엔드투엔드 분류 파이프라인, 재현율 우선으로 <strong>87.3% 정확도</strong> 달성.</td>
+            </tr>
+            <tr>
+              <td><strong>활성화 도메인 예측 파이프라인</strong></td>
+              <td>CNN–BiLSTM으로 단백질 활성화 도메인 10개 클래스 분류, 홀드아웃 <strong>F1 = 0.95</strong>, SHAP·K-평균으로 해석.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 대외활동 -->
+      <h2 class="ko-sec">대외활동</h2>
+      <div class="ko-table-wrap">
+        <table class="ko-table">
+          <tbody>
+            <tr>
+              <td class="ko-period" style="width:22%">~ 현재</td>
+              <td><strong>Cal Galacticos 주장</strong> (UC 버클리 교내 경쟁 축구) — 버클리 최대 규모 한인 축구팀 운영, 신규 회원 모집·행사·SNS·팀 일정 관리.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 자기소개서 시트 -->
+    <section class="ko-sheet ko-essay">
+      <h1 class="ko-doc-title">자기소개서</h1>
+
+      <h3>지원 동기 및 성장 배경</h3>
+      <p>저는 데이터와 디자인, 그리고 생물학이 만나는 지점에서 문제를 풀 때 가장 몰입합니다. UC 버클리에서 데이터 사이언스와 통합생물학을 함께 공부하며, 서로 다른 분야의 언어를 잇는 일에 자연스럽게 끌렸습니다. 숫자로 드러나는 사실과 사람이 실제로 느끼는 경험 사이의 간극을 좁히는 것 &mdash; 그것이 제가 기술을 배우는 이유입니다.</p>
+
+      <h3>직무 역량 및 경험</h3>
+      <p>서울아산병원 AI 연구원으로서 3D 의료 영상 전처리 파이프라인을 구축하고 <strong>SHAP·Grad-CAM</strong>으로 모델의 판단을 임상의가 이해할 수 있도록 시각화했습니다. 다기관 분류 챌린지에서는 특징 선택과 팀 전략에 기여해 7위를 기록했습니다. Mozilla Firefox 프로젝트에서는 사용자 조사부터 <strong>React·Figma</strong> 구현까지 제품의 전 과정을 경험하며, 기술과 사용자 사이를 잇는 감각을 길렀습니다.</p>
+
+      <h3>강점 및 성장 방향</h3>
+      <p>저의 강점은 <strong>여러 분야를 잇는 연결력</strong>과 <strong>끝까지 다듬는 집요함</strong>입니다. 코드, 데이터, 디자인을 넘나들며 늘 배우고 만들고 개선해 왔고, 제가 만든 결과물이 기술적으로 흥미로운 데 그치지 않고 누군가에게 실제로 도움이 되기를 바랍니다. 앞으로도 데이터로 창의적인 결정을 이끌고, 디자인으로 기술을 인간적으로 만드는 사람으로 성장하겠습니다.</p>
+
+      <div class="ko-closing">
+        위의 모든 기재 사항은 사실과 다름이 없습니다.
+        <span class="ko-sign">지원자 : <strong>최 준 호</strong> (인)</span>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
