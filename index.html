@@ -8,6 +8,31 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
   <script src="i18n.js"></script>
+  <!-- Intro: decide before first paint whether to play it.
+       Plays on a fresh load or refresh of the home page; skipped when arriving
+       from another page of this site (nav.js leaves a short-lived note on
+       in-site link clicks) or via the Back/Forward buttons. -->
+  <script>
+    (function () {
+      var d = document.documentElement;
+      try {
+        var force = /[?&]intro=1\b/.test(location.search);
+        var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+        var note = +sessionStorage.getItem('jc-site-nav') || 0;
+        sessionStorage.removeItem('jc-site-nav');
+        var fromSite = nav.type !== 'reload' && (
+          Date.now() - note < 15000 ||
+          (document.referrer && location.protocol !== 'file:' && new URL(document.referrer).origin === location.origin));
+        var calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (force || (!fromSite && nav.type !== 'back_forward' && !calm)) {
+          d.classList.add('intro-pending');
+          // failsafe: if the intro hasn't started within 6s (slow network), show the site
+          setTimeout(function () { if (!window.__introReady) d.classList.remove('intro-pending'); }, 6000);
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="intro.css" />
   <style>
     /* ── Base ─────────────────────────────────────────────────────────────── */
     html {
@@ -525,6 +550,7 @@
   </style>
 </head>
 <body>
+  <div id="intro"></div>
   <header class="site-header" id="siteHeader">
     <div class="logo">JUNHO CHOI</div>
     <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')">
@@ -568,7 +594,7 @@
   <!-- ═══ Section 1: Hero (white) ═══════════════════════════════════════ -->
   <section class="hero-section" id="heroSection">
     <div class="hero-text">
-      <h1 class="hero-name anim"><span data-i18n="index.hero.first">Junho</span><br><span class="hero-name-row"><span data-i18n="index.hero.last">Choi</span> <p class="hero-sub anim anim-d2" data-i18n="index.hero.sub">This site is where I collect my work, hobbies, and everyday photos</p></span></h1>
+      <h1 class="hero-name anim"><span data-i18n="index.hero.first">Junho</span><br><span class="hero-name-row"><span data-i18n="index.hero.last">Choi</span> <p class="hero-sub anim anim-d2" data-i18n-html="index.hero.sub">This site is where I collect my work, hobbies, and everyday photos</p></span></h1>
     </div>
     <!-- REPLACE: Save your portrait photo as images/home/hero.jpg -->
     <img src="images/main.jpg" alt="Junho Choi" class="hero-image anim-scale" />
@@ -753,5 +779,6 @@
   </script>
   <script src="script.js"></script>
   <script src="nav.js"></script>
+  <script src="intro.js"></script>
 </body>
 </html>
