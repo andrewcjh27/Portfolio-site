@@ -221,6 +221,11 @@
     @media (prefers-reduced-motion: reduce) {
       .pj-case, .pj-case-inner, .pj-cover img, .pj-toggle-icon { transition: none; }
     }
+  
+    @media (max-width: 640px) {
+      .pj-eyebrow { letter-spacing: 0.1em; }
+      .pj-list, .pj-hero { padding-left: 24px; padding-right: 24px; }
+    }
   </style>
 </head>
 <body>
@@ -275,16 +280,16 @@
       <div class="pj-preview">
         <div class="pj-cover"><img src="images/projects/braven1.jpg" alt="Braven Connect cover" loading="lazy" /></div>
         <div class="pj-info">
-          <div class="pj-eyebrow"><span>01</span> Mobile app &middot; UX research</div>
+          <div class="pj-eyebrow" data-i18n-html="projects.braven.pj-eyebrow"><span>01</span> Mobile app &middot; UX research</div>
           <h2 class="pj-title">Braven Connect</h2>
-          <p class="pj-summary">Turned a multi-channel survey of public-university students into four class-year personas, then into Braven&rsquo;s mobile app &mdash; from low-fi wireframes to high-fi screens.</p>
+          <p class="pj-summary" data-i18n-html="projects.braven.pj-summary">Turned a multi-channel survey of public-university students into four class-year personas, then into Braven&rsquo;s mobile app &mdash; from low-fi wireframes to high-fi screens.</p>
           <dl class="pj-meta">
-            <div><dt>Role</dt><dd>UI/UX Consultant</dd></div>
-            <div><dt>Timeline</dt><dd>Jan &ndash; May 2025</dd></div>
-            <div><dt>Team</dt><dd>8 consultants &middot; Berkeley Consulting Collaborative</dd></div>
-            <div><dt>Tools</dt><dd>Figma, FigJam, survey analysis</dd></div>
+            <div><dt data-i18n="pj.label.Role">Role</dt><dd data-i18n-html="projects.braven.Role">UI/UX Consultant</dd></div>
+            <div><dt data-i18n="pj.label.Timeline">Timeline</dt><dd data-i18n-html="projects.braven.Timeline">Jan &ndash; May 2025</dd></div>
+            <div><dt data-i18n="pj.label.Team">Team</dt><dd data-i18n-html="projects.braven.Team">8 consultants &middot; Berkeley Consulting Collaborative</dd></div>
+            <div><dt data-i18n="pj.label.Tools">Tools</dt><dd data-i18n-html="projects.braven.Tools">Figma, FigJam, survey analysis</dd></div>
           </dl>
-          <div class="pj-tags"><span>UX Research</span><span>Affinity Mapping</span><span>Personas</span><span>Mobile UI</span><span>Figma</span></div>
+          <div class="pj-tags"><span data-i18n="pj.tag.ux-research">UX Research</span><span data-i18n="pj.tag.affinity-mapping">Affinity Mapping</span><span data-i18n="pj.tag.personas">Personas</span><span data-i18n="pj.tag.mobile-ui">Mobile UI</span><span>Figma</span></div>
           <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="braven-case">
             <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
           </button>
@@ -295,14 +300,14 @@
           <div class="cs" tabindex="0" aria-roledescription="carousel">
             <div class="cs-track">
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">The problem</div>
-              <p class="cs-lede">Braven assumed students wanted more career information. Our survey showed students mostly chose virtual events for time and convenience, and wanted direct, 1:1 contact more than more webinars &mdash; with needs that differed sharply by class year.</p>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.problem">The problem</div>
+              <p class="cs-lede" data-i18n-html="projects.braven.s0.cs-lede">Braven assumed students wanted more career information. Our survey showed students mostly chose virtual events for time and convenience, and wanted direct, 1:1 contact more than more webinars &mdash; with needs that differed sharply by class year.</p>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 01 &middot; Jan 2025</div>
-                <h4 class="cs-title">User outreach &amp; survey distribution</h4>
-                <div class="cs-body">Designed and distributed a multi-question user survey to undergraduates at public four-year universities, sampling across class years, demographics, and device usage. The instrument captured how students discover career events, why they choose virtual over in-person, what they retain, and the friction points before, during, and after attending.</div>
+                <div class="cs-kicker" data-i18n-html="projects.braven.s1.kicker">Phase 01 &middot; Jan 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.braven.s1.cs-title">User outreach &amp; survey distribution</h4>
+                <div class="cs-body" data-i18n-html="projects.braven.s1.cs-body">Designed and distributed a multi-question user survey to undergraduates at public four-year universities, sampling across class years, demographics, and device usage. The instrument captured how students discover career events, why they choose virtual over in-person, what they retain, and the friction points before, during, and after attending.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/braven-steps/01-outreach-v2.png" alt="Braven user research — outreach instructions">
@@ -310,9 +315,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 02 &middot; Feb 2025</div>
-                <h4 class="cs-title">Aggregate &amp; visualize the data</h4>
-                <div class="cs-body">Cleaned the raw responses and translated them into bar charts, pie charts, histograms, and heatmaps so the team could read the dataset at a glance. Surfaced majority opinions, outliers, and inconsistencies across the eight-person research team.
+                <div class="cs-kicker" data-i18n-html="projects.braven.s2.kicker">Phase 02 &middot; Feb 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.braven.s2.cs-title">Aggregate &amp; visualize the data</h4>
+                <div class="cs-body" data-i18n-html="projects.braven.s2.cs-body">Cleaned the raw responses and translated them into bar charts, pie charts, histograms, and heatmaps so the team could read the dataset at a glance. Surfaced majority opinions, outliers, and inconsistencies across the eight-person research team.
               <ul>
                 <li><strong>Visualized</strong> attendance, device, time-of-day, and content-preference distributions</li>
                 <li><strong>Flagged</strong> patterns worth investigating (e.g., low ease-of-use ratings, time-constraint cluster)</li>
@@ -324,9 +329,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 03 &middot; Feb 2025</div>
-                <h4 class="cs-title">Affinity mapping</h4>
-                <div class="cs-body">Each consultant generated sticky-note insights from their assigned section of the survey. We then clustered them on a shared FigJam board into three themes: <strong>Demographics</strong>, <strong>Motivations</strong>, and <strong>Pain Points &amp; Needs</strong> — exposing the conflicting points where Braven&rsquo;s assumptions diverged from what students actually wanted.</div>
+                <div class="cs-kicker" data-i18n-html="projects.braven.s3.kicker">Phase 03 &middot; Feb 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.braven.s3.cs-title">Affinity mapping</h4>
+                <div class="cs-body" data-i18n-html="projects.braven.s3.cs-body">Each consultant generated sticky-note insights from their assigned section of the survey. We then clustered them on a shared FigJam board into three themes: <strong>Demographics</strong>, <strong>Motivations</strong>, and <strong>Pain Points &amp; Needs</strong> — exposing the conflicting points where Braven&rsquo;s assumptions diverged from what students actually wanted.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/braven-steps/03-affinity-v2.png" alt="Braven user research — affinity map">
@@ -334,9 +339,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 04 &middot; Feb &ndash; Mar 2025</div>
-                <h4 class="cs-title">Synthesize general audience insights</h4>
-                <div class="cs-body">Turned the clusters into a single working audience profile. Two themes dominated:
+                <div class="cs-kicker" data-i18n-html="projects.braven.s4.kicker">Phase 04 &middot; Feb &ndash; Mar 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.braven.s4.cs-title">Synthesize general audience insights</h4>
+                <div class="cs-body" data-i18n-html="projects.braven.s4.cs-body">Turned the clusters into a single working audience profile. Two themes dominated:
               <ul>
                 <li><strong>Time constraints &amp; convenience</strong> were overwhelmingly the reason students chose virtual events at all</li>
                 <li><strong>Students don&rsquo;t know what they want</strong> — they want the end result without the effort, and lack the steps to get there</li>
@@ -349,9 +354,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 05 &middot; Mar 2025</div>
-                <h4 class="cs-title">Year-by-year deep dive (Part 2)</h4>
-                <div class="cs-body">The general profile was too coarse to drive design, so we split the dataset four ways &mdash; <strong>first-year, second-year, third-year, fourth-year</strong> &mdash; and reran the affinity exercise within each cohort. Each consultant was assigned a year and tagged every survey question with where that cohort&rsquo;s proportions diverged from the average.</div>
+                <div class="cs-kicker" data-i18n-html="projects.braven.s5.kicker">Phase 05 &middot; Mar 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.braven.s5.cs-title">Year-by-year deep dive (Part 2)</h4>
+                <div class="cs-body" data-i18n-html="projects.braven.s5.cs-body">The general profile was too coarse to drive design, so we split the dataset four ways &mdash; <strong>first-year, second-year, third-year, fourth-year</strong> &mdash; and reran the affinity exercise within each cohort. Each consultant was assigned a year and tagged every survey question with where that cohort&rsquo;s proportions diverged from the average.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/braven-steps/05-year-split-v2.png" alt="Braven user research — year-split charts">
@@ -359,9 +364,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 06 &middot; Mar &ndash; Apr 2025</div>
-                <h4 class="cs-title">Per-year personas</h4>
-                <div class="cs-body">The deep dive produced four sharply different audience profiles &mdash; each with its own demographics, motivations, pain points, and needs:
+                <div class="cs-kicker" data-i18n-html="projects.braven.s6.kicker">Phase 06 &middot; Mar &ndash; Apr 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.braven.s6.cs-title">Per-year personas</h4>
+                <div class="cs-body" data-i18n-html="projects.braven.s6.cs-body">The deep dive produced four sharply different audience profiles &mdash; each with its own demographics, motivations, pain points, and needs:
               <ul>
                 <li><strong>First-years</strong> &mdash; part-time employed, interested in networking and exploring industries. Lack of time is the sole barrier; want 1:1 mentor meetings.</li>
                 <li><strong>Second-years</strong> &mdash; more passive, less proactive about finding events. Want personal meetings and chat/email follow-ups; uncomfortable speaking to employers.</li>
@@ -376,9 +381,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 07 &middot; Apr 2025</div>
-                <h4 class="cs-title">Low-fidelity wireframes</h4>
-                <div class="cs-body">Translated the four personas into the first set of mobile screens &mdash; pure structure, no styling. Sketched out the <strong>Student Roadmap</strong>, <strong>Upcoming Events</strong>, <strong>Past Videos / Speakers</strong> library, and the <strong>Home dashboard</strong> as gray-and-purple wireframes. Goal here: validate the information architecture and navigation flow with the Braven team before any visual polish.</div>
+                <div class="cs-kicker" data-i18n-html="projects.braven.s7.kicker">Phase 07 &middot; Apr 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.braven.s7.cs-title">Low-fidelity wireframes</h4>
+                <div class="cs-body" data-i18n-html="projects.braven.s7.cs-body">Translated the four personas into the first set of mobile screens &mdash; pure structure, no styling. Sketched out the <strong>Student Roadmap</strong>, <strong>Upcoming Events</strong>, <strong>Past Videos / Speakers</strong> library, and the <strong>Home dashboard</strong> as gray-and-purple wireframes. Goal here: validate the information architecture and navigation flow with the Braven team before any visual polish.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/braven-steps/07-lowfi-v2.png" alt="Braven low-fidelity wireframes — Student Roadmap, Events, Past Videos, Home">
@@ -386,16 +391,16 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 08 &middot; May 2025</div>
-                <h4 class="cs-title">High-fidelity mockups</h4>
-                <div class="cs-body">Layered Braven&rsquo;s brand language (the navy / coral / butter-yellow palette) onto the validated wireframes and pushed every screen to production-ready fidelity in Figma. Final set covered the <strong>welcome dashboard</strong>, <strong>Braven Connect</strong> speaker library, <strong>Events calendar</strong>, <strong>Career Questionnaire</strong>, <strong>My Tasks</strong>, and the personalised <strong>Career Roadmap</strong> &mdash; all tied back to the persona-driven decisions from earlier phases.</div>
+                <div class="cs-kicker" data-i18n-html="projects.braven.s8.kicker">Phase 08 &middot; May 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.braven.s8.cs-title">High-fidelity mockups</h4>
+                <div class="cs-body" data-i18n-html="projects.braven.s8.cs-body">Layered Braven&rsquo;s brand language (the navy / coral / butter-yellow palette) onto the validated wireframes and pushed every screen to production-ready fidelity in Figma. Final set covered the <strong>welcome dashboard</strong>, <strong>Braven Connect</strong> speaker library, <strong>Events calendar</strong>, <strong>Career Questionnaire</strong>, <strong>My Tasks</strong>, and the personalised <strong>Career Roadmap</strong> &mdash; all tied back to the persona-driven decisions from earlier phases.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/braven-steps/08-highfi-v2.png" alt="Braven high-fidelity mockups — Welcome, Braven Connect, Events, Career Questionnaire">
             </div></div>
             </section>
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.outcome">Outcome &amp; reflection</div>
               <p class="cs-lede"><span class="todo">TODO &mdash; the measured engagement / usability lift, final screens or prototype link</span></p>
             </section>
             </div>
@@ -406,7 +411,7 @@
               <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
             </div>
           </div>
-          <div class="pj-case-foot"><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+          <div class="pj-case-foot"><button class="pj-collapse" type="button" data-i18n-html="pj.close">Close case study &uarr;</button></div>
         </div>
       </div>
     </article>
@@ -414,16 +419,16 @@
       <div class="pj-preview">
         <div class="pj-cover"><img src="images/projects/mozilla1.jpg" alt="Mozilla Firefox cover" loading="lazy" /></div>
         <div class="pj-info">
-          <div class="pj-eyebrow"><span>02</span> Browser extension &middot; Research to UI</div>
+          <div class="pj-eyebrow" data-i18n-html="projects.mozilla.pj-eyebrow"><span>02</span> Browser extension &middot; Research to UI</div>
           <h2 class="pj-title">Mozilla Firefox</h2>
-          <p class="pj-summary">Researched how people feel about trading performance for battery life, then designed and built a Firefox extension that makes tab memory and CPU use visible.</p>
+          <p class="pj-summary" data-i18n-html="projects.mozilla.pj-summary">Researched how people feel about trading performance for battery life, then designed and built a Firefox extension that makes tab memory and CPU use visible.</p>
           <dl class="pj-meta">
-            <div><dt>Role</dt><dd>IT Consultant (research &amp; UI)</dd></div>
-            <div><dt>Timeline</dt><dd>Aug 2025 &ndash; Feb 2026</dd></div>
-            <div><dt>Team</dt><dd>12 consultants &middot; Invention Corps of Berkeley</dd></div>
-            <div><dt>Tools</dt><dd>Figma, FigJam, React, Vite</dd></div>
+            <div><dt data-i18n="pj.label.Role">Role</dt><dd data-i18n-html="projects.mozilla.Role">IT Consultant (research &amp; UI)</dd></div>
+            <div><dt data-i18n="pj.label.Timeline">Timeline</dt><dd data-i18n-html="projects.mozilla.Timeline">Aug 2025 &ndash; Feb 2026</dd></div>
+            <div><dt data-i18n="pj.label.Team">Team</dt><dd data-i18n-html="projects.mozilla.Team">12 consultants &middot; Invention Corps of Berkeley</dd></div>
+            <div><dt data-i18n="pj.label.Tools">Tools</dt><dd data-i18n-html="projects.mozilla.Tools">Figma, FigJam, React, Vite</dd></div>
           </dl>
-          <div class="pj-tags"><span>User Research</span><span>Survey Design</span><span>Figma</span><span>React</span><span>Vite</span></div>
+          <div class="pj-tags"><span data-i18n="pj.tag.user-research">User Research</span><span data-i18n="pj.tag.survey-design">Survey Design</span><span>Figma</span><span>React</span><span>Vite</span></div>
           <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="mozilla-case">
             <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
           </button>
@@ -434,14 +439,14 @@
           <div class="cs" tabindex="0" aria-roledescription="carousel">
             <div class="cs-track">
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">The problem</div>
-              <p class="cs-lede">Firefox wanted to explore an Adaptive Performance mode that throttles idle tabs. The open questions: do users care about eco features, what would convince them, and how much speed would they give up for battery?</p>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.problem">The problem</div>
+              <p class="cs-lede" data-i18n-html="projects.mozilla.s0.cs-lede">Firefox wanted to explore an Adaptive Performance mode that throttles idle tabs. The open questions: do users care about eco features, what would convince them, and how much speed would they give up for battery?</p>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 01 &middot; Aug 2025</div>
-                <h4 class="cs-title">Project framing &mdash; Adaptive Performance</h4>
-                <div class="cs-body">Started from a hypothesis: most browsers waste battery on idle tabs, and Firefox could differentiate with an <strong>Adaptive Performance</strong> mode that intelligently throttles based on usage. Defined the open questions we&rsquo;d need to answer with users: do they care about eco features, what data would convince them, and how much performance loss is acceptable in exchange for battery gain?</div>
+                <div class="cs-kicker" data-i18n-html="projects.mozilla.s1.kicker">Phase 01 &middot; Aug 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.mozilla.s1.cs-title">Project framing &mdash; Adaptive Performance</h4>
+                <div class="cs-body" data-i18n-html="projects.mozilla.s1.cs-body">Started from a hypothesis: most browsers waste battery on idle tabs, and Firefox could differentiate with an <strong>Adaptive Performance</strong> mode that intelligently throttles based on usage. Defined the open questions we&rsquo;d need to answer with users: do they care about eco features, what data would convince them, and how much performance loss is acceptable in exchange for battery gain?</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/mozilla-steps/01-framing-v2.png" alt="Mozilla — Week 1 Figjam framing">
@@ -449,9 +454,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 02 &middot; Sep 2025 (Week 1)</div>
-                <h4 class="cs-title">Survey question brainstorm</h4>
-                <div class="cs-body">The 12-person team filled a FigJam board with raw interview/survey question candidates &mdash; each consultant contributing from their angle. Questions ranged from blunt (&ldquo;why do you prefer your browser over Firefox?&rdquo;) to specific (&ldquo;if you could save 10% battery at the cost of significantly laggier performance, would you?&rdquo;).</div>
+                <div class="cs-kicker" data-i18n-html="projects.mozilla.s2.kicker">Phase 02 &middot; Sep 2025 (Week 1)</div>
+                <h4 class="cs-title" data-i18n-html="projects.mozilla.s2.cs-title">Survey question brainstorm</h4>
+                <div class="cs-body" data-i18n-html="projects.mozilla.s2.cs-body">The 12-person team filled a FigJam board with raw interview/survey question candidates &mdash; each consultant contributing from their angle. Questions ranged from blunt (&ldquo;why do you prefer your browser over Firefox?&rdquo;) to specific (&ldquo;if you could save 10% battery at the cost of significantly laggier performance, would you?&rdquo;).</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/mozilla-steps/02-brainstorm-v2.png" alt="Mozilla — survey question brainstorm sticky-note board">
@@ -459,9 +464,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 03 &middot; Sep 2025</div>
-                <h4 class="cs-title">Categorize into themes</h4>
-                <div class="cs-body">Grouped the brainstorm into five working buckets that became the spine of the eventual questionnaire:
+                <div class="cs-kicker" data-i18n-html="projects.mozilla.s3.kicker">Phase 03 &middot; Sep 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.mozilla.s3.cs-title">Categorize into themes</h4>
+                <div class="cs-body" data-i18n-html="projects.mozilla.s3.cs-body">Grouped the brainstorm into five working buckets that became the spine of the eventual questionnaire:
               <ul>
                 <li><strong>Background / Demographics</strong> &mdash; age, browser of choice, hardware, power-user level</li>
                 <li><strong>Eco Qs</strong> &mdash; environmental motivation, willingness to trade speed for sustainability</li>
@@ -476,9 +481,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 04 &middot; Oct 2025</div>
-                <h4 class="cs-title">Survey structuring</h4>
-                <div class="cs-body">Pressure-tested the brainstorm against eight guiding criteria &mdash; purpose, target audience, question types, clarity, flow/logic, scalability, time-to-complete, and ethics. The result: a coherent survey that flows from general to specific, mixes qualitative and quantitative items, and stays under a respondent-friendly length.</div>
+                <div class="cs-kicker" data-i18n-html="projects.mozilla.s4.kicker">Phase 04 &middot; Oct 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.mozilla.s4.cs-title">Survey structuring</h4>
+                <div class="cs-body" data-i18n-html="projects.mozilla.s4.cs-body">Pressure-tested the brainstorm against eight guiding criteria &mdash; purpose, target audience, question types, clarity, flow/logic, scalability, time-to-complete, and ethics. The result: a coherent survey that flows from general to specific, mixes qualitative and quantitative items, and stays under a respondent-friendly length.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/mozilla-steps/04-structure-v2.png" alt="Mozilla — Guiding Questions framework (8 criteria)">
@@ -486,9 +491,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 05 &middot; Oct &ndash; Nov 2025</div>
-                <h4 class="cs-title">Final survey assembly &amp; distribution</h4>
-                <div class="cs-body">Consolidated the brainstorm into a clean, multi-section instrument: <strong>Background Screening</strong>, <strong>Eco-Conscious Preferences</strong>, <strong>Power-user Questions</strong>, <strong>Extensions</strong>, <strong>Browser Usage &amp; Experience</strong>, and <strong>Final Questions</strong>. Distributed across the team&rsquo;s networks; collected enough responses to read both broad signals and edge cases.</div>
+                <div class="cs-kicker" data-i18n-html="projects.mozilla.s5.kicker">Phase 05 &middot; Oct &ndash; Nov 2025</div>
+                <h4 class="cs-title" data-i18n-html="projects.mozilla.s5.cs-title">Final survey assembly &amp; distribution</h4>
+                <div class="cs-body" data-i18n-html="projects.mozilla.s5.cs-body">Consolidated the brainstorm into a clean, multi-section instrument: <strong>Background Screening</strong>, <strong>Eco-Conscious Preferences</strong>, <strong>Power-user Questions</strong>, <strong>Extensions</strong>, <strong>Browser Usage &amp; Experience</strong>, and <strong>Final Questions</strong>. Distributed across the team&rsquo;s networks; collected enough responses to read both broad signals and edge cases.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/mozilla-steps/05-final-survey-v2.png" alt="Mozilla — final structured survey (Background / Eco / Power / Extensions)">
@@ -496,16 +501,16 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 06 &middot; Dec 2025 &ndash; Feb 2026</div>
-                <h4 class="cs-title">Build &mdash; tab-performance extension</h4>
-                <div class="cs-body">Took the survey insights into engineering. Built a Firefox extension in <strong>React + Vite</strong> that tracks <strong>50+ concurrent tabs</strong> in real time and lets users filter and sort by memory and CPU usage &mdash; the &ldquo;visibility&rdquo; signal the survey identified as the missing piece in current eco-mode UIs. Designed the UI in <strong>Figma</strong> with the 12-person team split across frontend and backend tracks.</div>
+                <div class="cs-kicker" data-i18n-html="projects.mozilla.s6.kicker">Phase 06 &middot; Dec 2025 &ndash; Feb 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.mozilla.s6.cs-title">Build &mdash; tab-performance extension</h4>
+                <div class="cs-body" data-i18n-html="projects.mozilla.s6.cs-body">Took the survey insights into engineering. Built a Firefox extension in <strong>React + Vite</strong> that tracks <strong>50+ concurrent tabs</strong> in real time and lets users filter and sort by memory and CPU usage &mdash; the &ldquo;visibility&rdquo; signal the survey identified as the missing piece in current eco-mode UIs. Designed the UI in <strong>Figma</strong> with the 12-person team split across frontend and backend tracks.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/mozilla-steps/06-extension-v2.png" alt="Mozilla — final survey + Adaptive Performance question set">
             </div></div>
             </section>
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.outcome">Outcome &amp; reflection</div>
               <p class="cs-lede"><span class="todo">TODO &mdash; survey response count, key findings, extension screens / demo</span></p>
             </section>
             </div>
@@ -516,7 +521,7 @@
               <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
             </div>
           </div>
-          <div class="pj-case-foot"><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+          <div class="pj-case-foot"><button class="pj-collapse" type="button" data-i18n-html="pj.close">Close case study &uarr;</button></div>
         </div>
       </div>
     </article>
@@ -524,16 +529,16 @@
       <div class="pj-preview">
         <div class="pj-cover"><img src="images/projects/urban-conga.jpg" alt="Urban Conga cover" loading="lazy" /></div>
         <div class="pj-info">
-          <div class="pj-eyebrow"><span>03</span> Interactive installation &middot; Spatial UX</div>
+          <div class="pj-eyebrow" data-i18n-html="projects.urban-conga.pj-eyebrow"><span>03</span> Interactive installation &middot; Spatial UX</div>
           <h2 class="pj-title">Urban Conga</h2>
-          <p class="pj-summary">Designed a data-informed public installation system that measures how people actually use civic, park, and commercial spaces &mdash; from behavioral survey to Rhino layout.</p>
+          <p class="pj-summary" data-i18n-html="projects.urban-conga.pj-summary">Designed a data-informed public installation system that measures how people actually use civic, park, and commercial spaces &mdash; from behavioral survey to Rhino layout.</p>
           <dl class="pj-meta">
-            <div><dt>Role</dt><dd>UX Design Consultant</dd></div>
-            <div><dt>Timeline</dt><dd>Jan &ndash; Jun 2026</dd></div>
-            <div><dt>Team</dt><dd>9 consultants &middot; Invention Corps of Berkeley</dd></div>
-            <div><dt>Tools</dt><dd>Rhino 3D, FigJam, survey analysis</dd></div>
+            <div><dt data-i18n="pj.label.Role">Role</dt><dd data-i18n-html="projects.urban-conga.Role">UX Design Consultant</dd></div>
+            <div><dt data-i18n="pj.label.Timeline">Timeline</dt><dd data-i18n-html="projects.urban-conga.Timeline">Jan &ndash; Jun 2026</dd></div>
+            <div><dt data-i18n="pj.label.Team">Team</dt><dd data-i18n-html="projects.urban-conga.Team">9 consultants &middot; Invention Corps of Berkeley</dd></div>
+            <div><dt data-i18n="pj.label.Tools">Tools</dt><dd data-i18n-html="projects.urban-conga.Tools">Rhino 3D, FigJam, survey analysis</dd></div>
           </dl>
-          <div class="pj-tags"><span>UX Research</span><span>Data Schemas</span><span>Rhino 3D</span><span>Spatial Design</span></div>
+          <div class="pj-tags"><span data-i18n="pj.tag.ux-research">UX Research</span><span data-i18n="pj.tag.data-schemas">Data Schemas</span><span>Rhino 3D</span><span data-i18n="pj.tag.spatial-design">Spatial Design</span></div>
           <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="urban-conga-case">
             <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
           </button>
@@ -544,14 +549,14 @@
           <div class="cs" tabindex="0" aria-roledescription="carousel">
             <div class="cs-track">
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">The problem</div>
-              <p class="cs-lede">Urban Conga&rsquo;s installations had no way to show how people engaged with them. The goal: capture real usage patterns with low-cost sensing, without making people uncomfortable in public.</p>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.problem">The problem</div>
+              <p class="cs-lede" data-i18n-html="projects.urban-conga.s0.cs-lede">Urban Conga&rsquo;s installations had no way to show how people engaged with them. The goal: capture real usage patterns with low-cost sensing, without making people uncomfortable in public.</p>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 01 &middot; Jan &ndash; Feb 2026</div>
-                <h4 class="cs-title">Public-space behavioral survey</h4>
-                <div class="cs-body">Built and distributed a survey across the team&rsquo;s networks asking people how they actually use civic squares, parks, and commercial spaces &mdash; group size, time of day, length of stay, deal-breakers, and what they&rsquo;d feel comfortable doing in public. The goal: capture real behavior, not assumptions, before any installation design started.</div>
+                <div class="cs-kicker" data-i18n-html="projects.urban-conga.s1.kicker">Phase 01 &middot; Jan &ndash; Feb 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.urban-conga.s1.cs-title">Public-space behavioral survey</h4>
+                <div class="cs-body" data-i18n-html="projects.urban-conga.s1.cs-body">Built and distributed a survey across the team&rsquo;s networks asking people how they actually use civic squares, parks, and commercial spaces &mdash; group size, time of day, length of stay, deal-breakers, and what they&rsquo;d feel comfortable doing in public. The goal: capture real behavior, not assumptions, before any installation design started.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/urban-conga-steps/01-survey-v2.png" alt="Urban Conga — survey task">
@@ -559,9 +564,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 02 &middot; Feb 2026</div>
-                <h4 class="cs-title">Insight extraction</h4>
-                <div class="cs-body">Each of the 9 consultants was asked to surface 2&ndash;3 patterns from the survey responses. The themes that emerged immediately:
+                <div class="cs-kicker" data-i18n-html="projects.urban-conga.s2.kicker">Phase 02 &middot; Feb 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.urban-conga.s2.cs-title">Insight extraction</h4>
+                <div class="cs-body" data-i18n-html="projects.urban-conga.s2.cs-body">Each of the 9 consultants was asked to surface 2&ndash;3 patterns from the survey responses. The themes that emerged immediately:
               <ul>
                 <li>Almost everyone visits public spaces in <strong>groups of 3&ndash;5 people</strong></li>
                 <li><strong>Overcrowding, cleanliness, and noise</strong> are the top deal-breakers</li>
@@ -575,9 +580,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 03 &middot; Feb &ndash; Mar 2026</div>
-                <h4 class="cs-title">Space-type segmentation</h4>
-                <div class="cs-body">The team recognized that one installation concept can&rsquo;t cover every context. We grouped responses into <strong>three space archetypes</strong> &mdash; each with its own usage signature, mood, and core values:
+                <div class="cs-kicker" data-i18n-html="projects.urban-conga.s3.kicker">Phase 03 &middot; Feb &ndash; Mar 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.urban-conga.s3.cs-title">Space-type segmentation</h4>
+                <div class="cs-body" data-i18n-html="projects.urban-conga.s3.cs-body">The team recognized that one installation concept can&rsquo;t cover every context. We grouped responses into <strong>three space archetypes</strong> &mdash; each with its own usage signature, mood, and core values:
               <ul>
                 <li><strong>Civic spaces</strong> &mdash; 2 hours, 2&ndash;5 people, productive at noon/night, valuing education, focus, and sightseeing</li>
                 <li><strong>Park spaces</strong> &mdash; 30 min&ndash;1 hour, relaxation-focused, valuing exercise, stress relief, quiet, and friends</li>
@@ -590,9 +595,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 04 &middot; Mar 2026</div>
-                <h4 class="cs-title">Concept ideation</h4>
-                <div class="cs-body">Each space archetype got its own installation direction. The brainstorm produced a long-list of physical and digital interaction concepts matched to the space&rsquo;s mood:
+                <div class="cs-kicker" data-i18n-html="projects.urban-conga.s4.kicker">Phase 04 &middot; Mar 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.urban-conga.s4.cs-title">Concept ideation</h4>
+                <div class="cs-body" data-i18n-html="projects.urban-conga.s4.cs-body">Each space archetype got its own installation direction. The brainstorm produced a long-list of physical and digital interaction concepts matched to the space&rsquo;s mood:
               <ul>
                 <li><strong>Litter walls, locks, etching/scratching</strong> &mdash; permanence and trace-leaving in civic spaces</li>
                 <li><strong>Infrared sensing &amp; AI cluster detection</strong> &mdash; measuring how long and how many, depending on context</li>
@@ -607,9 +612,9 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 05 &middot; Apr 2026</div>
-                <h4 class="cs-title">Sensing &amp; data-schema constraints</h4>
-                <div class="cs-body">Translated the qualitative behavioral goals (&ldquo;measure dwell time,&rdquo; &ldquo;count cluster size,&rdquo; &ldquo;detect voluntary engagement&rdquo;) into structured, quantifiable data schemas with low-cost, low-overhead sensing approaches &mdash; capacitive touch, IR proximity, simple pressure switches.</div>
+                <div class="cs-kicker" data-i18n-html="projects.urban-conga.s5.kicker">Phase 05 &middot; Apr 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.urban-conga.s5.cs-title">Sensing &amp; data-schema constraints</h4>
+                <div class="cs-body" data-i18n-html="projects.urban-conga.s5.cs-body">Translated the qualitative behavioral goals (&ldquo;measure dwell time,&rdquo; &ldquo;count cluster size,&rdquo; &ldquo;detect voluntary engagement&rdquo;) into structured, quantifiable data schemas with low-cost, low-overhead sensing approaches &mdash; capacitive touch, IR proximity, simple pressure switches.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/urban-conga-steps/05-data-schema-v2.png" alt="Urban Conga — sensing schema area">
@@ -617,16 +622,16 @@
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 06 &middot; May &ndash; Jun 2026</div>
-                <h4 class="cs-title">Spatial &amp; 3D layout in Rhino</h4>
-                <div class="cs-body">Modeled candidate installation footprints in <strong>Rhino 3D</strong>, validating that each layout could host the inferred data flows from phase 5 while staying within the budget and footprint of a real public space. Closed the loop between behavior &rarr; sensing &rarr; physical form.</div>
+                <div class="cs-kicker" data-i18n-html="projects.urban-conga.s6.kicker">Phase 06 &middot; May &ndash; Jun 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.urban-conga.s6.cs-title">Spatial &amp; 3D layout in Rhino</h4>
+                <div class="cs-body" data-i18n-html="projects.urban-conga.s6.cs-body">Modeled candidate installation footprints in <strong>Rhino 3D</strong>, validating that each layout could host the inferred data flows from phase 5 while staying within the budget and footprint of a real public space. Closed the loop between behavior &rarr; sensing &rarr; physical form.</div>
               </div>
               <div class="cs-media"><div class="exp-workflow-image has-image">
               <img loading="lazy" src="images/projects/urban-conga-steps/06-rhino-v2.png" alt="Urban Conga — installation reference + Rhino layout area">
             </div></div>
             </section>
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.outcome">Outcome &amp; reflection</div>
               <p class="cs-lede"><span class="todo">TODO &mdash; final concept, Rhino renders, what Urban Conga took forward</span></p>
             </section>
             </div>
@@ -637,7 +642,7 @@
               <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
             </div>
           </div>
-          <div class="pj-case-foot"><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+          <div class="pj-case-foot"><button class="pj-collapse" type="button" data-i18n-html="pj.close">Close case study &uarr;</button></div>
         </div>
       </div>
     </article>
@@ -645,16 +650,16 @@
       <div class="pj-preview">
         <div class="pj-cover"><span class="pj-mark">모먹</span></div>
         <div class="pj-info">
-          <div class="pj-eyebrow"><span>04</span> Personal product &middot; Web app</div>
+          <div class="pj-eyebrow" data-i18n-html="projects.momuk.pj-eyebrow"><span>04</span> Personal product &middot; Web app</div>
           <h2 class="pj-title">Momuk</h2>
-          <p class="pj-summary">오늘 뭐 먹지 &mdash; a menu suggester that answers what to eat, not where. It reads weather, air quality and time of day, scores 126 hand-tagged dishes, and shows the top reasons for its pick.</p>
+          <p class="pj-summary" data-i18n-html="projects.momuk.pj-summary">오늘 뭐 먹지 &mdash; a menu suggester that answers what to eat, not where. It reads weather, air quality and time of day, scores 126 hand-tagged dishes, and shows the top reasons for its pick.</p>
           <dl class="pj-meta">
-            <div><dt>Role</dt><dd>Solo &mdash; design &amp; build</dd></div>
-            <div><dt>Timeline</dt><dd>Aug 2026</dd></div>
-            <div><dt>Team</dt><dd>Personal project</dd></div>
-            <div><dt>Tools</dt><dd>HTML, CSS, JavaScript</dd></div>
+            <div><dt data-i18n="pj.label.Role">Role</dt><dd data-i18n-html="projects.momuk.Role">Solo &mdash; design &amp; build</dd></div>
+            <div><dt data-i18n="pj.label.Timeline">Timeline</dt><dd data-i18n-html="projects.momuk.Timeline">Aug 2026</dd></div>
+            <div><dt data-i18n="pj.label.Team">Team</dt><dd data-i18n-html="projects.momuk.Team">Personal project</dd></div>
+            <div><dt data-i18n="pj.label.Tools">Tools</dt><dd data-i18n-html="projects.momuk.Tools">HTML, CSS, JavaScript</dd></div>
           </dl>
-          <div class="pj-tags"><span>Product Design</span><span>Web App</span><span>Recommendation</span></div>
+          <div class="pj-tags"><span data-i18n="pj.tag.product-design">Product Design</span><span data-i18n="pj.tag.web-app">Web App</span><span data-i18n="pj.tag.recommendation">Recommendation</span></div>
           <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="momuk-case">
             <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
           </button>
@@ -665,7 +670,7 @@
           <div class="cs" tabindex="0" aria-roledescription="carousel">
             <div class="cs-track">
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">The problem</div>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.problem">The problem</div>
               <p class="cs-lede"><span class="todo">TODO &mdash; the problem / why you built it</span></p>
             </section>
             <section class="cs-slide">
@@ -701,7 +706,7 @@
               <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
             </section>
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.outcome">Outcome &amp; reflection</div>
               <p class="cs-lede"><span class="todo">TODO &mdash; final screens, live link, what you would change</span></p>
             </section>
             </div>
@@ -712,7 +717,7 @@
               <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
             </div>
           </div>
-          <div class="pj-case-foot"><a href="https://github.com/andrewcjh27/Momuk" target="_blank" rel="noopener">GitHub &nearr;</a><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+          <div class="pj-case-foot"><a href="https://github.com/andrewcjh27/Momuk" target="_blank" rel="noopener">GitHub &nearr;</a><button class="pj-collapse" type="button" data-i18n-html="pj.close">Close case study &uarr;</button></div>
         </div>
       </div>
     </article>
@@ -720,16 +725,16 @@
       <div class="pj-preview">
         <div class="pj-cover"><span class="pj-mark">Replate</span></div>
         <div class="pj-info">
-          <div class="pj-eyebrow"><span>05</span> Data dashboard &middot; Product design</div>
+          <div class="pj-eyebrow" data-i18n-html="projects.replate.pj-eyebrow"><span>05</span> Data dashboard &middot; Product design</div>
           <h2 class="pj-title">Replate</h2>
-          <p class="pj-summary">Analyzing Replate&rsquo;s large-scale user data to design and build a website dashboard used by both donors and the company.</p>
+          <p class="pj-summary" data-i18n-html="projects.replate.pj-summary">Analyzing Replate&rsquo;s large-scale user data to design and build a website dashboard used by both donors and the company.</p>
           <dl class="pj-meta">
-            <div><dt>Role</dt><dd><span class="todo">TODO &mdash; role</span></dd></div>
-            <div><dt>Timeline</dt><dd><span class="todo">TODO &mdash; dates</span></dd></div>
-            <div><dt>Team</dt><dd>Invention Corps of Berkeley</dd></div>
-            <div><dt>Tools</dt><dd><span class="todo">TODO &mdash; tools</span></dd></div>
+            <div><dt data-i18n="pj.label.Role">Role</dt><dd><span class="todo">TODO &mdash; role</span></dd></div>
+            <div><dt data-i18n="pj.label.Timeline">Timeline</dt><dd><span class="todo">TODO &mdash; dates</span></dd></div>
+            <div><dt data-i18n="pj.label.Team">Team</dt><dd data-i18n-html="projects.replate.Team">Invention Corps of Berkeley</dd></div>
+            <div><dt data-i18n="pj.label.Tools">Tools</dt><dd><span class="todo">TODO &mdash; tools</span></dd></div>
           </dl>
-          <div class="pj-tags"><span>Dashboard</span><span>Data Viz</span><span>Product Design</span></div>
+          <div class="pj-tags"><span data-i18n="pj.tag.dashboard">Dashboard</span><span data-i18n="pj.tag.data-viz">Data Viz</span><span data-i18n="pj.tag.product-design">Product Design</span></div>
           <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="replate-case">
             <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
           </button>
@@ -740,7 +745,7 @@
           <div class="cs" tabindex="0" aria-roledescription="carousel">
             <div class="cs-track">
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">The problem</div>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.problem">The problem</div>
               <p class="cs-lede"><span class="todo">TODO &mdash; the problem / users (donors vs. Replate team)</span></p>
             </section>
             <section class="cs-slide">
@@ -776,7 +781,7 @@
               <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
             </section>
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <div class="cs-kicker" data-i18n-html="pj.kicker.outcome">Outcome &amp; reflection</div>
               <p class="cs-lede"><span class="todo">TODO &mdash; dashboard screens, impact</span></p>
             </section>
             </div>
@@ -787,7 +792,7 @@
               <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
             </div>
           </div>
-          <div class="pj-case-foot"><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+          <div class="pj-case-foot"><button class="pj-collapse" type="button" data-i18n-html="pj.close">Close case study &uarr;</button></div>
         </div>
       </div>
     </article>
@@ -796,7 +801,7 @@
   <footer class="pj-footer">
     <span>&copy; 2026 Junho Choi</span>
     <div>
-      <a href="mailto:andrewc27@berkeley.edu">Email</a>
+      <a href="mailto:andrewc27@berkeley.edu" data-i18n="footer.email">Email</a>
       <a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">LinkedIn</a>
     </div>
   </footer>
@@ -836,11 +841,13 @@
         function set(open) {
           pj.classList.toggle('open', open);
           toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-          label.textContent = open ? 'Hide case study' : 'View case study';
+          var ko = window.i18n && window.i18n.lang === 'ko';
+          label.textContent = open ? (ko ? '케이스 스터디 접기' : 'Hide case study') : (ko ? '케이스 스터디 보기' : 'View case study');
           caseEl.inert = !open;
           if (open) setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 50);
         }
         set(false);
+        document.addEventListener('langchange', function () { set(pj.classList.contains('open')); });
         toggle.addEventListener('click', function () { set(!pj.classList.contains('open')); });
         pj.querySelector('.pj-collapse').addEventListener('click', function () {
           set(false);

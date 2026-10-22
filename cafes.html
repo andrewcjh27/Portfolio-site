@@ -868,6 +868,15 @@
       .search-input { font-size: 16px; }
       .cafe-sidebar { max-height: 55vh; }
     }
+  
+    /* ── Mobile polish: 24px text gutter; footer sits below the list ── */
+    @media (max-width: 640px) {
+      .cafe-overview-inner { width: calc(100% - 48px); }
+      .cafe-plotted-text { padding-left: 24px; padding-right: 24px; }
+      .cafe-sidebar { width: calc(100% - 48px); margin: 1rem 24px; }
+      .cafe-footer { position: static; flex-direction: row; justify-content: space-between; align-items: center; padding: 1.2rem 24px 1.6rem; gap: 1rem; }
+      .cafe-footer a { margin-left: 0.9rem; }
+    }
   </style>
 </head>
 <body>

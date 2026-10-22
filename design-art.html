@@ -321,6 +321,14 @@
       .cat-cta { padding: 4rem 6% 6rem; }
       .cat-footer { flex-direction: column; gap: 0.6rem; padding: 1.4rem 6%; }
     }
+  
+    /* ── Mobile polish: 24px gutter, 2×2 equal pills ── */
+    @media (max-width: 640px) {
+      .cat-hero, .cat-about, .cat-gallery, .cat-cta { padding-left: 24px; padding-right: 24px; }
+      .cat-cta-pills { display: grid; grid-template-columns: 1fr 1fr; width: 100%; max-width: 340px; gap: 0.7rem; }
+      .cat-pill { padding: 0.75rem 0.5rem; text-align: center; }
+      .cat-footer { padding-left: 24px; padding-right: 24px; }
+    }
   </style>
 </head>
 <body>

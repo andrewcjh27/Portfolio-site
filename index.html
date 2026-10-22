@@ -547,6 +547,15 @@
       .explore-title { font-size: 1.8rem; }
       .help-heading { font-size: 1.8rem; }
     }
+  
+    /* ── Mobile polish: equal-width pills like the desktop 3 + 2 layout ── */
+    @media (max-width: 640px) {
+      .explore-pills { width: 100%; gap: 0.7rem; }
+      .pill-row { flex-wrap: nowrap; gap: 0.7rem; width: 100%; }
+      .explore-pill { flex: 0 0 calc((100% - 1.4rem) / 3); min-width: 0; padding: 0.75rem 0.4rem; font-size: 0.92rem; }
+      .contact-links { flex-direction: column; align-items: center; gap: 0.7rem; }
+      .contact-pill { width: 100%; max-width: 300px; justify-content: center; }
+    }
   </style>
 </head>
 <body>

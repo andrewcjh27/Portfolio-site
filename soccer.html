@@ -1285,6 +1285,22 @@
       /* ≥16px stops iOS from auto-zooming the page when the field gains focus */
       .coach-input { font-size: 16px; }
     }
+  
+    /* ── Mobile polish: two-line match cards ── */
+    @media (max-width: 640px) {
+      .match-card {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        grid-template-areas: "date result del" "teams teams score";
+        align-items: center; row-gap: 0.55rem; column-gap: 0.6rem; padding: 0.9rem 1rem;
+      }
+      .match-date { grid-area: date; min-width: 0; }
+      .match-result { grid-area: result; margin-left: 0; }
+      .match-card .delete-btn { grid-area: del; }
+      .match-teams { grid-area: teams; justify-content: flex-start; gap: 0.55rem; font-size: 0.95rem; min-width: 0; }
+      .match-teams > span { white-space: nowrap; }
+      .match-score { grid-area: score; min-width: 0; font-size: 1.25rem; }
+    }
   </style>
 </head>
 <body>
@@ -1735,7 +1751,7 @@
           ></textarea>
           <div class="coach-actions">
             <p class="coach-hint" data-i18n-html="soccer.coach.hintHtml">
-              Local bridge: <code>python3 soccer_chat_server.py</code> with Ollama running.
+              Powered by Groq &middot; replies may take a few seconds.
             </p>
             <div class="coach-btn-group">
               <button id="coachEndBtn" type="button" class="coach-end-btn" data-i18n="soccer.coach.end">End chat</button>
