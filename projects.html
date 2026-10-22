@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en" data-i18n-title="projects.pageTitle">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projects | Junho Choi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="nav.css" />
+  <script src="i18n.js"></script>
+  <style>
+    /* Scaffold styling — placeholder until the final design is in. */
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { background: #fff; }
+    .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.96) !important; border-bottom: 1px solid rgba(0,0,0,0.055) !important; }
+
+    .pj-hero { max-width: 1200px; margin: 0 auto; padding: 9rem 1.5rem 3rem; }
+    .pj-hero-eyebrow, .pj-eyebrow, .pj-meta dt, .pj-block h3 {
+      font-family: "SF Mono", Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: #888; }
+    .pj-hero h1 { font-size: clamp(3rem, 9vw, 7rem); line-height: 0.95; letter-spacing: -0.04em; margin: 1rem 0 1.2rem; color: #111; }
+    .pj-hero p { max-width: 560px; color: #555; line-height: 1.6; }
+
+    .pj-list { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 6rem; }
+    .pj { border-top: 1px solid rgba(0,0,0,0.1); padding: 3rem 0; scroll-margin-top: 64px; }
+    .pj-preview { display: grid; grid-template-columns: 1.15fr 1fr; gap: 3rem; align-items: start; }
+    .pj-cover { aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; background: #f4f3ee; display: flex; align-items: center; justify-content: center; }
+    .pj-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s cubic-bezier(0.22,1,0.36,1); }
+    .pj:hover .pj-cover img { transform: scale(1.03); }
+    .pj-mark { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; color: #111; }
+    .pj-eyebrow span { color: #111; margin-right: 0.6rem; }
+    .pj-title { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; margin: 0.6rem 0 0.8rem; color: #111; }
+    .pj-summary { color: #444; line-height: 1.6; margin: 0 0 1.5rem; }
+    .pj-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; margin: 0 0 1.4rem; }
+    .pj-meta dd { margin: 0.3rem 0 0; font-size: 0.92rem; color: #222; }
+    .pj-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.8rem; }
+    .pj-tags span { font-family: "SF Mono", Menlo, monospace; font-size: 0.7rem; letter-spacing: 0.05em; color: #444;
+      border: 1px solid rgba(0,0,0,0.18); border-radius: 999px; padding: 0.3rem 0.8rem; }
+    .pj-toggle, .pj-collapse { font: inherit; cursor: pointer; border-radius: 999px; }
+    .pj-toggle { display: inline-flex; align-items: center; gap: 0.8rem; background: #111; color: #fff; border: 0; padding: 0.75rem 1.3rem; font-size: 0.9rem; }
+    .pj-toggle-icon { display: inline-block; transition: transform 0.4s cubic-bezier(0.22,1,0.36,1); font-size: 1.1rem; line-height: 1; }
+    .pj.open .pj-toggle-icon { transform: rotate(45deg); }
+
+    /* Expand / collapse: animates height via grid rows 0fr -> 1fr */
+    .pj-case { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .pj.open .pj-case { grid-template-rows: 1fr; }
+    .pj-case-inner { overflow: hidden; min-height: 0; width: 100%; opacity: 0; transition: opacity 0.5s ease; }
+    .pj.open .pj-case-inner { opacity: 1; transition-delay: 0.15s; }
+    .pj-block { margin-top: 3rem; }
+    .pj-block p { color: #333; line-height: 1.7; margin: 0.8rem 0 0; }
+    .pj-case-foot { display: flex; gap: 1rem; align-items: center; justify-content: flex-end; margin: 1.5rem 0 0.5rem; }
+    .pj-case-foot a { color: #111; }
+    .pj-collapse { background: none; border: 1px solid rgba(0,0,0,0.2); padding: 0.6rem 1.1rem; font-size: 0.85rem; color: #111; }
+
+
+    /* Case study slider */
+    .cs { margin-top: 2.5rem; outline: none; }
+    .cs-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      scrollbar-width: none; gap: 1.5rem; overscroll-behavior-x: contain; align-items: stretch; }
+    .cs-track::-webkit-scrollbar { display: none; }
+    .cs-slide { flex: 0 0 100%; scroll-snap-align: start; box-sizing: border-box;
+      display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 2.5rem; align-items: center;
+      background: #f7f6f2; border-radius: 12px; padding: 2.5rem; min-height: 420px; }
+    .cs-slide-text { grid-template-columns: 1fr; align-content: center; row-gap: 0.4rem; }
+    .cs-kicker { font-family: "SF Mono", Menlo, monospace; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: #888; margin-bottom: 0.8rem; }
+    .cs-title { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; color: #111; margin: 0 0 0.8rem; line-height: 1.2; }
+    .cs-body { font-size: 0.95rem; line-height: 1.65; color: #333; }
+    .cs-body ul { margin: 0.6rem 0 0; padding-left: 1.1rem; }
+    .cs-body li { margin-bottom: 0.3rem; color: #444; }
+    .cs-body strong { color: #111; font-weight: 600; }
+    .cs-lede { font-size: clamp(1.2rem, 2.2vw, 1.7rem); line-height: 1.45; letter-spacing: -0.015em; color: #111; max-width: 820px; margin: 0; }
+    .cs-media .exp-workflow-image { margin-top: 0; background: #fff; }
+    .cs-media .exp-workflow-image.has-image { aspect-ratio: auto; }
+    .cs-media .exp-workflow-image.has-image img { height: auto; max-height: 520px; object-fit: contain; }
+    .cs-controls { display: flex; align-items: center; gap: 1rem; margin-top: 1.2rem; }
+    .cs-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.2); background: #fff; color: #111;
+      font-size: 1.05rem; cursor: pointer; transition: background 0.2s, color 0.2s, opacity 0.2s; }
+    .cs-btn:hover:not(:disabled) { background: #111; color: #fff; }
+    .cs-btn:disabled { opacity: 0.3; cursor: default; }
+    .cs-progress { flex: 1; height: 2px; background: rgba(0,0,0,0.1); border-radius: 2px; overflow: hidden; }
+    .cs-progress span { display: block; height: 100%; width: 0; background: #111; transition: width 0.4s cubic-bezier(0.22,1,0.36,1); }
+    .cs-count { font-family: "SF Mono", Menlo, monospace; font-size: 0.75rem; letter-spacing: 0.08em; color: #555; min-width: 4.5em; text-align: center; }
+    @media (max-width: 820px) {
+      .cs-slide { grid-template-columns: 1fr; gap: 1.2rem; padding: 1.5rem; align-content: center; min-height: 0; }
+      .cs-media { order: -1; }
+    }
+
+    /* Placeholder text to fill in later */
+    .todo { background: #fff4c2; color: #6b5300; border-radius: 4px; padding: 0 0.3rem; font-family: "SF Mono", Menlo, monospace; font-size: 0.85em; }
+
+    /* ── Project workflow timeline (used inside each project's panel) ─
+       A vertical timeline of numbered steps. Each step has a marker
+       (number circle), an eyebrow (date / phase), title, description,
+       and an image slot for a screenshot. Image slot shows a dashed
+       placeholder until an actual <img> is added. */
+    .exp-workflow { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(0,0,0,0.08); }
+    .exp-workflow-heading {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888;
+      margin: 0 0 1.6rem;
+    }
+    .exp-workflow-timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      counter-reset: workflow;
+    }
+    .exp-workflow-timeline::before {
+      /* Vertical connecting line */
+      content: '';
+      position: absolute;
+      left: 18px;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.05));
+    }
+    .exp-workflow-step {
+      position: relative;
+      padding-left: 60px;
+      padding-bottom: 2.4rem;
+    }
+    .exp-workflow-step:last-child { padding-bottom: 0; }
+    .exp-workflow-step::before {
+      /* Marker dot with number */
+      counter-increment: workflow;
+      content: counter(workflow, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #111;
+      color: #fff;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.04em;
+    }
+    .exp-workflow-step-eyebrow {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #888;
+      margin: 0.35rem 0 0.4rem;
+    }
+    .exp-workflow-step-title {
+      font-family: -apple-system, "SF Pro Display", sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: #111;
+      margin: 0 0 0.55rem;
+      line-height: 1.25;
+    }
+    .exp-workflow-step-body {
+      font-family: -apple-system, "SF Pro Text", sans-serif;
+      font-size: 0.94rem;
+      line-height: 1.6;
+      color: #333;
+      margin: 0 0 1rem;
+    }
+    .exp-workflow-step-body strong { color: #111; font-weight: 600; }
+    .exp-workflow-step-body ul {
+      margin: 0.5rem 0 0;
+      padding-left: 1.1rem;
+    }
+    .exp-workflow-step-body ul li {
+      margin-bottom: 0.3rem;
+      color: #444;
+    }
+    .exp-workflow-image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #f4f3ee;
+      border: 1.5px dashed rgba(0,0,0,0.18);
+      border-radius: 6px;
+      margin-top: 0.8rem;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .exp-workflow-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .exp-workflow-image.has-image {
+      border-style: solid;
+      border-color: rgba(0,0,0,0.1);
+      background: transparent;
+    }
+    .exp-workflow-image-placeholder {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      color: rgba(0,0,0,0.4);
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .pj-footer { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 3rem; display: flex; justify-content: space-between; color: #888; font-size: 0.85rem; border-top: 1px solid rgba(0,0,0,0.08); }
+    .pj-footer a { color: #555; margin-left: 1.2rem; }
+
+    @media (max-width: 820px) {
+      .pj-preview { grid-template-columns: 1fr; gap: 1.6rem; }
+      .pj-hero { padding-top: 7rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pj-case, .pj-case-inner, .pj-cover img, .pj-toggle-icon { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="siteHeader">
+    <a href="index.html" class="logo" aria-label="Junho Choi — About">JUNHO CHOI</a>
+    <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav').classList.toggle('nav-open');this.classList.toggle('active')"><svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <nav class="nav">
+      <a href="resume.html"     class="nav-link" data-i18n="nav.resume">Resume</a>
+      <a href="experience.html" class="nav-link" data-i18n="nav.experience">Experience</a>
+      <a href="projects.html"   class="nav-link active" data-i18n="nav.projects">Projects</a>
+      <div class="nav-more">
+        <button class="nav-more-toggle nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+          <span data-i18n="nav.more">More</span>
+          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <polyline points="2,4 5,7 8,4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
+        </button>
+        <div class="nav-more-panel" role="menu">
+          <div>
+            <div class="nav-more-label" data-i18n="nav.categories">Categories</div>
+            <div class="nav-more-list">
+              <a href="design.html" data-i18n="nav.design">Design</a>
+              <a href="photo.html" data-i18n="nav.photography">Photography</a>
+              <a href="cafes.html" data-i18n="nav.cafes">Cafes</a>
+              <a href="codes.html" data-i18n="nav.codes">Codes</a>
+              <a href="soccer.html" data-i18n="nav.soccer">Soccer</a>
+            </div>
+          </div>
+          <a href="photo.html" class="nav-more-feature">
+            <h3 data-i18n-html="nav.feature.title">Photography &rarr;</h3>
+            <p data-i18n="nav.feature.desc">A growing visual diary of cities, water, and quiet moments.</p>
+          </a>
+          <div class="nav-more-footer">
+            <a href="resume.html" data-i18n="nav.footer.resume">Resume</a>
+            <a href="mailto:andrewc27@berkeley.edu" data-i18n="nav.footer.contact">Contact</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="pj-hero">
+    <div class="pj-hero-eyebrow" data-i18n="projects.eyebrow">Selected work &mdash; Product &amp; UX</div>
+    <h1 data-i18n-html="projects.title">Projects</h1>
+    <p data-i18n="projects.lead">Product design and UI/UX case studies &mdash; from research and synthesis to the screens that shipped.</p>
+  </section>
+
+  <main class="pj-list">
+
+    <article class="pj" id="braven">
+      <div class="pj-preview">
+        <div class="pj-cover"><img src="images/projects/braven1.jpg" alt="Braven Connect cover" loading="lazy" /></div>
+        <div class="pj-info">
+          <div class="pj-eyebrow"><span>01</span> Mobile app &middot; UX research</div>
+          <h2 class="pj-title">Braven Connect</h2>
+          <p class="pj-summary">Turned a multi-channel survey of public-university students into four class-year personas, then into Braven&rsquo;s mobile app &mdash; from low-fi wireframes to high-fi screens.</p>
+          <dl class="pj-meta">
+            <div><dt>Role</dt><dd>UI/UX Consultant</dd></div>
+            <div><dt>Timeline</dt><dd>Jan &ndash; May 2025</dd></div>
+            <div><dt>Team</dt><dd>8 consultants &middot; Berkeley Consulting Collaborative</dd></div>
+            <div><dt>Tools</dt><dd>Figma, FigJam, survey analysis</dd></div>
+          </dl>
+          <div class="pj-tags"><span>UX Research</span><span>Affinity Mapping</span><span>Personas</span><span>Mobile UI</span><span>Figma</span></div>
+          <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="braven-case">
+            <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
+          </button>
+        </div>
+      </div>
+      <div class="pj-case" id="braven-case" role="region" aria-label="Braven Connect case study">
+        <div class="pj-case-inner">
+          <div class="cs" tabindex="0" aria-roledescription="carousel">
+            <div class="cs-track">
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">The problem</div>
+              <p class="cs-lede">Braven assumed students wanted more career information. Our survey showed students mostly chose virtual events for time and convenience, and wanted direct, 1:1 contact more than more webinars &mdash; with needs that differed sharply by class year.</p>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 01 &middot; Jan 2025</div>
+                <h4 class="cs-title">User outreach &amp; survey distribution</h4>
+                <div class="cs-body">Designed and distributed a multi-question user survey to undergraduates at public four-year universities, sampling across class years, demographics, and device usage. The instrument captured how students discover career events, why they choose virtual over in-person, what they retain, and the friction points before, during, and after attending.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/braven-steps/01-outreach-v2.png" alt="Braven user research — outreach instructions">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 02 &middot; Feb 2025</div>
+                <h4 class="cs-title">Aggregate &amp; visualize the data</h4>
+                <div class="cs-body">Cleaned the raw responses and translated them into bar charts, pie charts, histograms, and heatmaps so the team could read the dataset at a glance. Surfaced majority opinions, outliers, and inconsistencies across the eight-person research team.
+              <ul>
+                <li><strong>Visualized</strong> attendance, device, time-of-day, and content-preference distributions</li>
+                <li><strong>Flagged</strong> patterns worth investigating (e.g., low ease-of-use ratings, time-constraint cluster)</li>
+              </ul></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/braven-steps/02-charts-v2.png" alt="Braven user research — survey response chart wall">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 03 &middot; Feb 2025</div>
+                <h4 class="cs-title">Affinity mapping</h4>
+                <div class="cs-body">Each consultant generated sticky-note insights from their assigned section of the survey. We then clustered them on a shared FigJam board into three themes: <strong>Demographics</strong>, <strong>Motivations</strong>, and <strong>Pain Points &amp; Needs</strong> — exposing the conflicting points where Braven&rsquo;s assumptions diverged from what students actually wanted.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/braven-steps/03-affinity-v2.png" alt="Braven user research — affinity map">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 04 &middot; Feb &ndash; Mar 2025</div>
+                <h4 class="cs-title">Synthesize general audience insights</h4>
+                <div class="cs-body">Turned the clusters into a single working audience profile. Two themes dominated:
+              <ul>
+                <li><strong>Time constraints &amp; convenience</strong> were overwhelmingly the reason students chose virtual events at all</li>
+                <li><strong>Students don&rsquo;t know what they want</strong> — they want the end result without the effort, and lack the steps to get there</li>
+              </ul>
+              The base persona: a second-year, public-institution, underserved, Zoom-comfortable, social-media-savvy student.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/braven-steps/04-insights-v2.png" alt="Braven user research — general audience insights">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 05 &middot; Mar 2025</div>
+                <h4 class="cs-title">Year-by-year deep dive (Part 2)</h4>
+                <div class="cs-body">The general profile was too coarse to drive design, so we split the dataset four ways &mdash; <strong>first-year, second-year, third-year, fourth-year</strong> &mdash; and reran the affinity exercise within each cohort. Each consultant was assigned a year and tagged every survey question with where that cohort&rsquo;s proportions diverged from the average.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/braven-steps/05-year-split-v2.png" alt="Braven user research — year-split charts">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 06 &middot; Mar &ndash; Apr 2025</div>
+                <h4 class="cs-title">Per-year personas</h4>
+                <div class="cs-body">The deep dive produced four sharply different audience profiles &mdash; each with its own demographics, motivations, pain points, and needs:
+              <ul>
+                <li><strong>First-years</strong> &mdash; part-time employed, interested in networking and exploring industries. Lack of time is the sole barrier; want 1:1 mentor meetings.</li>
+                <li><strong>Second-years</strong> &mdash; more passive, less proactive about finding events. Want personal meetings and chat/email follow-ups; uncomfortable speaking to employers.</li>
+                <li><strong>Third-years</strong> &mdash; busiest cohort, focused on internships. Highest engagement during events; want resume help and intimate 1:1 meetings with employers.</li>
+                <li><strong>Fourth-years</strong> &mdash; largely unemployed, hunting full-time roles. Want direct employer contact, not more information &mdash; fewer webinars, more 1:1s.</li>
+              </ul>
+              These four personas became the spine of the mobile app iterations that followed.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/braven-steps/06-personas-v2.png" alt="Braven user research — per-year personas">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 07 &middot; Apr 2025</div>
+                <h4 class="cs-title">Low-fidelity wireframes</h4>
+                <div class="cs-body">Translated the four personas into the first set of mobile screens &mdash; pure structure, no styling. Sketched out the <strong>Student Roadmap</strong>, <strong>Upcoming Events</strong>, <strong>Past Videos / Speakers</strong> library, and the <strong>Home dashboard</strong> as gray-and-purple wireframes. Goal here: validate the information architecture and navigation flow with the Braven team before any visual polish.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/braven-steps/07-lowfi-v2.png" alt="Braven low-fidelity wireframes — Student Roadmap, Events, Past Videos, Home">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 08 &middot; May 2025</div>
+                <h4 class="cs-title">High-fidelity mockups</h4>
+                <div class="cs-body">Layered Braven&rsquo;s brand language (the navy / coral / butter-yellow palette) onto the validated wireframes and pushed every screen to production-ready fidelity in Figma. Final set covered the <strong>welcome dashboard</strong>, <strong>Braven Connect</strong> speaker library, <strong>Events calendar</strong>, <strong>Career Questionnaire</strong>, <strong>My Tasks</strong>, and the personalised <strong>Career Roadmap</strong> &mdash; all tied back to the persona-driven decisions from earlier phases.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/braven-steps/08-highfi-v2.png" alt="Braven high-fidelity mockups — Welcome, Braven Connect, Events, Career Questionnaire">
+            </div></div>
+            </section>
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <p class="cs-lede"><span class="todo">TODO &mdash; the measured engagement / usability lift, final screens or prototype link</span></p>
+            </section>
+            </div>
+            <div class="cs-controls">
+              <button class="cs-btn cs-prev" type="button" aria-label="Previous slide">&larr;</button>
+              <div class="cs-progress"><span></span></div>
+              <span class="cs-count">01 / 10</span>
+              <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
+            </div>
+          </div>
+          <div class="pj-case-foot"><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+        </div>
+      </div>
+    </article>
+    <article class="pj" id="mozilla">
+      <div class="pj-preview">
+        <div class="pj-cover"><img src="images/projects/mozilla1.jpg" alt="Mozilla Firefox cover" loading="lazy" /></div>
+        <div class="pj-info">
+          <div class="pj-eyebrow"><span>02</span> Browser extension &middot; Research to UI</div>
+          <h2 class="pj-title">Mozilla Firefox</h2>
+          <p class="pj-summary">Researched how people feel about trading performance for battery life, then designed and built a Firefox extension that makes tab memory and CPU use visible.</p>
+          <dl class="pj-meta">
+            <div><dt>Role</dt><dd>IT Consultant (research &amp; UI)</dd></div>
+            <div><dt>Timeline</dt><dd>Aug 2025 &ndash; Feb 2026</dd></div>
+            <div><dt>Team</dt><dd>12 consultants &middot; Invention Corps of Berkeley</dd></div>
+            <div><dt>Tools</dt><dd>Figma, FigJam, React, Vite</dd></div>
+          </dl>
+          <div class="pj-tags"><span>User Research</span><span>Survey Design</span><span>Figma</span><span>React</span><span>Vite</span></div>
+          <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="mozilla-case">
+            <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
+          </button>
+        </div>
+      </div>
+      <div class="pj-case" id="mozilla-case" role="region" aria-label="Mozilla Firefox case study">
+        <div class="pj-case-inner">
+          <div class="cs" tabindex="0" aria-roledescription="carousel">
+            <div class="cs-track">
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">The problem</div>
+              <p class="cs-lede">Firefox wanted to explore an Adaptive Performance mode that throttles idle tabs. The open questions: do users care about eco features, what would convince them, and how much speed would they give up for battery?</p>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 01 &middot; Aug 2025</div>
+                <h4 class="cs-title">Project framing &mdash; Adaptive Performance</h4>
+                <div class="cs-body">Started from a hypothesis: most browsers waste battery on idle tabs, and Firefox could differentiate with an <strong>Adaptive Performance</strong> mode that intelligently throttles based on usage. Defined the open questions we&rsquo;d need to answer with users: do they care about eco features, what data would convince them, and how much performance loss is acceptable in exchange for battery gain?</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/mozilla-steps/01-framing-v2.png" alt="Mozilla — Week 1 Figjam framing">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 02 &middot; Sep 2025 (Week 1)</div>
+                <h4 class="cs-title">Survey question brainstorm</h4>
+                <div class="cs-body">The 12-person team filled a FigJam board with raw interview/survey question candidates &mdash; each consultant contributing from their angle. Questions ranged from blunt (&ldquo;why do you prefer your browser over Firefox?&rdquo;) to specific (&ldquo;if you could save 10% battery at the cost of significantly laggier performance, would you?&rdquo;).</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/mozilla-steps/02-brainstorm-v2.png" alt="Mozilla — survey question brainstorm sticky-note board">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 03 &middot; Sep 2025</div>
+                <h4 class="cs-title">Categorize into themes</h4>
+                <div class="cs-body">Grouped the brainstorm into five working buckets that became the spine of the eventual questionnaire:
+              <ul>
+                <li><strong>Background / Demographics</strong> &mdash; age, browser of choice, hardware, power-user level</li>
+                <li><strong>Eco Qs</strong> &mdash; environmental motivation, willingness to trade speed for sustainability</li>
+                <li><strong>Power Qs</strong> &mdash; current habits around tab sleeping, low-power modes, memory awareness</li>
+                <li><strong>Convenience Qs</strong> &mdash; 1-click vs. customizable, visibility preferences for feature output</li>
+                <li><strong>Extensions</strong> &mdash; how integrated browser extensions are into the user&rsquo;s daily flow</li>
+              </ul></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/mozilla-steps/03-categorize-v2.png" alt="Mozilla — categorized question clusters (Eco / Power / Convenience / Background)">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 04 &middot; Oct 2025</div>
+                <h4 class="cs-title">Survey structuring</h4>
+                <div class="cs-body">Pressure-tested the brainstorm against eight guiding criteria &mdash; purpose, target audience, question types, clarity, flow/logic, scalability, time-to-complete, and ethics. The result: a coherent survey that flows from general to specific, mixes qualitative and quantitative items, and stays under a respondent-friendly length.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/mozilla-steps/04-structure-v2.png" alt="Mozilla — Guiding Questions framework (8 criteria)">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 05 &middot; Oct &ndash; Nov 2025</div>
+                <h4 class="cs-title">Final survey assembly &amp; distribution</h4>
+                <div class="cs-body">Consolidated the brainstorm into a clean, multi-section instrument: <strong>Background Screening</strong>, <strong>Eco-Conscious Preferences</strong>, <strong>Power-user Questions</strong>, <strong>Extensions</strong>, <strong>Browser Usage &amp; Experience</strong>, and <strong>Final Questions</strong>. Distributed across the team&rsquo;s networks; collected enough responses to read both broad signals and edge cases.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/mozilla-steps/05-final-survey-v2.png" alt="Mozilla — final structured survey (Background / Eco / Power / Extensions)">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 06 &middot; Dec 2025 &ndash; Feb 2026</div>
+                <h4 class="cs-title">Build &mdash; tab-performance extension</h4>
+                <div class="cs-body">Took the survey insights into engineering. Built a Firefox extension in <strong>React + Vite</strong> that tracks <strong>50+ concurrent tabs</strong> in real time and lets users filter and sort by memory and CPU usage &mdash; the &ldquo;visibility&rdquo; signal the survey identified as the missing piece in current eco-mode UIs. Designed the UI in <strong>Figma</strong> with the 12-person team split across frontend and backend tracks.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/mozilla-steps/06-extension-v2.png" alt="Mozilla — final survey + Adaptive Performance question set">
+            </div></div>
+            </section>
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <p class="cs-lede"><span class="todo">TODO &mdash; survey response count, key findings, extension screens / demo</span></p>
+            </section>
+            </div>
+            <div class="cs-controls">
+              <button class="cs-btn cs-prev" type="button" aria-label="Previous slide">&larr;</button>
+              <div class="cs-progress"><span></span></div>
+              <span class="cs-count">01 / 08</span>
+              <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
+            </div>
+          </div>
+          <div class="pj-case-foot"><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+        </div>
+      </div>
+    </article>
+    <article class="pj" id="urban-conga">
+      <div class="pj-preview">
+        <div class="pj-cover"><img src="images/projects/urban-conga.jpg" alt="Urban Conga cover" loading="lazy" /></div>
+        <div class="pj-info">
+          <div class="pj-eyebrow"><span>03</span> Interactive installation &middot; Spatial UX</div>
+          <h2 class="pj-title">Urban Conga</h2>
+          <p class="pj-summary">Designed a data-informed public installation system that measures how people actually use civic, park, and commercial spaces &mdash; from behavioral survey to Rhino layout.</p>
+          <dl class="pj-meta">
+            <div><dt>Role</dt><dd>UX Design Consultant</dd></div>
+            <div><dt>Timeline</dt><dd>Jan &ndash; Jun 2026</dd></div>
+            <div><dt>Team</dt><dd>9 consultants &middot; Invention Corps of Berkeley</dd></div>
+            <div><dt>Tools</dt><dd>Rhino 3D, FigJam, survey analysis</dd></div>
+          </dl>
+          <div class="pj-tags"><span>UX Research</span><span>Data Schemas</span><span>Rhino 3D</span><span>Spatial Design</span></div>
+          <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="urban-conga-case">
+            <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
+          </button>
+        </div>
+      </div>
+      <div class="pj-case" id="urban-conga-case" role="region" aria-label="Urban Conga case study">
+        <div class="pj-case-inner">
+          <div class="cs" tabindex="0" aria-roledescription="carousel">
+            <div class="cs-track">
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">The problem</div>
+              <p class="cs-lede">Urban Conga&rsquo;s installations had no way to show how people engaged with them. The goal: capture real usage patterns with low-cost sensing, without making people uncomfortable in public.</p>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 01 &middot; Jan &ndash; Feb 2026</div>
+                <h4 class="cs-title">Public-space behavioral survey</h4>
+                <div class="cs-body">Built and distributed a survey across the team&rsquo;s networks asking people how they actually use civic squares, parks, and commercial spaces &mdash; group size, time of day, length of stay, deal-breakers, and what they&rsquo;d feel comfortable doing in public. The goal: capture real behavior, not assumptions, before any installation design started.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/urban-conga-steps/01-survey-v2.png" alt="Urban Conga — survey task">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 02 &middot; Feb 2026</div>
+                <h4 class="cs-title">Insight extraction</h4>
+                <div class="cs-body">Each of the 9 consultants was asked to surface 2&ndash;3 patterns from the survey responses. The themes that emerged immediately:
+              <ul>
+                <li>Almost everyone visits public spaces in <strong>groups of 3&ndash;5 people</strong></li>
+                <li><strong>Overcrowding, cleanliness, and noise</strong> are the top deal-breakers</li>
+                <li>People are uncomfortable with anything they&rsquo;re unaware of &mdash; but much more relaxed once they understand what an installation is doing</li>
+                <li>Behavior splits into two distinct modes: <strong>quick passers-by (15&ndash;30 min)</strong> and <strong>extended visitors (1+ hour)</strong></li>
+              </ul></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/urban-conga-steps/02-insights-v2.png" alt="Urban Conga — insight sticky notes per consultant">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 03 &middot; Feb &ndash; Mar 2026</div>
+                <h4 class="cs-title">Space-type segmentation</h4>
+                <div class="cs-body">The team recognized that one installation concept can&rsquo;t cover every context. We grouped responses into <strong>three space archetypes</strong> &mdash; each with its own usage signature, mood, and core values:
+              <ul>
+                <li><strong>Civic spaces</strong> &mdash; 2 hours, 2&ndash;5 people, productive at noon/night, valuing education, focus, and sightseeing</li>
+                <li><strong>Park spaces</strong> &mdash; 30 min&ndash;1 hour, relaxation-focused, valuing exercise, stress relief, quiet, and friends</li>
+                <li><strong>Commercial spaces</strong> &mdash; 1&ndash;2 hours, productive at noon/night, social and purchase-driven</li>
+              </ul></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/urban-conga-steps/03-space-types-v2.png" alt="Urban Conga — space type breakdown cards (Civic / Park / Commercial)">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 04 &middot; Mar 2026</div>
+                <h4 class="cs-title">Concept ideation</h4>
+                <div class="cs-body">Each space archetype got its own installation direction. The brainstorm produced a long-list of physical and digital interaction concepts matched to the space&rsquo;s mood:
+              <ul>
+                <li><strong>Litter walls, locks, etching/scratching</strong> &mdash; permanence and trace-leaving in civic spaces</li>
+                <li><strong>Infrared sensing &amp; AI cluster detection</strong> &mdash; measuring how long and how many, depending on context</li>
+                <li><strong>Touch / pressure / button voting</strong> &mdash; e.g. a Starbucks &ldquo;Strawberry Ac&aacute;i vs. Caramel Macchiato first to 100&rdquo; in a mall</li>
+                <li><strong>Material wear-and-tear over time</strong> &mdash; the installation visibly changes from use</li>
+                <li><strong>Sticker walls / community blurbs</strong>, <strong>kinetic park installations</strong>, <strong>racing/climbing micro-games</strong></li>
+              </ul></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/urban-conga-steps/04-concepts-v2.png" alt="Urban Conga — installation concept ideation">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 05 &middot; Apr 2026</div>
+                <h4 class="cs-title">Sensing &amp; data-schema constraints</h4>
+                <div class="cs-body">Translated the qualitative behavioral goals (&ldquo;measure dwell time,&rdquo; &ldquo;count cluster size,&rdquo; &ldquo;detect voluntary engagement&rdquo;) into structured, quantifiable data schemas with low-cost, low-overhead sensing approaches &mdash; capacitive touch, IR proximity, simple pressure switches.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/urban-conga-steps/05-data-schema-v2.png" alt="Urban Conga — sensing schema area">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 06 &middot; May &ndash; Jun 2026</div>
+                <h4 class="cs-title">Spatial &amp; 3D layout in Rhino</h4>
+                <div class="cs-body">Modeled candidate installation footprints in <strong>Rhino 3D</strong>, validating that each layout could host the inferred data flows from phase 5 while staying within the budget and footprint of a real public space. Closed the loop between behavior &rarr; sensing &rarr; physical form.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/urban-conga-steps/06-rhino-v2.png" alt="Urban Conga — installation reference + Rhino layout area">
+            </div></div>
+            </section>
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <p class="cs-lede"><span class="todo">TODO &mdash; final concept, Rhino renders, what Urban Conga took forward</span></p>
+            </section>
+            </div>
+            <div class="cs-controls">
+              <button class="cs-btn cs-prev" type="button" aria-label="Previous slide">&larr;</button>
+              <div class="cs-progress"><span></span></div>
+              <span class="cs-count">01 / 08</span>
+              <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
+            </div>
+          </div>
+          <div class="pj-case-foot"><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+        </div>
+      </div>
+    </article>
+    <article class="pj" id="momuk">
+      <div class="pj-preview">
+        <div class="pj-cover"><span class="pj-mark">모먹</span></div>
+        <div class="pj-info">
+          <div class="pj-eyebrow"><span>04</span> Personal product &middot; Web app</div>
+          <h2 class="pj-title">Momuk</h2>
+          <p class="pj-summary">오늘 뭐 먹지 &mdash; a menu suggester that answers what to eat, not where. It reads weather, air quality and time of day, scores 126 hand-tagged dishes, and shows the top reasons for its pick.</p>
+          <dl class="pj-meta">
+            <div><dt>Role</dt><dd>Solo &mdash; design &amp; build</dd></div>
+            <div><dt>Timeline</dt><dd>Aug 2026</dd></div>
+            <div><dt>Team</dt><dd>Personal project</dd></div>
+            <div><dt>Tools</dt><dd>HTML, CSS, JavaScript</dd></div>
+          </dl>
+          <div class="pj-tags"><span>Product Design</span><span>Web App</span><span>Recommendation</span></div>
+          <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="momuk-case">
+            <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
+          </button>
+        </div>
+      </div>
+      <div class="pj-case" id="momuk-case" role="region" aria-label="Momuk case study">
+        <div class="pj-case-inner">
+          <div class="cs" tabindex="0" aria-roledescription="carousel">
+            <div class="cs-track">
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">The problem</div>
+              <p class="cs-lede"><span class="todo">TODO &mdash; the problem / why you built it</span></p>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 01 &middot; <span class="todo">TODO &mdash; dates</span></div>
+                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
+                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 02 &middot; <span class="todo">TODO &mdash; dates</span></div>
+                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
+                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 03 &middot; <span class="todo">TODO &mdash; dates</span></div>
+                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
+                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 04 &middot; <span class="todo">TODO &mdash; dates</span></div>
+                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
+                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+            </section>
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <p class="cs-lede"><span class="todo">TODO &mdash; final screens, live link, what you would change</span></p>
+            </section>
+            </div>
+            <div class="cs-controls">
+              <button class="cs-btn cs-prev" type="button" aria-label="Previous slide">&larr;</button>
+              <div class="cs-progress"><span></span></div>
+              <span class="cs-count">01 / 06</span>
+              <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
+            </div>
+          </div>
+          <div class="pj-case-foot"><a href="https://github.com/andrewcjh27/Momuk" target="_blank" rel="noopener">GitHub &nearr;</a><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+        </div>
+      </div>
+    </article>
+    <article class="pj" id="replate">
+      <div class="pj-preview">
+        <div class="pj-cover"><span class="pj-mark">Replate</span></div>
+        <div class="pj-info">
+          <div class="pj-eyebrow"><span>05</span> Data dashboard &middot; Product design</div>
+          <h2 class="pj-title">Replate</h2>
+          <p class="pj-summary">Analyzing Replate&rsquo;s large-scale user data to design and build a website dashboard used by both donors and the company.</p>
+          <dl class="pj-meta">
+            <div><dt>Role</dt><dd><span class="todo">TODO &mdash; role</span></dd></div>
+            <div><dt>Timeline</dt><dd><span class="todo">TODO &mdash; dates</span></dd></div>
+            <div><dt>Team</dt><dd>Invention Corps of Berkeley</dd></div>
+            <div><dt>Tools</dt><dd><span class="todo">TODO &mdash; tools</span></dd></div>
+          </dl>
+          <div class="pj-tags"><span>Dashboard</span><span>Data Viz</span><span>Product Design</span></div>
+          <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="replate-case">
+            <span class="pj-toggle-label">View case study</span><span class="pj-toggle-icon" aria-hidden="true">+</span>
+          </button>
+        </div>
+      </div>
+      <div class="pj-case" id="replate-case" role="region" aria-label="Replate case study">
+        <div class="pj-case-inner">
+          <div class="cs" tabindex="0" aria-roledescription="carousel">
+            <div class="cs-track">
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">The problem</div>
+              <p class="cs-lede"><span class="todo">TODO &mdash; the problem / users (donors vs. Replate team)</span></p>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 01 &middot; <span class="todo">TODO &mdash; dates</span></div>
+                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
+                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 02 &middot; <span class="todo">TODO &mdash; dates</span></div>
+                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
+                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 03 &middot; <span class="todo">TODO &mdash; dates</span></div>
+                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
+                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker">Phase 04 &middot; <span class="todo">TODO &mdash; dates</span></div>
+                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
+                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+            </section>
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker">Outcome &amp; reflection</div>
+              <p class="cs-lede"><span class="todo">TODO &mdash; dashboard screens, impact</span></p>
+            </section>
+            </div>
+            <div class="cs-controls">
+              <button class="cs-btn cs-prev" type="button" aria-label="Previous slide">&larr;</button>
+              <div class="cs-progress"><span></span></div>
+              <span class="cs-count">01 / 06</span>
+              <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
+            </div>
+          </div>
+          <div class="pj-case-foot"><button class="pj-collapse" type="button">Close case study &uarr;</button></div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="pj-footer">
+    <span>&copy; 2026 Junho Choi</span>
+    <div>
+      <a href="mailto:andrewc27@berkeley.edu">Email</a>
+      <a href="https://www.linkedin.com/in/junho-choi-a8b097239" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Horizontal case-study sliders
+      document.querySelectorAll('.cs').forEach(function (cs) {
+        var track = cs.querySelector('.cs-track');
+        var slides = track.querySelectorAll('.cs-slide');
+        var prev = cs.querySelector('.cs-prev'), next = cs.querySelector('.cs-next');
+        var bar = cs.querySelector('.cs-progress span'), count = cs.querySelector('.cs-count');
+        var total = slides.length;
+        function pad(n) { return (n < 10 ? '0' : '') + n; }
+        function index() { return Math.round(track.scrollLeft / (slides[0].offsetWidth + parseFloat(getComputedStyle(track).columnGap || 0) || 1)); }
+        function go(i) { i = Math.max(0, Math.min(total - 1, i)); track.scrollTo({ left: slides[i].offsetLeft - track.offsetLeft }); }
+        function update() {
+          var i = index();
+          count.textContent = pad(i + 1) + ' / ' + pad(total);
+          bar.style.width = ((i + 1) / total * 100) + '%';
+          prev.disabled = i === 0; next.disabled = i === total - 1;
+        }
+        prev.addEventListener('click', function () { go(index() - 1); });
+        next.addEventListener('click', function () { go(index() + 1); });
+        cs.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowRight') { e.preventDefault(); go(index() + 1); }
+          if (e.key === 'ArrowLeft') { e.preventDefault(); go(index() - 1); }
+        });
+        var t; track.addEventListener('scroll', function () { clearTimeout(t); t = setTimeout(update, 60); }, { passive: true });
+        window.addEventListener('resize', update);
+        update();
+      });
+      document.querySelectorAll('.pj').forEach(function (pj) {
+        var toggle = pj.querySelector('.pj-toggle');
+        var label = pj.querySelector('.pj-toggle-label');
+        var caseEl = pj.querySelector('.pj-case');
+        function set(open) {
+          pj.classList.toggle('open', open);
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          label.textContent = open ? 'Hide case study' : 'View case study';
+          caseEl.inert = !open;
+          if (open) setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 50);
+        }
+        set(false);
+        toggle.addEventListener('click', function () { set(!pj.classList.contains('open')); });
+        pj.querySelector('.pj-collapse').addEventListener('click', function () {
+          set(false);
+          pj.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        // Open directly from a link like projects.html#braven
+        if (location.hash === '#' + pj.id) set(true);
+      });
+    })();
+  </script>
+  <script src="nav.js"></script>
+</body>
+</html>
