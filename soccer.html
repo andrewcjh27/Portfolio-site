@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <title>Soccer | Junho Choi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="soccer-ai-endpoint" content="http://127.0.0.1:5051/api/chat" />
+  <!-- Published site: Cloudflare Pages Function (functions/api/chat.js, Groq).
+       Local Ollama bridge: set window.SOCCER_AI_ENDPOINT = 'http://127.0.0.1:5051/api/chat' -->
+  <meta name="soccer-ai-endpoint" content="/api/chat" />
 
   <!-- Force every refresh / direct visit to start at the top of the page
        so the cinematic intro begins on the title card + first frame of the
@@ -2147,7 +2149,7 @@
         }
 
         const errorMessage =
-          'Could not reach Soccer AI. Start local bridge with "python3 soccer_chat_server.py" and ensure Ollama is running.';
+          'The AI Coach is taking a break right now. Please try again in a moment.';
         if (chatEnded) return;
         coachHistory.push({ role: 'assistant', content: errorMessage });
         appendCoachMessage('error', errorMessage);
