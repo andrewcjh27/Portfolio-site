@@ -38,6 +38,19 @@ html.intro-pending #intro,
 .intro-line .w { display: inline-block; opacity: 0; will-change: opacity, filter; }
 .intro-line.l1 { color: #f4f2ee; text-shadow: 0 0 22px rgba(7,7,7,0.85), 0 0 6px rgba(7,7,7,0.6); }
 .intro-line.l2 { color: #4a4844; text-shadow: 0 0 22px rgba(239,237,232,0.95), 0 0 6px rgba(239,237,232,0.8); }
+/* Subtitle under line 2 — hangs below so the main line stays centered */
+.intro-sub {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.5em;
+  white-space: nowrap;
+  font-size: clamp(13px, 1.15vw, 18px);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #8a8781;
+}
 
 /* Skip */
 .intro-skip {

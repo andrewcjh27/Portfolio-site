@@ -15,6 +15,7 @@
 
   var LINE1 = 'This is a space created to show myself.';
   var LINE2 = 'Welcome, to my portfolio';
+  var LINE2_SUB = '(designed and coded from scratch)';
   var THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js';
 
   // Timeline (seconds)
@@ -22,7 +23,7 @@
     fade:   [0.0, 1.2],
     l1:     { in: 0.6, out: 2.5 },
     light:  [2.55, 4.35],   // light rolls in over the dunes
-    l2:     { in: 3.45, out: 5.0 },
+    l2:     { in: 3.45, out: 6.0 },
     clear:  [4.85, 6.6],    // a breeze lifts the grains away as they fade
     white:  [5.1, 6.3],
     reveal: 6.0,
@@ -42,19 +43,28 @@
   root.setAttribute('aria-hidden', 'true');
   var canvas = document.createElement('canvas');
   root.appendChild(canvas);
-  function makeLine(text, cls) {
-    var p = document.createElement('p');
-    p.className = 'intro-line ' + cls;
+  function addWords(el, text) {
     text.split(' ').forEach(function (word, i, arr) {
       var s = document.createElement('span'); s.className = 'w'; s.textContent = word;
-      p.appendChild(s);
-      if (i < arr.length - 1) p.appendChild(document.createTextNode(' '));
+      el.appendChild(s);
+      if (i < arr.length - 1) el.appendChild(document.createTextNode(' '));
     });
+  }
+  function makeLine(text, cls, sub) {
+    var p = document.createElement('p');
+    p.className = 'intro-line ' + cls;
+    addWords(p, text);
+    if (sub) {                     // smaller line under the main one; its words animate right after
+      var sp = document.createElement('span');
+      sp.className = 'intro-sub';
+      addWords(sp, sub);
+      p.appendChild(sp);
+    }
     root.appendChild(p);
     return [].slice.call(p.querySelectorAll('.w'));
   }
   var words1 = makeLine(LINE1, 'l1');
-  var words2 = makeLine(LINE2, 'l2');
+  var words2 = makeLine(LINE2, 'l2', LINE2_SUB);
   var skipBtn = document.createElement('button');
   skipBtn.type = 'button'; skipBtn.className = 'intro-skip'; skipBtn.textContent = 'Skip intro';
   skipBtn.removeAttribute('aria-hidden');
