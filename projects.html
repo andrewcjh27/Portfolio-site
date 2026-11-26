@@ -28,6 +28,14 @@
     .pj-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s cubic-bezier(0.22,1,0.36,1); }
     .pj:hover .pj-cover img { transform: scale(1.03); }
     .pj-cover video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Demo videos sit on white; multiply turns that white into the page colour, so only the device shows */
+    .pj-cover--demo { background: transparent; border-radius: 0; overflow: visible; }
+    .pj-cover--demo video { mix-blend-mode: multiply; }
+    /* Alternate sides on wide screens: demo left, then right, and so on */
+    @media (min-width: 821px) {
+      .pj:nth-of-type(even) .pj-preview { grid-template-columns: 1fr 1.15fr; }
+      .pj:nth-of-type(even) .pj-cover { order: 2; }
+    }
     .pj-mark { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; color: #111; }
     .pj-eyebrow span { color: #111; margin-right: 0.6rem; }
     .pj-title { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; margin: 0.6rem 0 0.8rem; color: #111; }
@@ -289,16 +297,16 @@
 
     <article class="pj" id="momuk">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/momuk.mp4" poster="images/projects/demos/momuk.jpg" muted loop playsinline preload="none" aria-label="Momuk demo: answering three questions and getting a menu pick"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/momuk.mp4" poster="images/projects/demos/momuk.jpg" muted loop playsinline preload="none" aria-label="Momuk demo: answering three questions and getting a menu pick"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.momuk.pj-eyebrow"><span>01</span> Personal product &middot; Web app</div>
           <h2 class="pj-title">Momuk</h2>
-          <p class="pj-summary" data-i18n-html="projects.momuk.pj-summary">오늘 뭐 먹지 &mdash; a menu suggester that answers what to eat, not where. It reads weather, air quality and time of day, scores 126 hand-tagged dishes, and shows the top reasons for its pick.</p>
+          <p class="pj-summary" data-i18n-html="projects.momuk.pj-summary">오늘 뭐 먹지 &mdash; a menu suggester that answers what to eat, not where. It reads weather, region and time of day, scores 142 dishes on effects measured from ten years of Naver searches, and shows the math behind its pick.</p>
           <dl class="pj-meta">
             <div><dt data-i18n="pj.label.Role">Role</dt><dd data-i18n-html="projects.momuk.Role">Solo &mdash; design &amp; build</dd></div>
             <div><dt data-i18n="pj.label.Timeline">Timeline</dt><dd data-i18n-html="projects.momuk.Timeline">Aug 2026 &ndash; Present</dd></div>
             <div><dt data-i18n="pj.label.Team">Team</dt><dd data-i18n-html="projects.momuk.Team">Personal project</dd></div>
-            <div><dt data-i18n="pj.label.Tools">Tools</dt><dd data-i18n-html="projects.momuk.Tools">HTML, CSS, JavaScript</dd></div>
+            <div><dt data-i18n="pj.label.Tools">Tools</dt><dd data-i18n-html="projects.momuk.Tools">Figma, JavaScript, PySpark, Databricks</dd></div>
           </dl>
           <div class="pj-tags"><span data-i18n="pj.tag.product-design">Product Design</span><span data-i18n="pj.tag.web-app">Web App</span><span data-i18n="pj.tag.recommendation">Recommendation</span></div>
           <button class="pj-toggle" type="button" aria-expanded="false" aria-controls="momuk-case">
@@ -310,61 +318,106 @@
         <div class="pj-case-inner">
           <div class="cs" tabindex="0" aria-roledescription="carousel">
             <div class="cs-track">
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker" data-i18n-html="projects.momuk.cs.s0.kicker">At a glance</div>
+                <h4 class="cs-title" data-i18n-html="projects.momuk.cs.s0.cs-title">One dish for this moment &mdash; and the numbers behind it</h4>
+                <dl class="cs-facts">
+                  <div><dt data-i18n="projects.momuk.cs.s0.f.product">Product</dt><dd data-i18n-html="projects.momuk.cs.s0.f.product-v">오늘 뭐 먹지 &mdash; a Korean menu suggester that answers <em>what</em> to eat, not where</dd></div>
+                  <div><dt data-i18n="projects.momuk.cs.s0.f.question">Question</dt><dd data-i18n-html="projects.momuk.cs.s0.f.question-v">Can the food folklore everyone repeats &mdash; 전 on rainy days, 삼계탕 on 복날 &mdash; be measured and used?</dd></div>
+                  <div><dt data-i18n="projects.momuk.cs.s0.f.role">My part</dt><dd data-i18n-html="projects.momuk.cs.s0.f.role-v">Solo: Figma design, front end, data pipeline, analysis</dd></div>
+                  <div><dt data-i18n="projects.momuk.cs.s0.f.built">Built</dt><dd data-i18n-html="projects.momuk.cs.s0.f.built-v">A static web app on GitHub Pages, scored by a PySpark pipeline on Databricks that refreshes every week, for $0</dd></div>
+                  <div><dt data-i18n="projects.momuk.cs.s0.f.result">Result</dt><dd data-i18n-html="projects.momuk.cs.s0.f.result-v">142 dishes ranked on effects measured from ten years of Naver searches and weather; every pick can show its own math</dd></div>
+                </dl>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/momuk/why.png" alt="Momuk — a rainy-evening pick of 수제비 and the multipliers behind it">
+            </div></div>
+            </section>
             <section class="cs-slide cs-slide-text">
               <div class="cs-kicker" data-i18n-html="pj.kicker.problem">The problem</div>
-              <p class="cs-lede"><span class="todo">TODO &mdash; the problem / why you built it</span></p>
+              <p class="cs-lede" data-i18n-html="projects.momuk.cs.s1.cs-lede">Map apps answer <em>where</em> to eat. Nothing answers <em>what</em> &mdash; the 오늘 뭐 먹지 that comes up every day. Momuk gives one confident suggestion for the moment you are in: the weather, the hour, who you&rsquo;re with and what you want to spend.</p>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 01 &middot; <span class="todo">TODO &mdash; dates</span></div>
-                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
-                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+                <div class="cs-kicker" data-i18n-html="projects.momuk.cs.s2.kicker">Phase 01 &middot; Aug 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.momuk.cs.s2.cs-title">Design the flow, then a rules engine &mdash; on purpose</h4>
+                <div class="cs-body" data-i18n-html="projects.momuk.cs.s2.cs-body">Designed in Figma: three questions (how many, how hungry, budget) and one answer. A single bowl travels through the flow and fills as you answer &mdash; a progress bar that never looks like one &mdash; and steams at the pick.<br><br>With no users there was no data to learn from, and a model trained on nothing is a worse rules engine that can&rsquo;t explain itself. So v1 was a <strong>transparent weighted sum</strong>: it samples instead of always taking the top dish, so the same weather doesn&rsquo;t always give the same answer, and every culture-based rule (rain, fine dust, payday, season) was flagged <strong>folklore</strong> &mdash; to be tested later.</div>
               </div>
-              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/momuk/flow.png" alt="Momuk flow — start, three questions, one dish">
+            </div></div>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 02 &middot; <span class="todo">TODO &mdash; dates</span></div>
-                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
-                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+                <div class="cs-kicker" data-i18n-html="projects.momuk.cs.s3.kicker">Phase 02 &middot; Oct 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.momuk.cs.s3.cs-title">Don&rsquo;t wait for users &mdash; test the folklore now</h4>
+                <div class="cs-body" data-i18n-html="projects.momuk.cs.s3.cs-body">The plan was to test the folklore after ~200 logged decisions, months away. Public data could answer a population-level version immediately, and turned the project into a real data build. Constraints: <strong>$0</strong>, data that represents <strong>Korean</strong> eaters, and three skills to practise &mdash; forecasting, causal inference, experiment design.<br><br>Delivery-order data was out (not reachable from the US, now sold), so <strong>Naver search trends</strong> became the signal: free, national, daily since 2016, and a measure of <em>craving</em> &mdash; right for a &ldquo;what do I feel like&rdquo; app. Google Trends added provinces; Open-Meteo added ten years of weather for all 17.</div>
               </div>
-              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/momuk/pipeline.png" alt="Pipeline — Naver, Google Trends, Open-Meteo and a food calendar into bronze, silver and gold on Databricks, then a weekly model file for the website">
+            </div></div>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 03 &middot; <span class="todo">TODO &mdash; dates</span></div>
-                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
-                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+                <div class="cs-kicker" data-i18n-html="projects.momuk.cs.s4.kicker">Phase 03 &middot; Oct &ndash; Nov 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.momuk.cs.s4.cs-title">Most of the work was making the data mean what it says</h4>
+                <div class="cs-body" data-i18n-html="projects.momuk.cs.s4.cs-body"><strong>Every request is scaled to its own peak.</strong> Naver returns 0&ndash;100 per request, so dishes from different requests can&rsquo;t be compared. Putting one mid-popularity <strong>anchor dish (김치찌개)</strong> in every request put all dishes on one scale.<br><br><strong>Nobody searches &ldquo;후라이드치킨&rdquo;.</strong> Near-zero dishes were a keyword problem, not a popularity one. A keyword check kept a search term only if it&rsquo;s spelled like the dish <em>and</em> moves like it week to week. 치킨 alone is searched ~36&times; more, so three chicken dishes became one.<br><br><strong>Catching my own mistakes.</strong> 곰탕&rsquo;s regional lean (&times;3.68 in Jeollanam-do) was circular &mdash; its search term had become 나주곰탕 &mdash; so it was withdrawn. And a test of whether regional leans were just tourists found no seasonal visitor pattern, so they stayed.</div>
               </div>
-              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/momuk/keywords.png" alt="Share of candidate keywords kept by type — main names 95%, spacing 100%, spellings 86%, synonyms 78%, generic terms 22%">
+            </div></div>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker">Phase 04 &middot; <span class="todo">TODO &mdash; dates</span></div>
-                <h4 class="cs-title"><span class="todo">TODO &mdash; phase title</span></h4>
-                <div class="cs-body"><span class="todo">TODO &mdash; what you did, why, and what you learned</span></div>
+                <div class="cs-kicker" data-i18n-html="projects.momuk.cs.s5.kicker">Findings &middot; weather &amp; region</div>
+                <h4 class="cs-title" data-i18n-html="projects.momuk.cs.s5.cs-title">The folklore mostly holds &mdash; and the data knows Korea&rsquo;s map</h4>
+                <div class="cs-body" data-i18n-html="projects.momuk.cs.s5.cs-body">Against dry days in the same month and weekday, the five most rain-sensitive dishes were exactly the ones hand-tagged 비오는날: <strong>김치전 &times;1.79</strong>, 해물파전 &times;1.74, 수제비 &times;1.34. The data also found rainy-day soups the tags missed (짬뽕, 마라탕).<br><br>Without being told a single regional fact, province searches recovered local specialties: <strong>막국수 in Gangwon &times;5.18</strong>, 밀면 in Busan &times;4.01, 콩나물국밥 in Jeollabuk-do &times;2.78. Weekends brought hangover food (콩나물국밥 &times;1.59) and day-trip food (매운탕 &times;1.67).</div>
               </div>
-              <div class="cs-media"><div class="exp-workflow-image"><span class="exp-workflow-image-placeholder">image / screen</span></div></div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/momuk/rain.png" alt="Rainy-day lift — 김치전 ×1.79, 해물파전 ×1.74, 수제비 ×1.34, 칼국수 ×1.25, 바지락칼국수 ×1.19">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker" data-i18n-html="projects.momuk.cs.s6.kicker">Findings &middot; food days</div>
+                <h4 class="cs-title" data-i18n-html="projects.momuk.cs.s6.cs-title">복날 is a chicken day, and Christmas is a date night</h4>
+                <div class="cs-body" data-i18n-html="projects.momuk.cs.s6.cs-body">Each food day was compared with the same weekday 1&ndash;3 weeks around it, across ten years. <strong>복날 &rarr; 삼계탕 &times;9.73</strong>, 설날 &rarr; 떡국 &times;7.76, and 동지 &rarr; 팥죽 a startling <strong>&times;66</strong>.<br><br>The surprises were better than the folklore: on 복날 every chicken dish rises (백숙 &times;4.95, 닭한마리 &times;3.02); Christmas tops out at steak and pasta, above chicken and pizza. One rule failed &mdash; 추석 &rarr; 김치전 came out &times;0.75, because holiday 전 are 동그랑땡 and 모둠전, not the everyday 김치전.<br><br>The findings report true sizes; the recommender caps any one day at &times;3 so it can&rsquo;t take over the list.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/momuk/fooddays.png" alt="Food-day lift — 복날 삼계탕 ×9.73, 설날 떡국 ×7.76, 삼겹살데이 ×4.01, 블랙데이 짜장면 ×2.17, 크리스마스 피자 ×1.65, 추석 김치전 ×0.75">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker" data-i18n-html="projects.momuk.cs.s7.kicker">Phase 04 &middot; Nov 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.momuk.cs.s7.cs-title">Same app, guesses replaced by measurements</h4>
+                <div class="cs-body" data-i18n-html="projects.momuk.cs.s7.cs-body">v2 keeps the design and the three questions, and swaps every guessed rule for a measured one: popularity, rain, temperature, region, meal time, weekend and food days. Scoring in log space keeps each factor a separate multiplier, so <strong>왜 이 음식이야?</strong> shows the real calculation (비 오는 날 &times;1.4, 지역 &middot; 서울 &times;1.3 &hellip;), not copy.<br><br>Testing it like a user changed the rules: late night and breakfast became <strong>filters</strong> (밀면 at 1 a.m. can&rsquo;t be had), delivery food counts for late-night solo eaters, a turned-down dish never comes back, and after five &ldquo;안 땡겨&rdquo; it asks a narrowing question. A weekly Databricks job writes one JSON file to GitHub, so the site stays static and free.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/demos/momuk.jpg" alt="Momuk running in a browser">
+            </div></div>
             </section>
             <section class="cs-slide cs-slide-text">
               <div class="cs-kicker" data-i18n-html="pj.kicker.outcome">Outcome &amp; reflection</div>
-              <p class="cs-lede"><span class="todo">TODO &mdash; final screens, live link, what you would change</span></p>
+              <p class="cs-lede" data-i18n-html="projects.momuk.cs.s8.cs-lede">Live at <a href="https://andrewcjh27.github.io/Momuk/" target="_blank" rel="noopener">andrewcjh27.github.io/Momuk</a> in Korean and English, with anonymous, cookie-free counting of which picks people accept. Every choice &mdash; and every alternative rejected &mdash; is in a public decision log.</p>
+              <p class="cs-reflect" data-i18n-html="projects.momuk.cs.s8.reflect"><strong>Next:</strong> log each suggestion and whether it was accepted, then A/B test population picks against personalised ones by acceptance rate &mdash; and forecast tomorrow&rsquo;s cravings from the weather forecast.</p>
             </section>
             </div>
             <div class="cs-controls">
               <button class="cs-btn cs-prev" type="button" aria-label="Previous slide">&larr;</button>
               <div class="cs-progress"><span></span></div>
-              <span class="cs-count">01 / 06</span>
+              <span class="cs-count">01 / 09</span>
               <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
             </div>
           </div>
-          <div class="pj-case-foot"><a href="https://github.com/andrewcjh27/Momuk" target="_blank" rel="noopener">GitHub &nearr;</a><button class="pj-collapse" type="button" data-i18n-html="pj.close">Close case study &uarr;</button></div>
+          <div class="pj-case-foot"><a href="https://andrewcjh27.github.io/Momuk/" target="_blank" rel="noopener" data-i18n-html="projects.momuk.cs.live">Live site &nearr;</a><a href="https://github.com/andrewcjh27/Momuk" target="_blank" rel="noopener">GitHub &nearr;</a><button class="pj-collapse" type="button" data-i18n-html="pj.close">Close case study &uarr;</button></div>
         </div>
       </div>
     </article>
     <article class="pj" id="urban-conga">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/urban-conga.mp4" poster="images/projects/demos/urban-conga.jpg" muted loop playsinline preload="none" aria-label="Photobooth installation turning on a turntable: wireframe, shaded, then rendered"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/urban-conga.mp4" poster="images/projects/demos/urban-conga.jpg" muted loop playsinline preload="none" aria-label="Photobooth installation turning on a turntable: wireframe, shaded, then rendered"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.urban-conga.pj-eyebrow"><span>02</span> Interactive installation &middot; Spatial UX</div>
           <h2 class="pj-title">Urban Conga</h2>
@@ -485,7 +538,7 @@
     </article>
     <article class="pj" id="todo-widget">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/todo-widget.mp4" poster="images/projects/demos/todo-widget.jpg" muted loop playsinline preload="none" aria-label="Todo Widget demo: adding tasks from the Mac menu bar"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/todo-widget.mp4" poster="images/projects/demos/todo-widget.jpg" muted loop playsinline preload="none" aria-label="Todo Widget demo: adding tasks from the Mac menu bar"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.todo-widget.pj-eyebrow"><span>03</span> macOS app &middot; Personal tool</div>
           <h2 class="pj-title">Todo Widget</h2>
@@ -506,35 +559,71 @@
         <div class="pj-case-inner">
           <div class="cs" tabindex="0" aria-roledescription="carousel">
             <div class="cs-track">
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker" data-i18n-html="projects.todo-widget.cs.s0.kicker">At a glance</div>
+                <h4 class="cs-title" data-i18n-html="projects.todo-widget.cs.s0.cs-title">A to-do list that lives one click away</h4>
+                <dl class="cs-facts">
+                  <div><dt data-i18n="projects.todo-widget.cs.s0.f.product">Product</dt><dd data-i18n-html="projects.todo-widget.cs.s0.f.product-v">A macOS menu bar app: daily, weekly and monthly lists, a planner for each weekday, and D-day countdowns</dd></div>
+                  <div><dt data-i18n="projects.todo-widget.cs.s0.f.goal">Goal</dt><dd data-i18n-html="projects.todo-widget.cs.s0.f.goal-v">Let anyone install it free &mdash; with no paid Apple developer account &mdash; and be able to show it&rsquo;s real</dd></div>
+                  <div><dt data-i18n="projects.todo-widget.cs.s0.f.role">My part</dt><dd data-i18n-html="projects.todo-widget.cs.s0.f.role-v">Solo: design, SwiftUI build, packaging and release</dd></div>
+                  <div><dt data-i18n="projects.todo-widget.cs.s0.f.built">Built</dt><dd data-i18n-html="projects.todo-widget.cs.s0.f.built-v">v1.0.0 and v1.0.1 on GitHub Releases, a one-line installer, automated builds and an app icon</dd></div>
+                  <div><dt data-i18n="projects.todo-widget.cs.s0.f.stack">Stack</dt><dd data-i18n-html="projects.todo-widget.cs.s0.f.stack-v">Swift 6, SwiftUI, Swift Package Manager, GitHub Actions</dd></div>
+                </dl>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/demos/todo-widget.jpg" alt="Todo Widget open from the Mac menu bar">
+            </div></div>
+            </section>
             <section class="cs-slide cs-slide-text">
               <div class="cs-kicker" data-i18n-html="pj.kicker.problem">The problem</div>
-              <p class="cs-lede"><span class="todo">TODO &mdash; the problem / why you built it</span></p>
+              <p class="cs-lede" data-i18n-html="projects.todo-widget.cs.s1.cs-lede">A to-do list only works if you look at it. Todo Widget puts it in the Mac menu bar &mdash; always one click away, never another window to open &mdash; and splits tasks by horizon: today, this week, this month.</p>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker" data-i18n-html="projects.todo-widget.s1.kicker">Build &middot; Mar &ndash; Apr 2026</div>
-                <h4 class="cs-title" data-i18n-html="projects.todo-widget.s1.cs-title">Three lists, one click away</h4>
-                <div class="cs-body" data-i18n-html="projects.todo-widget.s1.cs-body">A SwiftUI app that sits in the menu bar instead of the Dock. One tap switches between <strong>Daily</strong>, <strong>Weekly</strong> and <strong>Monthly</strong> lists; weekly and monthly tasks can carry a due date that turns into a <strong>D-day countdown</strong>. Tasks save on the Mac automatically.</div>
+                <div class="cs-kicker" data-i18n-html="projects.todo-widget.cs.s2.kicker">Build &middot; Mar 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.todo-widget.cs.s2.cs-title">Three horizons in one small window</h4>
+                <div class="cs-body" data-i18n-html="projects.todo-widget.cs.s2.cs-body">Built as a SwiftUI menu bar app with a Swift package, step by step: the menu bar entry point, a data model saved on the Mac, then the list &mdash; add, check off, rename, delete.<br><br>Weekly and monthly tasks can take a due date that becomes a <strong>D-day countdown</strong>, colour-coded: blue ahead, orange on the day, red when overdue. Daily tasks stay deliberately simple.</div>
               </div>
-              <div class="cs-media"><img loading="lazy" src="images/projects/todo-widget/lists.png" alt="Todo Widget &mdash; daily, weekly and monthly lists"></div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/todo-widget/lists.png" alt="Todo Widget lists with D-day countdowns">
+            </div></div>
             </section>
             <section class="cs-slide">
               <div class="cs-text">
-                <div class="cs-kicker" data-i18n-html="projects.todo-widget.s2.kicker">Planner</div>
-                <h4 class="cs-title" data-i18n-html="projects.todo-widget.s2.cs-title">A plan for each day of the week</h4>
-                <div class="cs-body" data-i18n-html="projects.todo-widget.s2.cs-body">A switch in the corner turns the widget into a weekly planner, with a tab for each day &mdash; classes on Monday, errands on Saturday.</div>
+                <div class="cs-kicker" data-i18n-html="projects.todo-widget.cs.s3.kicker">Planner &middot; Apr 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.todo-widget.cs.s3.cs-title">A plan for each day of the week</h4>
+                <div class="cs-body" data-i18n-html="projects.todo-widget.cs.s3.cs-body">A switch in the corner turns the widget into a weekly planner with a tab per day &mdash; classes on Monday, errands on Saturday &mdash; without a second app or window.</div>
               </div>
-              <div class="cs-media"><img loading="lazy" src="images/projects/todo-widget/planner.png" alt="Todo Widget planner with a tab for each day"></div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/todo-widget/planner.png" alt="Todo Widget planner with a tab for each day">
+            </div></div>
+            </section>
+            <section class="cs-slide">
+              <div class="cs-text">
+                <div class="cs-kicker" data-i18n-html="projects.todo-widget.cs.s4.kicker">Release &middot; Nov 2026</div>
+                <h4 class="cs-title" data-i18n-html="projects.todo-widget.cs.s4.cs-title">Shipping it free, without Apple&rsquo;s $99 program</h4>
+                <div class="cs-body" data-i18n-html="projects.todo-widget.cs.s4.cs-body">Warning-free installs need notarization, which needs the paid Apple Developer Program, and Homebrew now disables apps that fail those checks. So the release uses what&rsquo;s free: a <strong>free (ad-hoc) signature</strong>, <strong>GitHub Releases</strong> with public download counts, and a <strong>one-line Terminal installer</strong> that puts the app in Applications and opens it.<br><br>Tagging a version builds and publishes a release automatically on GitHub Actions. It hides from the Dock, offers <strong>Launch at login</strong> as an opt-in checkbox, and ships under the MIT license.</div>
+              </div>
+              <div class="cs-media"><div class="exp-workflow-image has-image">
+              <img loading="lazy" src="images/projects/todo-widget/release.png" alt="Release pipeline — tag, GitHub Actions build, ad-hoc signing, GitHub Release, one-line install">
+            </div></div>
             </section>
             <section class="cs-slide cs-slide-text">
-              <div class="cs-kicker" data-i18n-html="projects.todo-widget.s3.kicker">Release &middot; Nov 2026</div>
-              <p class="cs-lede" data-i18n-html="projects.todo-widget.s3.cs-lede">Packaged as a Mac app with a one-line installer, and published free on GitHub Releases &mdash; pushing a version tag builds and ships a new release automatically.</p>
+              <div class="cs-kicker" data-i18n-html="projects.todo-widget.cs.s5.kicker">What broke along the way</div>
+              <h4 class="cs-title" data-i18n-html="projects.todo-widget.cs.s5.cs-title">Shipping is where the bugs were</h4>
+              <div class="cs-body" data-i18n-html="projects.todo-widget.cs.s5.cs-body"><strong>A compiler crash.</strong> The first release build crashed Swift 6.3 itself on one line of the launch-at-login toggle; passing a closure instead of a method reference fixed it.<br><br><strong>Tasks would have vanished.</strong> The packaged app saves under a new identity, so existing lists would look empty after installing &mdash; a one-time migration copies them across on first launch.<br><br><strong>Two icons in the menu bar.</strong> An old development build kept relaunching itself at login; found with <code>ps</code> and <code>launchctl</code>, stopped, and its launch file set aside rather than deleted.<br><br><strong>A page that didn&rsquo;t earn its place.</strong> A separate download page was built, then dropped for a README with screenshots and install, use and uninstall steps.</div>
+            </section>
+            <section class="cs-slide cs-slide-text">
+              <div class="cs-kicker" data-i18n-html="pj.kicker.outcome">Outcome &amp; reflection</div>
+              <p class="cs-lede" data-i18n-html="projects.todo-widget.cs.s6.cs-lede">Public and free since November 2026: v1.0.0, then v1.0.1 with its own app icon. Anyone on macOS 13 or later can install it with one command, and every release shows how many times it&rsquo;s been downloaded.</p>
+              <p class="cs-reflect" data-i18n-html="projects.todo-widget.cs.s6.reflect"><strong>Next:</strong> an opt-in, anonymous &ldquo;app opened&rdquo; ping, so success is measured in weekly users rather than downloads.</p>
             </section>
             </div>
             <div class="cs-controls">
               <button class="cs-btn cs-prev" type="button" aria-label="Previous slide">&larr;</button>
               <div class="cs-progress"><span></span></div>
-              <span class="cs-count">01 / 04</span>
+              <span class="cs-count">01 / 07</span>
               <button class="cs-btn cs-next" type="button" aria-label="Next slide">&rarr;</button>
             </div>
           </div>
@@ -544,7 +633,7 @@
     </article>
     <article class="pj" id="mozilla">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/mozilla.mp4" poster="images/projects/demos/mozilla.jpg" muted loop playsinline preload="none" aria-label="Adaptive Performance extension: turning it on, opening suggested actions and sleeping idle tabs"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/mozilla.mp4" poster="images/projects/demos/mozilla.jpg" muted loop playsinline preload="none" aria-label="Adaptive Performance extension: turning it on, opening suggested actions and sleeping idle tabs"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.mozilla.pj-eyebrow"><span>04</span> Browser extension &middot; Research to UI</div>
           <h2 class="pj-title">Mozilla Firefox</h2>
@@ -654,7 +743,7 @@
     </article>
     <article class="pj" id="braven">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/braven.mp4" poster="images/projects/demos/braven.jpg" muted loop playsinline preload="none" aria-label="Braven app prototype: home, career roadmap, events and Braven Connect"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/braven.mp4" poster="images/projects/demos/braven.jpg" muted loop playsinline preload="none" aria-label="Braven app prototype: home, career roadmap, events and Braven Connect"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.braven.pj-eyebrow"><span>05</span> Mobile app &middot; Research to product</div>
           <h2 class="pj-title">Braven Connect</h2>
