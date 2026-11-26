@@ -28,6 +28,14 @@
     .pj-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s cubic-bezier(0.22,1,0.36,1); }
     .pj:hover .pj-cover img { transform: scale(1.03); }
     .pj-cover video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Demo videos sit on white; multiply turns that white into the page colour, so only the device shows */
+    .pj-cover--demo { background: transparent; border-radius: 0; overflow: visible; }
+    .pj-cover--demo video { mix-blend-mode: multiply; }
+    /* Alternate sides on wide screens: demo left, then right, and so on */
+    @media (min-width: 821px) {
+      .pj:nth-of-type(even) .pj-preview { grid-template-columns: 1fr 1.15fr; }
+      .pj:nth-of-type(even) .pj-cover { order: 2; }
+    }
     .pj-mark { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; color: #111; }
     .pj-eyebrow span { color: #111; margin-right: 0.6rem; }
     .pj-title { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; margin: 0.6rem 0 0.8rem; color: #111; }
@@ -289,7 +297,7 @@
 
     <article class="pj" id="momuk">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/momuk.mp4" poster="images/projects/demos/momuk.jpg" muted loop playsinline preload="none" aria-label="Momuk demo: answering three questions and getting a menu pick"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/momuk.mp4" poster="images/projects/demos/momuk.jpg" muted loop playsinline preload="none" aria-label="Momuk demo: answering three questions and getting a menu pick"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.momuk.pj-eyebrow"><span>01</span> Personal product &middot; Web app</div>
           <h2 class="pj-title">Momuk</h2>
@@ -364,7 +372,7 @@
     </article>
     <article class="pj" id="urban-conga">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/urban-conga.mp4" poster="images/projects/demos/urban-conga.jpg" muted loop playsinline preload="none" aria-label="Photobooth installation turning on a turntable: wireframe, shaded, then rendered"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/urban-conga.mp4" poster="images/projects/demos/urban-conga.jpg" muted loop playsinline preload="none" aria-label="Photobooth installation turning on a turntable: wireframe, shaded, then rendered"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.urban-conga.pj-eyebrow"><span>02</span> Interactive installation &middot; Spatial UX</div>
           <h2 class="pj-title">Urban Conga</h2>
@@ -485,7 +493,7 @@
     </article>
     <article class="pj" id="todo-widget">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/todo-widget.mp4" poster="images/projects/demos/todo-widget.jpg" muted loop playsinline preload="none" aria-label="Todo Widget demo: adding tasks from the Mac menu bar"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/todo-widget.mp4" poster="images/projects/demos/todo-widget.jpg" muted loop playsinline preload="none" aria-label="Todo Widget demo: adding tasks from the Mac menu bar"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.todo-widget.pj-eyebrow"><span>03</span> macOS app &middot; Personal tool</div>
           <h2 class="pj-title">Todo Widget</h2>
@@ -544,7 +552,7 @@
     </article>
     <article class="pj" id="mozilla">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/mozilla.mp4" poster="images/projects/demos/mozilla.jpg" muted loop playsinline preload="none" aria-label="Adaptive Performance extension: turning it on, opening suggested actions and sleeping idle tabs"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/mozilla.mp4" poster="images/projects/demos/mozilla.jpg" muted loop playsinline preload="none" aria-label="Adaptive Performance extension: turning it on, opening suggested actions and sleeping idle tabs"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.mozilla.pj-eyebrow"><span>04</span> Browser extension &middot; Research to UI</div>
           <h2 class="pj-title">Mozilla Firefox</h2>
@@ -654,7 +662,7 @@
     </article>
     <article class="pj" id="braven">
       <div class="pj-preview">
-        <div class="pj-cover"><video class="pj-demo" src="images/projects/demos/braven.mp4" poster="images/projects/demos/braven.jpg" muted loop playsinline preload="none" aria-label="Braven app prototype: home, career roadmap, events and Braven Connect"></video></div>
+        <div class="pj-cover pj-cover--demo"><video class="pj-demo" src="images/projects/demos/braven.mp4" poster="images/projects/demos/braven.jpg" muted loop playsinline preload="none" aria-label="Braven app prototype: home, career roadmap, events and Braven Connect"></video></div>
         <div class="pj-info">
           <div class="pj-eyebrow" data-i18n-html="projects.braven.pj-eyebrow"><span>05</span> Mobile app &middot; Research to product</div>
           <h2 class="pj-title">Braven Connect</h2>
